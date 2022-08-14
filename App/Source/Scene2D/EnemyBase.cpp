@@ -185,6 +185,7 @@ void CEnemyBase::Update(const double dElapsedTime)
 void CEnemyBase::SetPlayer(CPlayer2D_V2* newPlayer)
 {
 	Player = newPlayer;
+	UpdateDirection();
 }
 
 void CEnemyBase::SetHealth(unsigned int Health)

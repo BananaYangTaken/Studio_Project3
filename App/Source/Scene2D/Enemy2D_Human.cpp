@@ -569,6 +569,7 @@ void CEnemy2D_Human::Update(const double dElapsedTime)
 		break;
 	}
 
+	++iFSMCounter;
 	// Update Jump or Fall
 	UpdateJumpFall(dElapsedTime);
 
