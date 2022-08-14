@@ -1,0 +1,224 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Scene2D">
+      <UniqueIdentifier>{a79bec2d-b676-4d67-8d13-e06114ae6987}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SoundController">
+      <UniqueIdentifier>{81cffce3-3fbb-40f2-925b-cb8cc6c4c2e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene2D\Header Files">
+      <UniqueIdentifier>{eb17c049-1f71-4043-8483-e81c4e743a72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene2D\Source Files">
+      <UniqueIdentifier>{259ffa08-1922-471e-9dff-4e6c0c8dbe70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameStateManagement">
+      <UniqueIdentifier>{eb0809c0-5cfa-48af-a816-7e205c1567f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameStateManagement\Header Files">
+      <UniqueIdentifier>{934f803f-4c72-4092-aaa6-9e0a779069fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameStateManagement\Source Files">
+      <UniqueIdentifier>{4a2bd86e-6077-408d-b160-6539d9cebc99}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Application.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SoundController\SoundController.cpp">
+      <Filter>SoundController</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SoundController\SoundInfo.cpp">
+      <Filter>SoundController</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\Map2D.cpp">
+      <Filter>Scene2D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\InventoryManager.cpp">
+      <Filter>Scene2D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\InventoryItem.cpp">
+      <Filter>Scene2D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\GameManager.cpp">
+      <Filter>Scene2D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\GUI_Scene2D.cpp">
+      <Filter>Scene2D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\Enemy2D.cpp">
+      <Filter>Scene2D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\Scene2D.cpp">
+      <Filter>Scene2D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\Player2D_V2.cpp">
+      <Filter>Scene2D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\Player2D.cpp">
+      <Filter>Scene2D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\Physics2D.cpp">
+      <Filter>Scene2D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\Object2D.cpp">
+      <Filter>Scene2D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\EnemyBase.cpp">
+      <Filter>Scene2D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\Enemy2D_V2.cpp">
+      <Filter>Scene2D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\Enemy2D_Human.cpp">
+      <Filter>Scene2D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\Enemy2D_Skeleton.cpp">
+      <Filter>Scene2D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\BackgroundEntity.cpp">
+      <Filter>Scene2D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameStateManagement\GameStateManager.cpp">
+      <Filter>GameStateManagement\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameStateManagement\MenuState.cpp">
+      <Filter>GameStateManagement\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameStateManagement\PauseState.cpp">
+      <Filter>GameStateManagement\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameStateManagement\PlayGameState.cpp">
+      <Filter>GameStateManagement\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\Projectile2D.cpp">
+      <Filter>Scene2D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\Projectile2DManager.cpp">
+      <Filter>Scene2D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\Enemy2DManager.cpp">
+      <Filter>Scene2D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameStateManagement\WinState.cpp">
+      <Filter>GameStateManagement\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameStateManagement\LoseState.cpp">
+      <Filter>GameStateManagement\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameStateManagement\IntroState.cpp">
+      <Filter>GameStateManagement\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\Enemy2D_Creeper.cpp">
+      <Filter>Scene2D\Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Application.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SoundController\SoundController.h">
+      <Filter>SoundController</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SoundController\SoundInfo.h">
+      <Filter>SoundController</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\InventoryManager.h">
+      <Filter>Scene2D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\InventoryItem.h">
+      <Filter>Scene2D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\GameManager.h">
+      <Filter>Scene2D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\GUI_Scene2D.h">
+      <Filter>Scene2D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\Enemy2D.h">
+      <Filter>Scene2D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\Scene2D.h">
+      <Filter>Scene2D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\Player2D_V2.h">
+      <Filter>Scene2D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\Player2D.h">
+      <Filter>Scene2D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\Physics2D.h">
+      <Filter>Scene2D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\Object2D.h">
+      <Filter>Scene2D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\Map2D.h">
+      <Filter>Scene2D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\EnemyBase.h">
+      <Filter>Scene2D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\Enemy2D_V2.h">
+      <Filter>Scene2D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\Enemy2D_Human.h">
+      <Filter>Scene2D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\Enemy2D_Skeleton.h">
+      <Filter>Scene2D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\BackgroundEntity.h">
+      <Filter>Scene2D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameStateManagement\GameStateBase.h">
+      <Filter>GameStateManagement\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameStateManagement\GameStateManager.h">
+      <Filter>GameStateManagement\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameStateManagement\MenuState.h">
+      <Filter>GameStateManagement\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameStateManagement\PauseState.h">
+      <Filter>GameStateManagement\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameStateManagement\PlayGameState.h">
+      <Filter>GameStateManagement\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\Projectile2D.h">
+      <Filter>Scene2D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\Projectile2DManager.h">
+      <Filter>Scene2D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\Enemy2DManager.h">
+      <Filter>Scene2D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameStateManagement\LoseState.h">
+      <Filter>GameStateManagement\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameStateManagement\WinState.h">
+      <Filter>GameStateManagement\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameStateManagement\IntroState.h">
+      <Filter>GameStateManagement\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\Enemy2D_Creeper.h">
+      <Filter>Scene2D\Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
