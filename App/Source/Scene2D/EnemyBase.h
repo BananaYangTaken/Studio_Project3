@@ -55,17 +55,16 @@ public:
 	// PostRender
 	virtual void PostRender(void);
 	
-	// Set the handle to cPlayer to this class instance
-	void SetPlayer2D(CPlayer2D_V2* Player1, CPlayer2D_V2* Player2 );
-
 	// boolean flag to indicate if this enemy is active
 	bool bIsActive;
+	void SetPlayer(CPlayer2D_V2* newPlayer);
 
 	//Getter and Setter for Health and InvulnerabilityFrames
 	virtual void SetHealth(unsigned int);
 	virtual void SetInvulnerabilityFrame(float);
 	virtual unsigned int GetHealth(void);
 	virtual float GetInvulnerabilityFrame(void);
+
 	virtual void SetStun(bool);
 
 protected:
@@ -121,16 +120,12 @@ protected:
 	// Physics
 	CPhysics2D cPhysics2D;
 
-	std::vector<CProjectile2D*>* cProjectileList;
-
 	// Current color
 	glm::vec4 runtimeColour;
 
 	unsigned int Direction;
 
-	// Handle to the CPlayer2D
-	CPlayer2D_V2* Player1;
-	CPlayer2D_V2* Player2;
+	CPlayer2D_V2* Player;
 
 	CSpriteAnimation* animatedSprites;
 
@@ -170,9 +165,6 @@ protected:
 	// Update position
 	virtual void UpdatePosition(void);
 
-
-	// Determine which player to target
-	virtual CPlayer2D_V2* DecideTarget(void);
 	
 };
 

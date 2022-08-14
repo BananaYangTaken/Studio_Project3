@@ -36,7 +36,6 @@
 #include "Map2D.h"
 
 // Include Entities
-#include "Player2D.h"
 #include "Player2D_V2.h"
 #include "Object2D.h"
 #include "EnemyBase.h"
@@ -85,9 +84,7 @@ protected:
 	//Handler containing the instance of 2D Map
 	CMap2D* cMap2D;
 	//Handler containing the instance of 2D player 1
-	CPlayer2D_V2* Player1;
-	//Handler containing the instance of 2D player 2
-	CPlayer2D_V2* Player2;
+	CPlayer2D_V2* Player;
 	//Handler containing the instance of 2D Gui
 	CGUI_Scene2D* cGUI_Scene2D;
 	// Keyboard Controller singleton instance

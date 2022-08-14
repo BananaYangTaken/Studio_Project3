@@ -59,16 +59,10 @@
     <ClCompile Include="Source\Scene2D\GUI_Scene2D.cpp">
       <Filter>Scene2D\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scene2D\Enemy2D.cpp">
-      <Filter>Scene2D\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Scene2D\Scene2D.cpp">
       <Filter>Scene2D\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Scene2D\Player2D_V2.cpp">
-      <Filter>Scene2D\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scene2D\Player2D.cpp">
       <Filter>Scene2D\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Scene2D\Physics2D.cpp">
@@ -80,13 +74,7 @@
     <ClCompile Include="Source\Scene2D\EnemyBase.cpp">
       <Filter>Scene2D\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scene2D\Enemy2D_V2.cpp">
-      <Filter>Scene2D\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Scene2D\Enemy2D_Human.cpp">
-      <Filter>Scene2D\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scene2D\Enemy2D_Skeleton.cpp">
       <Filter>Scene2D\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Scene2D\BackgroundEntity.cpp">
@@ -148,16 +136,10 @@
     <ClInclude Include="Source\Scene2D\GUI_Scene2D.h">
       <Filter>Scene2D\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Scene2D\Enemy2D.h">
-      <Filter>Scene2D\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Scene2D\Scene2D.h">
       <Filter>Scene2D\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scene2D\Player2D_V2.h">
-      <Filter>Scene2D\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scene2D\Player2D.h">
       <Filter>Scene2D\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scene2D\Physics2D.h">
@@ -172,13 +154,7 @@
     <ClInclude Include="Source\Scene2D\EnemyBase.h">
       <Filter>Scene2D\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Scene2D\Enemy2D_V2.h">
-      <Filter>Scene2D\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Scene2D\Enemy2D_Human.h">
-      <Filter>Scene2D\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scene2D\Enemy2D_Skeleton.h">
       <Filter>Scene2D\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scene2D\BackgroundEntity.h">

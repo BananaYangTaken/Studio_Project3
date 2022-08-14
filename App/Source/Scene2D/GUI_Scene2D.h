@@ -63,18 +63,13 @@ public:
 	void PostRender(void);
 	void Destroy(void);
 
-	void SetPlayerHealth(unsigned int, unsigned int);
-
 protected:
 	struct ButtonData
 	{
 		std::string fileName;
 		unsigned textureID;
 	}; 
-
-	ButtonData KnightIcon, ArcherIcon;
-
-	unsigned int Health[2];
+	
 
 	// Constructor
 	CGUI_Scene2D(void);
@@ -100,6 +95,5 @@ protected:
 	bool show_another_window;
 	ImVec4 clear_color;
 
-	ButtonData Temp;
 
 };

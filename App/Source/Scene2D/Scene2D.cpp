@@ -15,8 +15,6 @@ using namespace std;
 #include "..\SoundController\SoundInfo.h"
 
 //Enemies
-#include "Enemy2D_V2.h"
-#include "Enemy2D_Skeleton.h"
 #include "Enemy2D_Human.h"
 #include "Enemy2D_Creeper.h"
 
@@ -26,8 +24,7 @@ using namespace std;
 CScene2D::CScene2D(void) 
 	: cMap2D(NULL)
 	, cKeyboardController(NULL)
-	, Player1(NULL)
-	, Player2(NULL)
+	, Player(NULL)
 	, cGUI_Scene2D(NULL)
 	, cGameManager(NULL)
 	, cSettings(NULL)
@@ -57,15 +54,10 @@ CScene2D::~CScene2D(void)
 		cMap2D->Destroy();
 		cMap2D = NULL;
 	}
-	if (Player1)
+	if (Player)
 	{
-		delete Player1;
-		Player1 = NULL;
-	}
-	if (Player2)
-	{
-		delete Player2;
-		Player2 = NULL;
+		Player->Destroy();
+		Player = NULL;
 	}
 	if (cGameManager)
 	{
@@ -146,53 +138,19 @@ bool CScene2D::Init(void)
 			return false;
 		}
 		cMap2D->LoadMap("Maps/DM2213_Map_Level_03.csv", 2);
-
-		//Load Map onto Array
-		if (cMap2D->LoadMap("Maps/DM2213_Map_Win.csv", 3) == false)
-		{
-			//Map loading failed, return false
-			return false;
-		}
-		cMap2D->LoadMap("Maps/DM2213_Map_Win.csv", 3);
-
-		//Load Map onto Array
-		if (cMap2D->LoadMap("Maps/DM2213_Map_Lose.csv", 4) == false)
-		{
-			//Map loading failed, return false
-			return false;
-		}
-		cMap2D->LoadMap("Maps/DM2213_Map_Lose.csv", 4);
 	}
 	//cMap2D->SetCurrentLevel(1);
 	
 	//Create and initialse players
-	Player1 = new CPlayer2D_V2();
-	Player2 = new CPlayer2D_V2();
-	//Set Player Numbers
-	Player1->SetPlayer(1);
-	Player2->SetPlayer(2);
-	//Pass shader to players
-	Player1->SetShader("Shader2D_Colour");
-	Player2->SetShader("Shader2D_Colour");
+	Player = CPlayer2D_V2::GetInstance();
+	Player->SetShader("Shader2D_Colour");
 	//Initialise the players
-	if (Player1->Init() == false)
+	if (Player->Init() == false)
 	{
-		std::cout << "Failed to load Player1" << std::endl;
-		return false;
-	}
-	if (Player2->Init() == false)
-	{
-		std::cout << "Failed to load Player2" << std::endl;
+		std::cout << "Failed to load Player" << std::endl;
 		return false;
 	}
 
-	Player1->SetObjectList(&cObjectList);
-	Player2->SetObjectList(&cObjectList);
-
-
-	cProjectileManager = CProjectileManager::GetInstance();
-	cProjectileManager->Init(Player1, Player2);
-	cProjectileManager->SetEnemyVector(&cEnemyList);
 	LoadObjects();
 	LoadEnemies();
 	//Create and initialse 2D GUI
@@ -221,14 +179,11 @@ bool CScene2D::Update(const double dElapsedTime)
 {
 
 	//Call Map2D's update method
-	cMap2D->Update(dElapsedTime);
+ 	cMap2D->Update(dElapsedTime);
 
 	//Call Players's update method
- 	Player1->Update(dElapsedTime);
-	Player2->Update(dElapsedTime);
-
-	Player1->GetJumpCount() > Player2->GetJumpCount() ? Player2->SetJumpCount(Player1->GetJumpCount()) : Player1->SetJumpCount(Player2->GetJumpCount());
-	Player1->GetTeleportPower() > Player2->GetTeleportPower() ? Player2->SetTeleportPower(Player1->GetTeleportPower()) : Player1->SetTeleportPower(Player2->GetTeleportPower());
+ 	Player->Update(dElapsedTime);
+	
 	
 	for (int i = 0; i < cObjectList.size(); i++)
 	{
@@ -252,44 +207,8 @@ bool CScene2D::Update(const double dElapsedTime)
 			++it;
 		}
 	}
-	if(Player2->Getattack() == true)
-	{
-		for (int i = 0; i < cEnemyList.size(); i++)
-		{
-			if (Player2->GetDirection() == 1) 
-			{
-				if(cEnemyList.at(i)->vec2Index.y == Player2->vec2Index.y 
-				&& (cEnemyList.at(i)->vec2Index.x == Player2->vec2Index.x || cEnemyList.at(i)->vec2Index.x-1 == Player2->vec2Index.x) )
-				{
-					if (cEnemyList.at(i)->GetInvulnerabilityFrame() <= 0)
-					{
-						cEnemyList.at(i)->SetHealth(cEnemyList.at(i)->GetHealth() - 1);
-						cEnemyList.at(i)->SetInvulnerabilityFrame(0.5);
-						cEnemyList.at(i)->SetStun(true);
-						CSoundController::GetInstance()->PlaySoundByID(4);
-					}
-				}
-			}
-			else if (Player2->GetDirection() == 0)
-			{
-				if (cEnemyList.at(i)->vec2Index.y == Player2->vec2Index.y
-				&& (cEnemyList.at(i)->vec2Index.x == Player2->vec2Index.x || cEnemyList.at(i)->vec2Index.x + 1 == Player2->vec2Index.x))
-				{
-					if (cEnemyList.at(i)->GetInvulnerabilityFrame() <= 0)
-					{
-						cEnemyList.at(i)->SetHealth(cEnemyList.at(i)->GetHealth() - 1);
-						cEnemyList.at(i)->SetInvulnerabilityFrame(0.5);
-						cEnemyList.at(i)->SetStun(true);
-						CSoundController::GetInstance()->PlaySoundByID(4);
-					}
-				}
-			}
-		}
-	}
-	cProjectileManager->Update(dElapsedTime);
-
+	
 	//Call cGUI's update method
-	cGUI_Scene2D->SetPlayerHealth(Player1->GetHealth(), Player2->GetHealth());
 	cGUI_Scene2D->Update(dElapsedTime);
 	//Call Sound Controller's update method
 	cSoundController->Update(dElapsedTime);
@@ -319,7 +238,7 @@ bool CScene2D::Update(const double dElapsedTime)
 	}
 	
 	
-	if (Player1->GetAtExit() && Player2->GetAtExit())
+	if (Player->GetAtExit())
 	{
 		cGameManager->bLevelCompleted = true;
 	}
@@ -373,14 +292,11 @@ void CScene2D::Render(void)
 	cMap2D->PostRender();
 
 	//Call Player's Pre Render()
-	Player1->PreRender();
-	Player2->PreRender();
+	Player->PreRender();
 	//Call Player's Render()
-	Player1->Render();
-	Player2->Render();
+	Player->Render();
 	//Call Player's Post Render()
-	Player1->PostRender();
-	Player2->PostRender();
+	Player->PostRender();
 	for (int i = 0; i < cObjectList.size(); i++)
 	{
 		cObjectList[i]->PreRender();
@@ -397,9 +313,6 @@ void CScene2D::Render(void)
 		//Call CEnemy2D's Post Render()
 		cEnemyList[i]->PostRender();
 	}
-	cProjectileManager->PreRender();
-	cProjectileManager->Render();
-	cProjectileManager->PostRender();
 
 	//Call cGUI_Scene2D's Pre Render()
 	cGUI_Scene2D->PreRender();
@@ -424,24 +337,9 @@ void CScene2D::RestartLevel(void)
 		cMap2D->LoadMap("Maps/DM2213_Map_Level_02.csv", 1);
 	else if (cMap2D->GetCurrentLevel() == 2)
 		cMap2D->LoadMap("Maps/DM2213_Map_Level_03.csv", 2);
-	//else if (cMap2D->GetCurrentLevel() == 3)
-		//cMap2D->LoadMap("Maps/DM2213_Map_Win.csv", 3);
-	else if (cMap2D->GetCurrentLevel() == 4)
-		cMap2D->LoadMap("Maps/DM2213_Map_Lose", 4);
-	Player1->Reset();
-	Player2->Reset();
-	for (unsigned int i = 0; i < cObjectList.size(); i++)
-	{
-		delete cObjectList[i];
-		cObjectList[i] = NULL;
-	}
-	cObjectList.clear();
+	Player->Reset();
 
-	for (unsigned int i = 0; i < cEnemyList.size(); i++)
-	{
-		delete cEnemyList[i];
-		cEnemyList[i] = NULL;
-	}
+	cObjectList.clear();
 	cEnemyList.clear();
 	//Load Objects
 	LoadObjects();
@@ -513,11 +411,7 @@ void CScene2D::LoadEnemies(void)
 				if (Enemynew == true)
 				{
 					CEnemyBase* cEnemy2D;
-					if (Value == 300)
-						cEnemy2D = new CEnemy2D_V2();
-					else if (Value == 301)
-						cEnemy2D = new CEnemy2D_Skeleton();
-					else if (Value == 302)
+					if (Value == 302)
 						cEnemy2D = new CEnemy2D_Human();
 					else if (Value == 303)
 						cEnemy2D = new CEnemy2D_Creeper();
@@ -525,7 +419,7 @@ void CScene2D::LoadEnemies(void)
 					cEnemy2D->SetShader("Shader2D_Colour");
 					if (cEnemy2D->Init(uiCol, cSettings->NUM_TILES_YAXIS - uiRow - 1, cProjectileManager->GetProjectileList()) == true)
 					{
-						cEnemy2D->SetPlayer2D(Player1, Player2);
+						cEnemy2D->SetPlayer(Player);
 						cEnemyList.push_back(cEnemy2D);
 					}
 				}
@@ -550,15 +444,10 @@ void CScene2D::Destroy(void)
 		cMap2D->Destroy();
 		cMap2D = NULL;
 	}
-	if (Player1)
+	if (Player)
 	{
-		delete Player1;
-		Player1 = NULL;
-	}
-	if (Player2)
-	{
-		delete Player2;
-		Player2 = NULL;
+		Player->Destroy();
+		Player = NULL;
 	}
 	if (cGameManager)
 	{
@@ -569,19 +458,11 @@ void CScene2D::Destroy(void)
 	{
 		cSettings = NULL;
 	}
-
-	for (unsigned int i = 0; i < cObjectList.size(); i++)
+	if (cGUI_Scene2D)
 	{
-		delete cObjectList[i];
-		cObjectList[i] = NULL;
+		cGUI_Scene2D->Destroy();
+		cGUI_Scene2D = NULL;
 	}
 	cObjectList.clear();
-
-	for (unsigned int i = 0; i < cEnemyList.size(); i++)
-	{
-		delete cEnemyList[i];
-		cEnemyList[i] = NULL;
-	}
 	cEnemyList.clear();
-	cGUI_Scene2D->Destroy();
 }

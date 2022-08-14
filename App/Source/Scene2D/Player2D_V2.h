@@ -31,14 +31,19 @@
 //Include Physics2D
 #include "Physics2D.h"
 
+// Include Singleton template
+#include "DesignPatterns\SingletonTemplate.h"
+
+
 // Include Keyboard controller
 #include "Inputs\KeyboardController.h"
 
 // Include AnimatedSprites
 #include "Primitives/SpriteAnimation.h"
 
-class CPlayer2D_V2 : public CEntity2D
+class CPlayer2D_V2 : public CSingletonTemplate<CPlayer2D_V2>, public CEntity2D
 {
+	friend CSingletonTemplate<CPlayer2D_V2>;
 public:
 
 	// Init
@@ -175,7 +180,7 @@ protected:
 	void Constraint(DIRECTION eDirection = LEFT);
 
 	//Let Player interact with map
-	void InteractWithMap(int , int);
+	void InteractWithMap(int xdisplacement = 0, int ydisplacement = 0);
 	
 	//Check direction feasible to move in
 	bool CheckPosition(DIRECTION);

@@ -1,7 +1,5 @@
 #include "Projectile2DManager.h"
 #include <stdexcept>      // std::invalid_argument
-#include "Enemy2D_V2.h"
-#include "Enemy2D_Skeleton.h"
 #include "Enemy2D_Human.h"
 #include "Enemy2D_Creeper.h"
 
@@ -130,14 +128,7 @@ void CProjectileManager::Update(const double dElapsedTime)
 							cEnemyList->at(i)->SetHealth(cEnemyList->at(i)->GetHealth() - 1);
 							cEnemyList->at(i)->SetInvulnerabilityFrame(0.5);
 							cEnemyList->at(i)->SetStun(true);
-							if (dynamic_cast<CEnemy2D_Skeleton*>(cEnemyList->at(i)))
-							{
-								CSoundController::GetInstance()->PlaySoundByID(5);
-							}
-							else
-							{
-								CSoundController::GetInstance()->PlaySoundByID(4);
-							}
+							CSoundController::GetInstance()->PlaySoundByID(4);
 						}
 						CollisionDetected = !CollisionDetected;
 						break;

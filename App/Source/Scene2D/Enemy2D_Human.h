@@ -17,8 +17,6 @@ public:
 	void Update(const double dElapsedTime);
 
 protected:
-	// Determine which player to target
-	CPlayer2D_V2* DecideTarget(void);
 
 	unsigned int HealCount;
 	float HealDuration;

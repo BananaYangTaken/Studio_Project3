@@ -80,11 +80,9 @@ bool CGUI_Scene2D::Init(void)
 
 	// Load the images for buttons
 	CImageLoader* il = CImageLoader::GetInstance();
-	KnightIcon.fileName = "Image\\HumanKnightIcon.png";
-	KnightIcon.textureID = il->LoadTextureGetID(KnightIcon.fileName.c_str(), true);
+	//KnightIcon.fileName = "Image\\HumanKnightIcon.png";
+	//.textureID = il->LoadTextureGetID(KnightIcon.fileName.c_str(), true);
 
-	ArcherIcon.fileName = "Image\\SkeletonArcherIcon.png";
-	ArcherIcon.textureID = il->LoadTextureGetID(ArcherIcon.fileName.c_str(), true);
 
 	// Initialise the cInventoryManager
 	cInventoryManager = CInventoryManager::GetInstance();
@@ -159,37 +157,6 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 			}
 			ImGui::PopStyleColor();
 
-			//// Render the Health
-			//ImGuiWindowFlags healthWindowFlags = ImGuiWindowFlags_AlwaysAutoResize |
-			//	ImGuiWindowFlags_NoBackground |
-			//	ImGuiWindowFlags_NoTitleBar |
-			//	ImGuiWindowFlags_NoMove |
-			//	ImGuiWindowFlags_NoResize |
-			//	ImGuiWindowFlags_NoCollapse |
-			//	ImGuiWindowFlags_NoScrollbar;
-			//{
-			//	ImGui::Begin("Health", NULL, healthWindowFlags);
-			//	{
-			//		ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.03f,
-			//			cSettings->iWindowHeight * 0.03f));
-			//		ImGui::SetWindowSize(ImVec2(100.0f * relativeScale_x, 25.0f * relativeScale_y));
-			//		ImGui::SetWindowFontScale(1.5f * relativeScale_y);
-			//		cInventoryItem = cInventoryManager->GetItem("Health");
-			//		ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(cInventoryItem->vec2Size.x * relativeScale_x, cInventoryItem->vec2Size.y * relativeScale_y), ImVec2(0, 1), ImVec2(1, 0));
-			//		ImGui::SameLine();
-			//		ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(0.0f, 0.0f, 1.0f, 1.0f));
-			//		{
-			//			ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
-			//			{
-			//				ImGui::ProgressBar(cInventoryItem->GetCount() / (float)cInventoryItem->GetMaxCount(), ImVec2(100.0f * relativeScale_x, 20.0f * relativeScale_y));
-			//			}
-			//			ImGui::PopStyleColor();
-			//		}
-			//		ImGui::PopStyleColor();
-			//	}
-			//	ImGui::End();
-			//}
-
 			float buttonWidth = 256;
 			float buttonHeight = 128;
 			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));  // Set a background color
@@ -212,92 +179,9 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					ImGui::TextColored(ImVec4(1, 1, 0, 1), "%d / %d", cInventoryItem->GetCount(), cInventoryItem->GetMaxCount());
 				}
 				ImGui::End();
-				ImGui::Begin("Knight", NULL, topRightWindowFlags);
-				{
-					ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.85f, cSettings->iWindowHeight * 0.10f));
-					ImGui::Image((ImTextureID)KnightIcon.textureID, ImVec2(cInventoryItem->vec2Size.x * relativeScale_x, cInventoryItem->vec2Size.y * relativeScale_y), ImVec2(0, 1), ImVec2(1, 0));
-					ImGui::SameLine();
-					ImGui::SetWindowFontScale(1.5f * relativeScale_y);
-					ImGui::TextColored(ImVec4(1, 1, 0, 1), "%d / 5", Health[1]);
-				}
-				ImGui::End();
-				ImGui::Begin("Archer", NULL, topRightWindowFlags);
-				{
-					ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.85f, cSettings->iWindowHeight * 0.17f));
-					ImGui::Image((ImTextureID)ArcherIcon.textureID, ImVec2(cInventoryItem->vec2Size.x * relativeScale_x, cInventoryItem->vec2Size.y * relativeScale_y), ImVec2(0, 1), ImVec2(1, 0));
-					ImGui::SameLine();
-					ImGui::SetWindowFontScale(1.5f * relativeScale_y);
-					ImGui::TextColored(ImVec4(1, 1, 0, 1), "%d / 5", Health[0]);
-				}
-				ImGui::End();
 			}
 			ImGui::PopStyleColor();
 
-			/*
-			{
-				// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! 
-				// You can browse its code to learn more about Dear ImGui!).
-				if (show_demo_window)
-					ImGui::ShowDemoWindow(&show_demo_window);
-
-				// 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
-				{
-					static float f = 0.0f;
-					static int counter = 0;
-
-					// Create a window called "Preview IMGUI" and append into it.
-					ImGui::Begin("Preview IMGUI", NULL);
-					ImGui::SetWindowPos(ImVec2(10.0f, 10.0f));				// Set the top-left of the window at (10,10)
-					ImGui::SetWindowSize(ImVec2(300.0f, 200.0f));			// Set the window size to (300,200)
-
-					ImGui::Text("Toggle IMGUI demo.");						// Display some text (you can use a format strings too)
-					ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-					ImGui::Checkbox("Another Window", &show_another_window);
-
-					ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-					ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-					if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-						counter++;
-					ImGui::SameLine();
-					ImGui::Text("counter = %d", counter);
-
-					ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
-						1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-					ImGui::End();
-				}
-
-				// 3. Show another simple window.
-				if (show_another_window)
-				{
-					ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-					ImGui::Text("Hello from another window!");
-					if (ImGui::Button("Close Me"))
-						show_another_window = false;
-					ImGui::End();
-				}
-			}
-			*/
-
-			/*// Render a progress bar
-			{
-				m_fProgressBar += 0.001f;
-				if (m_fProgressBar > 1.0f)
-					m_fProgressBar = 0.0f;
-				ImVec4 col = ImVec4(0.0f, 0.0f, 1.0f, 1.0f);
-				ImGui::PushStyleColor(ImGuiCol_PlotHistogram, col);
-				{
-					col = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
-					ImGui::PushStyleColor(ImGuiCol_FrameBg, col);
-					{
-						//ImGui::ProgressBar(m_fProgressBar, ImVec2(100.0f * relativeScale_x, 20.0f * relativeScale_y));
-						ImGui::ProgressBar(cInventoryItem->GetCount() / (float)cInventoryItem->GetMaxCount(), ImVec2(100.0f * relativeScale_x, 20.0f * relativeScale_y));
-					}
-					ImGui::PopStyleColor();
-				}
-				ImGui::PopStyleColor();
-			}
-			*/
 		}
 		ImGui::End();
 	}
@@ -346,10 +230,5 @@ void CGUI_Scene2D::Destroy(void)
 	cSettings = NULL;
 }
 
-void CGUI_Scene2D::SetPlayerHealth(unsigned int Hp1, unsigned int Hp2)
-{
-	Health[0] = Hp1;
-	Health[1] = Hp2;
-}
 
 

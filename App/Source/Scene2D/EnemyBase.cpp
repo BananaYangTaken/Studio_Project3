@@ -67,7 +67,7 @@ void CEnemyBase::Update(const double dElapsedTime)
 			iFSMCounter = 0;
 			//cout << "Switching to Idle State" << endl;
 		}
-		else if (cPhysics2D.CalculateDistance(vec2Index, DecideTarget()->vec2Index) < 5.0f)
+		else if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 5.0f)
 		{
 			sCurrentFSM = ATTACK;
 			iFSMCounter = 0;
@@ -81,7 +81,7 @@ void CEnemyBase::Update(const double dElapsedTime)
 		iFSMCounter++;
 		break;
 	case ATTACK:
-		if (cPhysics2D.CalculateDistance(vec2Index, DecideTarget()->vec2Index) < 5.0f)
+		if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 5.0f)
 		{
 			// Attack
 			// Update direction to move towards for attack
@@ -92,7 +92,7 @@ void CEnemyBase::Update(const double dElapsedTime)
 			//std::cout << "StartPos: " << DecideTarget()->vec2Index.x << ", " << DecideTarget()->vec2Index.y << std::endl;
 			if (AStarCalculate == true)
 			{
-				auto path = cMap2D->PathFind(vec2Index, DecideTarget()->vec2Index, heuristic::euclidean, 10);
+				auto path = cMap2D->PathFind(vec2Index, Player->vec2Index, heuristic::euclidean, 10);
 				//Calculate New Destination
 				bool bFirstPosition = true;
 				for (const auto& coord : path)
@@ -180,19 +180,12 @@ void CEnemyBase::Update(const double dElapsedTime)
 	animatedSprites->Update(dElapsedTime);
 }
 
-/**
- @brief Set the handle to cPlayer to this class instance
- @param cPlayer2D A CPlayer2D* variable which contains the pointer to the CPlayer2D instance
- */
-void CEnemyBase::SetPlayer2D(CPlayer2D_V2* cPlayer1, CPlayer2D_V2* cPlayer2 )
+
+
+void CEnemyBase::SetPlayer(CPlayer2D_V2* newPlayer)
 {
-	Player1 = cPlayer1;
-	Player2 = cPlayer2;
-
-	// Update the enemy's direction
-	UpdateDirection();
+	Player = newPlayer;
 }
-
 
 void CEnemyBase::SetHealth(unsigned int Health)
 {
@@ -512,7 +505,7 @@ void CEnemyBase::UpdateJumpFall(const double dElapsedTime)
  */
 bool CEnemyBase::InteractWithPlayer(void)
 {
-	glm::vec2 i32vec2PlayerPos = DecideTarget()->vec2Index;
+	glm::vec2 i32vec2PlayerPos = Player->vec2Index;
 	
 	// Check if the enemy2D is within 1.5 indices of the player2D
 	if (((vec2Index.x >= i32vec2PlayerPos.x - 0.5) && 
@@ -536,7 +529,7 @@ bool CEnemyBase::InteractWithPlayer(void)
 void CEnemyBase::UpdateDirection(void)
 {
 	// Set the destination to the player
-	vec2Destination = DecideTarget()->vec2Index;
+	vec2Destination = Player->vec2Index;
 
 	// Calculate the direction between enemy2D and player2D
 	vec2Direction = vec2Destination - vec2Index;
@@ -658,18 +651,6 @@ void CEnemyBase::UpdatePosition(void)
 	}
 }
 
-CPlayer2D_V2* CEnemyBase::DecideTarget(void)
-{
-	if ((Player1->vec2Index - this->vec2Index).length() >= (Player2->vec2Index - this->vec2Index).length())
-	{
-		return Player1;
-	}
-	else if ((Player1->vec2Index - this->vec2Index).length() < (Player2->vec2Index - this->vec2Index).length())
-	{
-		return Player2;
-	}
-	return NULL;
-}
 /**
  @brief Set up the OpenGL display environment before rendering
  */

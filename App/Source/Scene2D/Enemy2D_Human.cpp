@@ -26,8 +26,7 @@ CEnemy2D_Human::CEnemy2D_Human(void)
 	bIsActive = false;
 	cMap2D = NULL;
 	cSettings = NULL;
-	Player1 = NULL;
-	Player2 = NULL;
+	Player = NULL;
 	sCurrentFSM = static_cast<CEnemyBase::FSM>(FSM::IDLE);
 	iFSMCounter = 0;
 	animatedSprites = NULL;
@@ -68,8 +67,7 @@ CEnemy2D_Human::~CEnemy2D_Human(void)
 	}
 
 	// We won't delete this since it was created elsewhere
-	Player1 = NULL;
-	Player2 = NULL;
+	Player = NULL;
 
 	// We won't delete this since it was created elsewhere
 	cMap2D = NULL;
@@ -89,8 +87,6 @@ bool CEnemy2D_Human::Init(int x, int y, std::vector<CProjectile2D*>* cProjectile
 	cSettings = CSettings::GetInstance();
 	// Get the handler to the CMap2D instance
 	cMap2D = CMap2D::GetInstance();
-
-	this->cProjectileList = cProjectileList;
 
 
 	unsigned int uiRow = -1;
@@ -148,11 +144,6 @@ bool CEnemy2D_Human::Init(int x, int y, std::vector<CProjectile2D*>* cProjectile
 
 	return true;
 }
-CPlayer2D_V2* CEnemy2D_Human::DecideTarget(void)
-{
-	return Player1;
-}
-
 
 void CEnemy2D_Human::Update(const double dElapsedTime)
 {
@@ -210,7 +201,7 @@ void CEnemy2D_Human::Update(const double dElapsedTime)
 				sCurrentFSM = static_cast<CEnemyBase::FSM>(IDLE);
 				iFSMCounter = 0;
 			}
-			else if (cPhysics2D.CalculateDistance(vec2Index, DecideTarget()->vec2Index) < 5.0f)
+			else if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 5.0f)
 			{
 				sCurrentFSM = static_cast<CEnemyBase::FSM>(ATTACK);
 				iFSMCounter = 0;
@@ -251,11 +242,11 @@ void CEnemy2D_Human::Update(const double dElapsedTime)
 		//FSM Transition
 		if (!Stunned)
 		{
-			if (cPhysics2D.CalculateDistance(vec2Index, DecideTarget()->vec2Index) < 7.0f)
+			if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 7.0f)
 			{
 				if (AStarCalculate == true)
 				{
-					auto path = cMap2D->PathFind(vec2Index, DecideTarget()->vec2Index, heuristic::euclidean, 10);
+					auto path = cMap2D->PathFind(vec2Index, Player->vec2Index, heuristic::euclidean, 10);
 					//Calculate New Destination
 					bool bFirstPosition = true;
 					for (const auto& coord : path)
@@ -297,7 +288,7 @@ void CEnemy2D_Human::Update(const double dElapsedTime)
 					UpdatePosition();
 				}
 				// Attack
-				if (cPhysics2D.CalculateDistance(vec2Index, DecideTarget()->vec2Index, 'x') < 1.5f && Attack == false)
+				if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index, 'x') < 1.5f && Attack == false)
 				{
 					Attack = true;
 					AttackAnim = 1;
@@ -320,26 +311,26 @@ void CEnemy2D_Human::Update(const double dElapsedTime)
 					ReloadDuration = 0.3;
 					if (Direction == 0)
 					{
-						if (vec2Index.y == Player1->vec2Index.y
-							&& (vec2Index.x == Player1->vec2Index.x || vec2Index.x - 1 == Player1->vec2Index.x))
+						if (vec2Index.y == Player->vec2Index.y
+							&& (vec2Index.x == Player->vec2Index.x || vec2Index.x - 1 == Player->vec2Index.x))
 						{
-							if (Player1->GetInvulnerabilityFrame() <= 0)
+							if (Player->GetInvulnerabilityFrame() <= 0)
 							{
-								Player1->SetHealth(Player1->GetHealth()-1);
-								Player1->SetInvulnerabilityFrame(0.5);
+								Player->SetHealth(Player->GetHealth()-1);
+								Player->SetInvulnerabilityFrame(0.5);
 								CSoundController::GetInstance()->PlaySoundByID(5);
 							}
 						}
 					}
 					else if (Direction == 1)
 					{
-						if (vec2Index.y == Player1->vec2Index.y
-							&& (vec2Index.x == Player1->vec2Index.x || vec2Index.x + 1 == Player1->vec2Index.x))
+						if (vec2Index.y == Player->vec2Index.y
+							&& (vec2Index.x == Player->vec2Index.x || vec2Index.x + 1 == Player->vec2Index.x))
 						{
-							if (Player1->GetInvulnerabilityFrame() <= 0)
+							if (Player->GetInvulnerabilityFrame() <= 0)
 							{
-								Player1->SetHealth(Player2->GetHealth()-1);
-								Player1->SetInvulnerabilityFrame(0.5);
+								Player->SetHealth(Player->GetHealth()-1);
+								Player->SetInvulnerabilityFrame(0.5);
 								CSoundController::GetInstance()->PlaySoundByID(5);
 							}
 						}
@@ -475,12 +466,12 @@ void CEnemy2D_Human::Update(const double dElapsedTime)
 		//FSM Transition
 		if (!Stunned)
 		{
-			if (cPhysics2D.CalculateDistance(vec2Index, DecideTarget()->vec2Index + glm::vec2(3,0)) < 10.0f)
+			if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index + glm::vec2(3,0)) < 10.0f)
 			{
 				if (AStarCalculate == true)
 				{
 
-					auto path = cMap2D->PathFind(vec2Index, DecideTarget()->vec2Index + glm::vec2(3, 0), heuristic::euclidean, 10);
+					auto path = cMap2D->PathFind(vec2Index, Player->vec2Index + glm::vec2(3, 0), heuristic::euclidean, 10);
 					//Calculate New Destination
 					bool bFirstPosition = true;
 					for (const auto& coord : path)
@@ -520,7 +511,7 @@ void CEnemy2D_Human::Update(const double dElapsedTime)
 				}
 				UpdatePosition();
 				//Heal
-				if (cPhysics2D.CalculateDistance(vec2Index, DecideTarget()->vec2Index, 'x') > 8.f)
+				if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index, 'x') > 8.f)
 				{
 					runtimeColour = glm::vec4(0.0, 1.0, 0.0, 1.0);
 					HealDuration = 2;
