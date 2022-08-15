@@ -120,7 +120,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 	// Calculate the relative scale to our default windows width
 	const float relativeScale_x = cSettings->iWindowWidth / 800.0f;
 	const float relativeScale_y = cSettings->iWindowHeight / 600.0f;
-
+	float wspace = 0.1f;
 	// Start the Dear ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
@@ -135,48 +135,44 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 
 			// Display the FPS
 			ImGui::TextColored(ImVec4(1, 1, 0, 1), "FPS: %d", cFPSCounter->GetFrameRate());
-
+			std::string recName = inventory_item_name_list[0];
 
 			// Render the inventory items
-			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));  // Set a background color
-			ImGuiWindowFlags inventoryWindowFlags =
-				ImGuiWindowFlags_AlwaysAutoResize |
-				ImGuiWindowFlags_NoTitleBar |
-				ImGuiWindowFlags_NoMove |
-				ImGuiWindowFlags_NoResize |
-				ImGuiWindowFlags_NoCollapse |
-				ImGuiWindowFlags_NoScrollbar;
 			if (checkinginventory == true)
 			{
 				for (int i = 0; i < inventory_size; i++)
 				{
-					const char* c = inventory_item_name_list[1].c_str();
+					if (recName != inventory_item_name_list[i])
+					{
+						wspace = wspace + 0.15f;
+					}
+					recName = inventory_item_name_list[i];
+					std::cout << i;
+					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));  // Set a background color
+					ImGuiWindowFlags inventoryWindowFlags =
+						ImGuiWindowFlags_AlwaysAutoResize |
+						ImGuiWindowFlags_NoTitleBar |
+						ImGuiWindowFlags_NoResize |
+						ImGuiWindowFlags_NoCollapse |
+						ImGuiWindowFlags_NoScrollbar;
+					const char* c = inventory_item_name_list[i].c_str();
 					std::string cText = std::string(c) + ": %d / %d";
-					ImGui::Begin(c, NULL, inventoryWindowFlags);
 					{
-						ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.4f, cSettings->iWindowHeight * 0.2f + 15 * i));
-						ImGui::SetWindowSize(ImVec2(200.0f * relativeScale_x, 25.0f * relativeScale_y));
-						cInventoryItem = cInventoryManager->GetItem(inventory_item_name_list[i]);
-						ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(cInventoryItem->vec2Size.x * relativeScale_x, cInventoryItem->vec2Size.y * relativeScale_y), ImVec2(0, 1), ImVec2(1, 0));
-						ImGui::SameLine();
-						ImGui::SetWindowFontScale(1.5f * relativeScale_y);
-						ImGui::TextColored(ImVec4(1, 1, 0, 1), cText.c_str(), inventory_item_quantity[i], inventory_item_max_quantity[i]);
+						ImGui::Begin(c, NULL, inventoryWindowFlags);
+						{
+							ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wspace, cSettings->iWindowHeight * (0.2f - 0.001f * i)));
+							ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
+							cInventoryItem = cInventoryManager->GetItem(inventory_item_name_list[i]);
+							ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(50, 50), ImVec2(0, 1), ImVec2(1, 0));
+							ImGui::SameLine();
+							ImGui::SetWindowFontScale(1.0f * relativeScale_y);
+							ImGui::TextColored(ImVec4(1, 1, 0, 1), cText.c_str(), inventory_item_quantity[i], inventory_item_max_quantity[i]);
+						}
+						ImGui::End();
 					}
-					ImGui::End();
-					/*ImGui::Begin("Rune", NULL, inventoryWindowFlags);
-					{
-						ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.01f, cSettings->iWindowHeight * 0.85f));
-						ImGui::SetWindowSize(ImVec2(200.0f * relativeScale_x, 25.0f * relativeScale_y));
-						cInventoryItem = cInventoryManager->GetItem("Rune");
-						ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(cInventoryItem->vec2Size.x * relativeScale_x, cInventoryItem->vec2Size.y * relativeScale_y), ImVec2(0, 1), ImVec2(1, 0));
-						ImGui::SameLine();
-						ImGui::SetWindowFontScale(1.5f * relativeScale_y);
-						ImGui::TextColored(ImVec4(1, 1, 0, 1), "Rune: %d / %d", cInventoryItem->GetCount(), cInventoryItem->GetMaxCount());
-					}
-					ImGui::End();*/
+					ImGui::PopStyleColor();
 				}
 			}
-			ImGui::PopStyleColor();
 
 			float buttonWidth = 256;
 			float buttonHeight = 128;

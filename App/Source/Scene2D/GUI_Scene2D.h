@@ -49,10 +49,10 @@ class CGUI_Scene2D : public CSingletonTemplate<CGUI_Scene2D>, public CEntity2D
 public:
 	// Init
 	bool Init(void);
-	int inventory_size = 10;
-	std::string inventory_item_name_list[10] = {"Key","Key", "Key", "Key", "Key", "Key", "Key", "Key", "Key", "Key"};
-	int inventory_item_quantity[10] = {0,0,0,0,0,0,0,0,0,0};
-	int inventory_item_max_quantity[10] = {10,10,10,10,10,10,10,10,10,10};
+	int inventory_size = 8;
+	std::string inventory_item_name_list[8] = {"Hardwood", "Key", "Rune", "Iron Ore", "Iron Ore", "Iron Ore", "Iron Ore", "Iron Ore"};
+	int inventory_item_quantity[8] = {0,0,0,0,0,0,0,0};
+	int inventory_item_max_quantity[8] = {10,10,10,10,10,10,10,10};
 	bool checkinginventory = false;
 	// Update
 	void Update(const double dElapsedTime);
