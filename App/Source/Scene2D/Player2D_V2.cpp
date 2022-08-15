@@ -261,7 +261,6 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		}
 	}
 	// Get keyboard updates
-	
 	if (cKeyboardController->IsKeyDown(GLFW_KEY_A))
 	{
 		// Calculate the new position to the left
@@ -277,8 +276,8 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		//If the new position is not feasible, then revert to old position
 		if (CheckPosition(LEFT) == false)
 		{
-			vec2Index = vec2OldIndex;
-			vec2NumMicroSteps.x = ((int)cSettings->NUM_STEPS_PER_TILE_XAXIS) - 1;
+			vec2Index.x = vec2OldIndex.x;
+			vec2NumMicroSteps.x = 0;
 		}
 
 
@@ -314,7 +313,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		//If the new position is not feasible, then revert to old position
 		if (CheckPosition(RIGHT) == false)
 		{
-			vec2Index = vec2OldIndex;
+			vec2Index.x = vec2OldIndex.x;
 			vec2NumMicroSteps.x = 0;
 		}
 		//Player is not idle
@@ -348,6 +347,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		// If the new position is not feasible, then revert to old position
 		if (CheckPosition(UP) == false)
 		{
+			vec2Index.y = vec2OldIndex.y;
 			vec2NumMicroSteps.y = 0;
 		}
 		//Player is not idle
@@ -378,7 +378,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		// If the new position is not feasible, then revert to old position
 		if (CheckPosition(DOWN) == false)
 		{
-			vec2Index = vec2OldIndex;
+			vec2Index.y = vec2OldIndex.y;
 			vec2NumMicroSteps.y = 0;
 		}
 
@@ -395,6 +395,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		animatedSprites->PlayAnimation("down", -1, 1.0f);
 	}
 
+	
 	std::cout << "x: " << vec2Index.x << " y: " << vec2Index.y << " xsteps: " << vec2NumMicroSteps.x << " ysteps: " << vec2NumMicroSteps.y << std::endl;
 	
 
