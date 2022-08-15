@@ -66,15 +66,6 @@ CPlayer2D_V2::~CPlayer2D_V2(void)
 	glDeleteVertexArrays(1, &VAO);
 }
 
-void CPlayer2D_V2::SetPlayer(unsigned int newPlayer)
-{
-	Player = newPlayer;
-}
-
-unsigned int CPlayer2D_V2::GetPlayer(void)
-{
-	return Player;
-}
 
 /**
   @brief Initialise this instance
@@ -184,6 +175,30 @@ bool CPlayer2D_V2::Init(void)
 	// Add a Key as one of the inventory items
 	cInventoryItem = cInventoryManager->Add("Key", "Image/Key.tga", 1, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+	cInventoryItem = cInventoryManager->Add("Hard wood", "Image/Hardwood.tga", 1, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+	cInventoryItem = cInventoryManager->Add("Stone Ore", "Image/Stone.tga", 1, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+	cInventoryItem = cInventoryManager->Add("Scrap Metal", "Image/Iron_Ore.tga", 1, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+	cInventoryItem = cInventoryManager->Add("Pistol Bullets", "Image/PistolBullet.tga", 1, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+	cInventoryItem = cInventoryManager->Add("Rifle Bullets", "Image/RifleBullet.tga", 1, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+	cInventoryItem = cInventoryManager->Add("Rifle", "Image/Rifle.tga", 1, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+	cInventoryItem = cInventoryManager->Add("Pistol", "Image/pistol.tga", 1, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+	cInventoryItem = cInventoryManager->Add("empty", "Image/BlankBox.tga", 1, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
 	return true;
 }
 
@@ -252,7 +267,6 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		}
 	}
 	// Get keyboard updates
-	
 	if (cKeyboardController->IsKeyDown(GLFW_KEY_A))
 	{
 		// Calculate the new position to the left
@@ -268,7 +282,8 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		//If the new position is not feasible, then revert to old position
 		if (CheckPosition(LEFT) == false)
 		{
-			vec2NumMicroSteps.x += 1;
+			vec2Index.x = vec2OldIndex.x;
+			vec2NumMicroSteps.x = 0;
 		}
 
 
@@ -304,7 +319,8 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		//If the new position is not feasible, then revert to old position
 		if (CheckPosition(RIGHT) == false)
 		{
-			vec2NumMicroSteps.x -= 1;
+			//vec2Index.x = vec2OldIndex.x;
+			vec2NumMicroSteps.x = 0;
 		}
 		//Player is not idle
 		idle = false;
@@ -329,14 +345,16 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 			vec2NumMicroSteps.y += 1;
 			if (vec2NumMicroSteps.y > cSettings->NUM_STEPS_PER_TILE_YAXIS)
 			{
-				vec2NumMicroSteps.y += 1;
+				vec2NumMicroSteps.y = 0;
+				vec2Index.y++;
 			}
 		}
 
 		// If the new position is not feasible, then revert to old position
 		if (CheckPosition(UP) == false)
 		{
-			vec2NumMicroSteps.y -= 1;
+			//vec2Index.y = vec2OldIndex.y;
+			vec2NumMicroSteps.y = 0;
 		}
 		//Player is not idle
 		idle = false;
@@ -366,7 +384,8 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		// If the new position is not feasible, then revert to old position
 		if (CheckPosition(DOWN) == false)
 		{
-			vec2NumMicroSteps.y += 1;
+			vec2Index.y = vec2OldIndex.y;
+			vec2NumMicroSteps.y = 0;
 		}
 
 		//Player is not idle
@@ -381,7 +400,9 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		//CS: Play the "down" animation
 		animatedSprites->PlayAnimation("down", -1, 1.0f);
 	}
-			
+
+	
+	//std::cout << "x: " << vec2Index.x << " y: " << vec2Index.y << " xsteps: " << vec2NumMicroSteps.x << " ysteps: " << vec2NumMicroSteps.y << std::endl;
 	
 
 	if (idle == true)

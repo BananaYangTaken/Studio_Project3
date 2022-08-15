@@ -39,8 +39,8 @@ public:
 
 	// Windows Information
 	// Should make these not hard-coded :P
-	unsigned int iWindowWidth = 1900;   //76 tiles
-	unsigned int iWindowHeight = 1075;  //43 tiles
+	unsigned int iWindowWidth = 1920;   //76 tiles
+	unsigned int iWindowHeight = 1080;  //43 tiles
 	unsigned int iWindowPosX = 50;
 	unsigned int iWindowPosY = 50;
 	bool bDisableMousePointer = false;
@@ -57,6 +57,8 @@ public:
 	// The variables which stores the specifications of the map
 	unsigned int NUM_TILES_XAXIS;
 	unsigned int NUM_TILES_YAXIS;
+	unsigned int VIEW_TILES_XAXIS;
+	unsigned int VIEW_TILES_YAXIS;
 
 	float TILE_WIDTH;
 	float TILE_HEIGHT;
