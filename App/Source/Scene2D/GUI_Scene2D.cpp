@@ -117,10 +117,12 @@ bool CGUI_Scene2D::Init(void)
  */
 void CGUI_Scene2D::Update(const double dElapsedTime)
 {
+	float level = -1;
 	// Calculate the relative scale to our default windows width
 	const float relativeScale_x = cSettings->iWindowWidth / 800.0f;
 	const float relativeScale_y = cSettings->iWindowHeight / 600.0f;
-	float wspace = 0.1f;
+	float wspace = 0.0f;
+	float hspace = 0.3f;
 	// Start the Dear ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
@@ -140,14 +142,22 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 			// Render the inventory items
 			if (checkinginventory == true)
 			{
+				ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 2, cSettings->iWindowHeight / 2));
+				ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
+				ImGui::SetWindowFontScale(2.5f * relativeScale_y);
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), "INVENTORY", cFPSCounter->GetFrameRate());
 				for (int i = 0; i < inventory_size; i++)
 				{
-					if (recName != inventory_item_name_list[i])
+					level++;
+					if (level >= 3)
 					{
-						wspace = wspace + 0.15f;
+						level = 0;
+						hspace += 0.1f;
+						wspace = 0.0f;
 					}
+					wspace = wspace + 0.20f;
+					
 					recName = inventory_item_name_list[i];
-					std::cout << i;
 					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));  // Set a background color
 					ImGuiWindowFlags inventoryWindowFlags =
 						ImGuiWindowFlags_AlwaysAutoResize |
@@ -160,7 +170,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					{
 						ImGui::Begin(c, NULL, inventoryWindowFlags);
 						{
-							ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wspace, cSettings->iWindowHeight * (0.2f - 0.001f * i)));
+							ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wspace, cSettings->iWindowHeight * hspace ));
 							ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
 							cInventoryItem = cInventoryManager->GetItem(inventory_item_name_list[i]);
 							ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(50, 50), ImVec2(0, 1), ImVec2(1, 0));
