@@ -45,6 +45,21 @@ CGUI_Scene2D::~CGUI_Scene2D(void)
 /**
   @brief Initialise this instance
   */
+void CGUI_Scene2D::setInventoryItem(int arrayVal, std::string item, int quantity, int maxQuantity)
+{
+	inventory_item_name_list[arrayVal] = item;
+	inventory_item_quantity[arrayVal] = quantity;
+	inventory_item_max_quantity[arrayVal] = maxQuantity;
+}
+
+void CGUI_Scene2D::IncreaseInventoryItemCount(int arrayVal, int incrementValue)
+{
+	inventory_item_quantity[arrayVal] = incrementValue;
+}
+void CGUI_Scene2D::DecreaseInventoryItemCount(int arrayVal, int decrementValue)
+{
+	inventory_item_quantity[arrayVal] = decrementValue;
+}
 bool CGUI_Scene2D::Init(void)
 {
 	// Get the handler to the CSettings instance
@@ -121,39 +136,45 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 			// Display the FPS
 			ImGui::TextColored(ImVec4(1, 1, 0, 1), "FPS: %d", cFPSCounter->GetFrameRate());
 
-			
+
 			// Render the inventory items
 			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));  // Set a background color
-			ImGuiWindowFlags inventoryWindowFlags = 
+			ImGuiWindowFlags inventoryWindowFlags =
 				ImGuiWindowFlags_AlwaysAutoResize |
 				ImGuiWindowFlags_NoTitleBar |
 				ImGuiWindowFlags_NoMove |
 				ImGuiWindowFlags_NoResize |
 				ImGuiWindowFlags_NoCollapse |
 				ImGuiWindowFlags_NoScrollbar;
+			if (checkinginventory == true)
 			{
-				ImGui::Begin("Key", NULL, inventoryWindowFlags);
+				for (int i = 0; i < inventory_size; i++)
 				{
-					ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.01f, cSettings->iWindowHeight * 0.9f));
-					ImGui::SetWindowSize(ImVec2(200.0f * relativeScale_x, 25.0f * relativeScale_y));
-					cInventoryItem = cInventoryManager->GetItem("Key");
-					ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(),ImVec2(cInventoryItem->vec2Size.x * relativeScale_x, cInventoryItem->vec2Size.y * relativeScale_y),ImVec2(0, 1), ImVec2(1, 0));
-					ImGui::SameLine();
-					ImGui::SetWindowFontScale(1.5f * relativeScale_y);
-					ImGui::TextColored(ImVec4(1, 1, 0, 1), "Key: %d / %d", cInventoryItem->GetCount(), cInventoryItem->GetMaxCount());
+					const char* c = inventory_item_name_list[1].c_str();
+					std::string cText = std::string(c) + ": %d / %d";
+					ImGui::Begin(c, NULL, inventoryWindowFlags);
+					{
+						ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.4f, cSettings->iWindowHeight * 0.2f + 15 * i));
+						ImGui::SetWindowSize(ImVec2(200.0f * relativeScale_x, 25.0f * relativeScale_y));
+						cInventoryItem = cInventoryManager->GetItem(inventory_item_name_list[i]);
+						ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(cInventoryItem->vec2Size.x * relativeScale_x, cInventoryItem->vec2Size.y * relativeScale_y), ImVec2(0, 1), ImVec2(1, 0));
+						ImGui::SameLine();
+						ImGui::SetWindowFontScale(1.5f * relativeScale_y);
+						ImGui::TextColored(ImVec4(1, 1, 0, 1), cText.c_str(), inventory_item_quantity[i], inventory_item_max_quantity[i]);
+					}
+					ImGui::End();
+					/*ImGui::Begin("Rune", NULL, inventoryWindowFlags);
+					{
+						ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.01f, cSettings->iWindowHeight * 0.85f));
+						ImGui::SetWindowSize(ImVec2(200.0f * relativeScale_x, 25.0f * relativeScale_y));
+						cInventoryItem = cInventoryManager->GetItem("Rune");
+						ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(cInventoryItem->vec2Size.x * relativeScale_x, cInventoryItem->vec2Size.y * relativeScale_y), ImVec2(0, 1), ImVec2(1, 0));
+						ImGui::SameLine();
+						ImGui::SetWindowFontScale(1.5f * relativeScale_y);
+						ImGui::TextColored(ImVec4(1, 1, 0, 1), "Rune: %d / %d", cInventoryItem->GetCount(), cInventoryItem->GetMaxCount());
+					}
+					ImGui::End();*/
 				}
-				ImGui::End();
-				ImGui::Begin("Rune", NULL, inventoryWindowFlags);
-				{
-					ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.01f, cSettings->iWindowHeight * 0.85f));
-					ImGui::SetWindowSize(ImVec2(200.0f * relativeScale_x, 25.0f * relativeScale_y));
-					cInventoryItem = cInventoryManager->GetItem("Rune");
-					ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(cInventoryItem->vec2Size.x * relativeScale_x, cInventoryItem->vec2Size.y * relativeScale_y), ImVec2(0, 1), ImVec2(1, 0));
-					ImGui::SameLine();
-					ImGui::SetWindowFontScale(1.5f * relativeScale_y);
-					ImGui::TextColored(ImVec4(1, 1, 0, 1), "Rune: %d / %d", cInventoryItem->GetCount(), cInventoryItem->GetMaxCount());
-				}
-				ImGui::End();
 			}
 			ImGui::PopStyleColor();
 
@@ -229,6 +250,4 @@ void CGUI_Scene2D::Destroy(void)
 	// We won't delete this since it was created elsewhere
 	cSettings = NULL;
 }
-
-
 

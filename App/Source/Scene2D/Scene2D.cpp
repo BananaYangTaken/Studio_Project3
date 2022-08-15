@@ -208,7 +208,11 @@ bool CScene2D::Update(const double dElapsedTime)
 	{
 		RestartLevel();
 	}
-	
+	if (cKeyboardController->IsKeyPressed(GLFW_KEY_TAB))
+	{
+		if(cGUI_Scene2D->checkinginventory == false) cGUI_Scene2D->checkinginventory = true;
+		else cGUI_Scene2D->checkinginventory = false;
+	}
 	
 	if (Player->GetAtExit())
 	{
