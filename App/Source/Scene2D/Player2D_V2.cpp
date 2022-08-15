@@ -66,15 +66,6 @@ CPlayer2D_V2::~CPlayer2D_V2(void)
 	glDeleteVertexArrays(1, &VAO);
 }
 
-void CPlayer2D_V2::SetPlayer(unsigned int newPlayer)
-{
-	Player = newPlayer;
-}
-
-unsigned int CPlayer2D_V2::GetPlayer(void)
-{
-	return Player;
-}
 
 /**
   @brief Initialise this instance
@@ -411,7 +402,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 	}
 
 	
-	std::cout << "x: " << vec2Index.x << " y: " << vec2Index.y << " xsteps: " << vec2NumMicroSteps.x << " ysteps: " << vec2NumMicroSteps.y << std::endl;
+	//std::cout << "x: " << vec2Index.x << " y: " << vec2Index.y << " xsteps: " << vec2NumMicroSteps.x << " ysteps: " << vec2NumMicroSteps.y << std::endl;
 	
 
 	if (idle == true)

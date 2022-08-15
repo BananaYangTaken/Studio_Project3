@@ -8,6 +8,8 @@ CSettings::CSettings(void)
 	, logl_root(NULL)
 	, NUM_TILES_XAXIS(50)
 	, NUM_TILES_YAXIS(30)
+	, VIEW_TILES_XAXIS(40)
+	, VIEW_TILES_YAXIS(20)
 	, TILE_WIDTH(0.0625f)
 	, TILE_HEIGHT(0.08333f)
 	, NUM_STEPS_PER_TILE_XAXIS(16.0f)
@@ -54,8 +56,8 @@ float CSettings::ConvertIndexToUVSpace(const AXIS sAxis, const int iIndex, const
 // Update the specifications of the map
 void CSettings::UpdateSpecifications(void)
 {
-	TILE_WIDTH = 2.0f / NUM_TILES_XAXIS;	// 0.0625f;
-	TILE_HEIGHT = 2.0f / NUM_TILES_YAXIS;	// 0.08333f;
+	TILE_WIDTH = 2.0f / VIEW_TILES_XAXIS;	// 0.0625f;
+	TILE_HEIGHT = 2.0f / VIEW_TILES_YAXIS;	// 0.08333f;
 
 	MICRO_STEP_XAXIS = TILE_WIDTH / NUM_STEPS_PER_TILE_XAXIS;
 	MICRO_STEP_YAXIS = TILE_HEIGHT / NUM_STEPS_PER_TILE_YAXIS;

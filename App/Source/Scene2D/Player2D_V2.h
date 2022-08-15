@@ -69,10 +69,6 @@ public:
 	// Destructor
 	virtual ~CPlayer2D_V2(void);
 
-	//Player Getter and Setter
-	void SetPlayer(unsigned int);
-	unsigned int GetPlayer(void);
-
 	//cObjectList Setter
 	void SetObjectList(std::vector< CObject2D*>*);
 

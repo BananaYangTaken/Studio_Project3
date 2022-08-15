@@ -185,6 +185,8 @@ bool CScene2D::Update(const double dElapsedTime)
 	//Call Sound Controller's update method
 	cSoundController->Update(dElapsedTime);
 
+	cMap2D->vec2Index = Player->vec2Index;
+
 	// Get keyboard updates
 	if (cKeyboardController->IsKeyDown(GLFW_KEY_F6))
 	{
