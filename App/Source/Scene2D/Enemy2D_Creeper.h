@@ -12,7 +12,7 @@ public:
 	// Destructor
 	~CEnemy2D_Creeper(void);
 
-	bool Init(int, int, std::vector<CProjectile2D*>*);
+	bool Init(int, int);
 
 	void Update(const double dElapsedTime);
 

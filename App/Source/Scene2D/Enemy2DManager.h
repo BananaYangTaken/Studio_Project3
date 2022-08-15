@@ -2,7 +2,6 @@
 
 // Include SingletonTemplate
 #include "DesignPatterns\SingletonTemplate.h"
-#include "Projectile2D.h"
 #include "Player2D_V2.h"
 #include "Map2D.h"
 #include "EnemyBase.h"

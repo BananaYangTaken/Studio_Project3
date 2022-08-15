@@ -23,8 +23,6 @@
 // Include Player2D_V2
 #include "Player2D_V2.h"
 
-#include "Projectile2D.h"
-
 // Include AnimatedSprites
 #include "Primitives/SpriteAnimation.h"
 
@@ -41,7 +39,7 @@ public:
 	~CEnemyBase(void);
 
 	// Init
-	virtual bool Init(int, int, std::vector<CProjectile2D*>*) = 0;
+	virtual bool Init(int, int) = 0;
 
 	// Update
 	virtual void Update(const double dElapsedTime);

@@ -39,8 +39,6 @@
 #include "Player2D_V2.h"
 #include "Object2D.h"
 #include "EnemyBase.h"
-#include "Projectile2D.h"
-#include "Projectile2DManager.h"
 
 // Include GUI
 #include "GUI_Scene2D.h"
@@ -95,8 +93,6 @@ protected:
 	CSettings* cSettings;
 	//Handler to the CSoundController
 	CSoundController* cSoundController;
-	//Handler to Projectile Manager
-	CProjectileManager* cProjectileManager;
 
 	//A vector containing instances of CEnemyBase Derived Class
 	std::vector<CEnemyBase*> cEnemyList;

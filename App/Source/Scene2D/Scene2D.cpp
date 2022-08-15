@@ -31,7 +31,6 @@ CScene2D::CScene2D(void)
 	, cSoundController(NULL)
 	, cObjectList(NULL)
 	, cEnemyList(NULL)
-	, cProjectileManager(NULL)
 {
 }
 
@@ -69,21 +68,9 @@ CScene2D::~CScene2D(void)
 		cSettings = NULL;
 	}
 
-	for (unsigned int i = 0; i < cObjectList.size(); i++)
-	{
-		delete cObjectList[i];
-		cObjectList[i] = NULL;
-	}
 	cObjectList.clear();
-
-	for (unsigned int i = 0; i < cEnemyList.size(); i++)
-	{
-		delete cEnemyList[i];
-		cEnemyList[i] = NULL;
-	}
 	cEnemyList.clear();
 
-	cProjectileManager->Exit();
 	CInventoryManager::GetInstance()->Exit();
 	cGUI_Scene2D->Destroy();
 }
@@ -326,8 +313,6 @@ void CScene2D::RestartLevel(void)
 	LoadObjects();
 	//Load Enemy
 	LoadEnemies();
-
-	cProjectileManager->Reset();
 }
 
 void CScene2D::LoadObjects(void)
@@ -398,7 +383,7 @@ void CScene2D::LoadEnemies(void)
 						cEnemy2D = new CEnemy2D_Creeper();
 					// Pass the shader to instance
 					cEnemy2D->SetShader("Shader2D_Colour");
-					if (cEnemy2D->Init(uiCol, cSettings->NUM_TILES_YAXIS - uiRow - 1, cProjectileManager->GetProjectileList()) == true)
+					if (cEnemy2D->Init(uiCol, cSettings->NUM_TILES_YAXIS - uiRow - 1))
 					{
 						cEnemyList.push_back(cEnemy2D);
 					}

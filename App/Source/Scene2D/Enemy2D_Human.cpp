@@ -83,7 +83,7 @@ CEnemy2D_Human::~CEnemy2D_Human(void)
 /**
   @brief Initialise this instance
   */
-bool CEnemy2D_Human::Init(int x, int y, std::vector<CProjectile2D*>* cProjectileList)
+bool CEnemy2D_Human::Init(int x, int y)
 {
 	// Get the handler to the CSettings instance
 	cSettings = CSettings::GetInstance();
@@ -143,6 +143,8 @@ bool CEnemy2D_Human::Init(int x, int y, std::vector<CProjectile2D*>* cProjectile
 
 	// If this class is initialised properly, then set the bIsActive to true
 	bIsActive = true;
+
+	UpdateDirection();
 
 	return true;
 }

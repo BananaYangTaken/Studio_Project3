@@ -18,7 +18,6 @@ using namespace std;
 // Include the Map2D as we will use it to check the player's movements and actions
 #include "Map2D.h"
 #include "Primitives/MeshBuilder.h"
-#include "Projectile2DManager.h"
 
 /**
  @brief Constructor This constructor has protected access modifier as this class will be a Singleton
@@ -45,7 +44,6 @@ CPlayer2D_V2::CPlayer2D_V2(void)
 	, CurrentTapDirection(NULL)
 	, AtExit(NULL)
 	, cObjectList(NULL)
-	, cProjectileList(NULL)
 	, Health(NULL)
 	, InvulnerabilityFrame(NULL)
 {
@@ -99,10 +97,6 @@ void CPlayer2D_V2::SetObjectList(std::vector<CObject2D*>* newObjectList)
 {
 	cObjectList = newObjectList;
 }
-void CPlayer2D_V2::SetProjectileList(std::vector<CProjectile2D*>* newProjectileList)
-{
-	cProjectileList = newProjectileList;
-}
 void CPlayer2D_V2::SetLoadObject(bool newState)
 {
 	LoadObject = newState;
@@ -135,8 +129,6 @@ bool CPlayer2D_V2::Init(void)
 
 	//Get the handler to the Game Manager Instance
 	cGameManager = CGameManager::GetInstance();
-
-	cProjectileList = CProjectileManager::GetInstance()->GetProjectileList();
 
 	iJumpCount = 0;
 
@@ -540,20 +532,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 	}
 	else if (attack)
 	{
-		if (attackAnim <= 0)
-		{
-			attack = !attack;
-			CProjectile2D* cProjectile;
-			cProjectile = new CProjectile2D;
-			cProjectileList->push_back(cProjectile);
-			cProjectile->SetShader("Shader2D_Colour");
-			cProjectile->Init(vec2Index, vec2NumMicroSteps, Direction, 9, CProjectile2D::FRIENDLY, CProjectile2D::ARROW);
-			attackAnim = 0;
-		}
-		else
-		{
-			attackAnim -= dElapsedTime;
-		}
+
 	}
 			
 	static bool Button_Pressed1 = false;

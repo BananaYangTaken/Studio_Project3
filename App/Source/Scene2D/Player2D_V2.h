@@ -25,7 +25,6 @@
 #include "GUI_Scene2D.h"
 #include "GameManager.h"
 #include "Object2D.h"
-#include "Projectile2D.h"
 // Include SoundController
 #include "..\SoundController\SoundController.h"
 //Include Physics2D
@@ -76,8 +75,6 @@ public:
 
 	//cObjectList Setter
 	void SetObjectList(std::vector< CObject2D*>*);
-	//cProjectList Setter
-	void SetProjectileList(std::vector< CProjectile2D*>*);
 
 	//LoadObject Setter and Getter
 	void SetLoadObject(bool);
@@ -110,7 +107,6 @@ protected:
 
 
 	std::vector< CObject2D*>* cObjectList;
-	std::vector< CProjectile2D*>* cProjectileList;
 
 	glm::vec2 vec2OldIndex;
 

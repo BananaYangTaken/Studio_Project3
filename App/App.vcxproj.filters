@@ -92,12 +92,6 @@
     <ClCompile Include="Source\GameStateManagement\PlayGameState.cpp">
       <Filter>GameStateManagement\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scene2D\Projectile2D.cpp">
-      <Filter>Scene2D\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scene2D\Projectile2DManager.cpp">
-      <Filter>Scene2D\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Scene2D\Enemy2DManager.cpp">
       <Filter>Scene2D\Source Files</Filter>
     </ClCompile>
@@ -174,12 +168,6 @@
     </ClInclude>
     <ClInclude Include="Source\GameStateManagement\PlayGameState.h">
       <Filter>GameStateManagement\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scene2D\Projectile2D.h">
-      <Filter>Scene2D\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scene2D\Projectile2DManager.h">
-      <Filter>Scene2D\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scene2D\Enemy2DManager.h">
       <Filter>Scene2D\Header Files</Filter>
