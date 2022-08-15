@@ -184,6 +184,15 @@ bool CPlayer2D_V2::Init(void)
 	// Add a Key as one of the inventory items
 	cInventoryItem = cInventoryManager->Add("Key", "Image/Key.tga", 1, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+	cInventoryItem = cInventoryManager->Add("Hardwood", "Image/Hardwood.tga", 1, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+	cInventoryItem = cInventoryManager->Add("Stone Ore", "Image/Stone.tga", 1, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+	cInventoryItem = cInventoryManager->Add("Iron Ore", "Image/Iron_Ore.tga", 1, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
 	return true;
 }
 
