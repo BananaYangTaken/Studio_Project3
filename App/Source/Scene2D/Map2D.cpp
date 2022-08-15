@@ -403,7 +403,6 @@ void CMap2D::Render(void)
 		Displacement.y = cSettings->NUM_TILES_YAXIS - cSettings->VIEW_TILES_YAXIS;
 	}
 	
-	std::cout <<"x:"<< Displacement.x << " y:" << Displacement.y << std::endl;
 	// Render
 	for (unsigned int uiRow = Displacement.y; uiRow < Displacement.y + cSettings->VIEW_TILES_YAXIS; uiRow++)
 	{
