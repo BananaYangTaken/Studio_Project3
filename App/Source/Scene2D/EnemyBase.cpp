@@ -433,7 +433,7 @@ void CEnemyBase::UpdatePosition(void)
 	// Store the old position
 	vec2OldIndex = vec2Index;
 
-	// if the player is to the left or right of the enemy2D, then jump to attack
+	// if the player is to the left or right of the enemy2D
 	if (vec2Direction.x < 0)
 	{
 		// Move left
@@ -456,7 +456,7 @@ void CEnemyBase::UpdatePosition(void)
 		if (CheckPosition(LEFT) == false)
 		{
 			FlipHorizontalDirection();
-			vec2Index = vec2OldIndex;
+			vec2Index.x = vec2OldIndex.x;
 			vec2NumMicroSteps.x = 0;
 		}
 
@@ -496,15 +496,61 @@ void CEnemyBase::UpdatePosition(void)
 		InteractWithPlayer();
 	}
 
-	// if the player is above the enemy2D, then jump to attack
-	if (vec2Direction.y > 0)
+	// if the player is to the above or below of the enemy2D
+	if (vec2Direction.y < 0)
 	{
-		if (cPhysics2D.GetStatus() == CPhysics2D::STATUS::IDLE)
+		// Move Down
+		const int iOldIndex = vec2Index.y;
+		if (vec2Index.y < (int)cSettings->NUM_TILES_YAXIS)
 		{
-			CSoundController::GetInstance()->PlaySoundByID(12);
-			cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
-			cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 3.5f));
+			vec2NumMicroSteps.y--;
+			if (vec2NumMicroSteps.y < 0)
+			{
+				vec2NumMicroSteps.y = ((int)cSettings->NUM_STEPS_PER_TILE_YAXIS) - 1;
+				vec2Index.y--;
+			}
 		}
+		Direction = DOWN;
+
+		// Constraint the enemy2D's position within the screen boundary
+		Constraint(DOWN);
+
+		// Find a feasible position for the enemy2D's current position
+		if (CheckPosition(DOWN) == false)
+		{
+			vec2Index.y = vec2OldIndex.y;
+			vec2NumMicroSteps.y = 0;
+		}
+		// Interact with the Player
+		InteractWithPlayer();
+	}
+	else if (vec2Direction.y > 0)
+	{
+		// Move Up
+		const int iOldIndex = vec2Index.y;
+		if (vec2Index.y < (int)cSettings->NUM_TILES_YAXIS)
+		{
+			vec2NumMicroSteps.y++;
+
+			if (vec2NumMicroSteps.y >= cSettings->NUM_STEPS_PER_TILE_YAXIS)
+			{
+				vec2NumMicroSteps.y = 0;
+				vec2Index.y++;
+			}
+		}
+		Direction = UP;
+
+		// Constraint the enemy2D's position within the screen boundary
+		Constraint(UP);
+
+		// Find a feasible position for the enemy2D's current position
+		if (CheckPosition(UP) == false)
+		{
+			vec2NumMicroSteps.y = 0;
+		}
+
+		// Interact with the Player
+		InteractWithPlayer();
 	}
 }
 
