@@ -123,21 +123,6 @@ bool CScene2D::Init(void)
 			return false;
 		}
 		cMap2D->LoadMap("Maps/DM2213_Map_Level_01.csv", 0);
-
-		if (cMap2D->LoadMap("Maps/DM2213_Map_Level_02.csv", 1) == false)
-		{
-			//Map loading failed, return false
-			return false;
-		}
-		cMap2D->LoadMap("Maps/DM2213_Map_Level_02.csv", 1);
-
-		//Load Map onto Array
-		if (cMap2D->LoadMap("Maps/DM2213_Map_Level_03.csv", 2) == false)
-		{
-			//Map loading failed, return false
-			return false;
-		}
-		cMap2D->LoadMap("Maps/DM2213_Map_Level_03.csv", 2);
 	}
 	//cMap2D->SetCurrentLevel(1);
 	
@@ -333,10 +318,6 @@ void CScene2D::RestartLevel(void)
 {
 	if (cMap2D->GetCurrentLevel() == 0)
 		cMap2D->LoadMap("Maps/DM2213_Map_Level_01.csv", 0);
-	else if (cMap2D->GetCurrentLevel() == 1)
-		cMap2D->LoadMap("Maps/DM2213_Map_Level_02.csv", 1);
-	else if (cMap2D->GetCurrentLevel() == 2)
-		cMap2D->LoadMap("Maps/DM2213_Map_Level_03.csv", 2);
 	Player->Reset();
 
 	cObjectList.clear();
@@ -419,7 +400,6 @@ void CScene2D::LoadEnemies(void)
 					cEnemy2D->SetShader("Shader2D_Colour");
 					if (cEnemy2D->Init(uiCol, cSettings->NUM_TILES_YAXIS - uiRow - 1, cProjectileManager->GetProjectileList()) == true)
 					{
-						cEnemy2D->SetPlayer(Player);
 						cEnemyList.push_back(cEnemy2D);
 					}
 				}

@@ -118,8 +118,6 @@ App/Debug/player2d_v2.obj.enc
 .vs/Studio_Project_3/v16/ipch/AutoPCH/68ce690848069334/SPRITEANIMATION.ipch
 *.ipch
 *.obj
-irrKlang/lib/irrKlang.exp
-irrKlang/lib/irrKlang.lib
 App/Debug/App.tlog/link.52880-cvtres.read.1.tlog
 App/Debug/App.tlog/link.52880-cvtres.write.1.tlog
 App/Debug/App.tlog/link.52880-rc.read.1.tlog

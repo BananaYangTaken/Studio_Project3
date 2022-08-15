@@ -52,6 +52,7 @@ CEnemy2D_Creeper::CEnemy2D_Creeper(void)
 
 	vec2Destination = glm::vec2(0, 0);	// Initialise the iDestination
 	vec2Direction = glm::vec2(0, 0);		// Initialise the iDirection
+	Player = CPlayer2D_V2::GetInstance();
 }
 
 /**
