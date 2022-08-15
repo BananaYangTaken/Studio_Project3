@@ -214,10 +214,7 @@ bool CScene2D::Update(const double dElapsedTime)
 		else cGUI_Scene2D->checkinginventory = false;
 	}
 	
-	if (Player->GetAtExit())
-	{
-		cGameManager->bLevelCompleted = true;
-	}
+	
 	//check if the player can proceed to next level
 	if (cGameManager->bLevelCompleted == true)
 	{

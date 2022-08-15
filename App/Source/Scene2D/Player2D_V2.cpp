@@ -25,24 +25,10 @@ using namespace std;
 CPlayer2D_V2::CPlayer2D_V2(void)
 	: cMap2D(NULL)
 	, Player(NULL)
-	, OnLadder(NULL)
 	, cKeyboardController(NULL)
 	, animatedSprites(NULL)
 	, runtimeColour(glm::vec4(1.0f))
 	, Direction(DOWN)
-	, jumpcount(NULL)
-	, Prejumpcount(NULL)
-	, teleportpower(NULL)
-	, jumpheightmodifier(NULL)
-	, speedmodifier(NULL)
-	, Timer(NULL)
-	, PhaseThroughWall(NULL)
-	, PhaseTimer(NULL)
-	, TapCount(NULL)
-	, DoubleTapTimer(NULL)
-	, PreviousTapDirection(NULL)
-	, CurrentTapDirection(NULL)
-	, AtExit(NULL)
 	, cObjectList(NULL)
 	, Health(NULL)
 	, InvulnerabilityFrame(NULL)
@@ -129,32 +115,6 @@ bool CPlayer2D_V2::Init(void)
 
 	//Get the handler to the Game Manager Instance
 	cGameManager = CGameManager::GetInstance();
-
-	iJumpCount = 0;
-
-	PhaseTimer = 0;
-
-	PhaseThroughWall = false;
-
-	jumpcount = 1;
-
-	Prejumpcount = jumpcount;
-
-	teleportpower = false;
-
-	jumpheightmodifier = 1;
-
-	speedmodifier = 1;
-
-	Timer = 0;
-
-	AtExit = false;
-
-	TapCount = 0;
-
-	DoubleTapTimer = 0;
-
-	OnLadder = false; 
 	
 	LoadObject = false;
 
@@ -207,7 +167,6 @@ bool CPlayer2D_V2::Init(void)
 	animatedSprites->AddAnimation("AttackLeft", 52, 61);
 	animatedSprites->AddAnimation("AttackRight", 65, 74);
 
-	attack = false;
 	attackAnim = 0;
 
 
@@ -215,7 +174,6 @@ bool CPlayer2D_V2::Init(void)
 	runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
 
 	cPhysics2D.Init();
-	cPhysics2D.SetStatus(CPhysics2D::STATUS::FALL);
 
 	// Add a Lives as one of the inventory items
 	cInventoryItem = cInventoryManager->Add("Lives", "Image/Scene2D_Lives.tga", 3, 3);
@@ -236,48 +194,22 @@ bool CPlayer2D_V2::Reset()
 {
 	unsigned int uiRow, uiCol;
 	runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
-	jumpcount = Prejumpcount;
-	teleportpower = false;
-	PhaseThroughWall = false;
-	PhaseTimer = 0;
-	TapCount = 0;
-	CurrentTapDirection = PreviousTapDirection = NULL;
-	DoubleTapTimer = 0;
-	speedmodifier = 1;
-	Timer = 0;
 	InvulnerabilityFrame = 0;
 	Health = 5;
-	if (Player == 1)
-	{
-		uiRow = -1;
-		uiCol = -1;
-		if (cMap2D->FindValue(200, uiRow, uiCol) == false)
-		{
-			return false;	// Unable to find the start position of the player 1, so quit this game
-		}
-		// Set the start position of the Player to iRow and iCol
-		vec2Index = glm::vec2(uiCol, uiRow);
-		// Erase the value of the player in the arrMapInfo
-		cMap2D->SetMapInfo(uiRow, uiCol, 0);
-		// By default, microsteps should be zero
-		vec2NumMicroSteps = glm::vec2(0, 0);
-	}
-	if (Player == 2)
-	{
-		uiRow = -1;
-		uiCol = -1;
-		if (cMap2D->FindValue(201, uiRow, uiCol) == false && Player == 2)
-		{
-			return false;	// Unable to find the start position of the player 2, so quit this game
-		}
-		// Set the start position of the Player to iRow and iCol
-		vec2Index = glm::vec2(uiCol, uiRow);
-		// Erase the value of the player in the arrMapInfo
-		cMap2D->SetMapInfo(uiRow, uiCol, 0);
-		// By default, microsteps should be zero
-		vec2NumMicroSteps = glm::vec2(0, 0);
-	}
 
+	uiRow = -1;
+	uiCol = -1;
+	if (cMap2D->FindValue(200, uiRow, uiCol) == false)
+	{
+		return false;	// Unable to find the start position of the player 1, so quit this game
+	}
+	// Set the start position of the Player to iRow and iCol
+	vec2Index = glm::vec2(uiCol, uiRow);
+	// Erase the value of the player in the arrMapInfo
+	cMap2D->SetMapInfo(uiRow, uiCol, 0);
+	// By default, microsteps should be zero
+	vec2NumMicroSteps = glm::vec2(0, 0);
+	
 	// Reset Rune
 	cInventoryItem = cInventoryManager->GetItem("Rune");
 	cInventoryItem->iItemCount = 0;
@@ -287,8 +219,6 @@ bool CPlayer2D_V2::Reset()
 
 	//CS: Init the color to white
 	//runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
-
-	iJumpCount = 0;
 
 	return true;
 }
@@ -300,9 +230,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 {
 	// Store the old position
 	vec2OldIndex = vec2Index;
-
-	if(!attack)
-		idle = true;
+	idle = true;
 	if (InvulnerabilityFrame > 0)
 	{
 		InvulnerabilityFrame -= dElapsedTime;
@@ -325,294 +253,136 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 	}
 	// Get keyboard updates
 	
-	if (!attack)
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_A))
 	{
-		if (cKeyboardController->IsKeyDown(GLFW_KEY_A))
+		// Calculate the new position to the left
+		if (vec2Index.x >= 0)
 		{
-			// Calculate the new position to the left
-			if (vec2Index.x >= 0)
+			vec2NumMicroSteps.x -= 1;
+			if (vec2NumMicroSteps.x < 0)
 			{
-				vec2NumMicroSteps.x -= 1 * speedmodifier;
-				if (vec2NumMicroSteps.x < 0)
-				{
-					vec2NumMicroSteps.x = ((int)cSettings->NUM_STEPS_PER_TILE_XAXIS) - 1;
-					vec2Index.x--;
-				}
-			}
-			//If the new position is not feasible, then revert to old position
-			if (CheckPosition(LEFT) == false)
-			{
-				if (PhaseThroughWall == false)
-				{
-					vec2Index = vec2OldIndex;
-					vec2NumMicroSteps.x = 0;
-				}
-			}
-			//Check if the player is in mid-air, suck as walking off a platform
-			if (IsMidAir() == true)
-			{
-				if (cPhysics2D.GetStatus() != CPhysics2D::STATUS::JUMP)
-					cPhysics2D.SetStatus(CPhysics2D::STATUS::FALL);
-			}
-
-			//Player is not idle
-			idle = false;
-
-			//Set Direction
-			Direction = 0;
-
-
-			// Constraint the player's position within the screen boundary
-			Constraint(LEFT);
-
-			//CS: Play the "left" animation
-			animatedSprites->PlayAnimation("left", -1, 1.0f);
-
-			//CS: Change Color
-			runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
-		}
-		else if (cKeyboardController->IsKeyDown(GLFW_KEY_D))
-		{
-			// Calculate the new position to the right
-			if (vec2Index.x < (int)cSettings->NUM_TILES_XAXIS)
-			{
-				vec2NumMicroSteps.x += 1 * speedmodifier;
-
-				if (vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
-				{
-					vec2NumMicroSteps.x = 0;
-					vec2Index.x++;
-				}
-			}
-			//If the new position is not feasible, then revert to old position
-			if (CheckPosition(RIGHT) == false)
-			{
-				if (PhaseThroughWall == false)
-				{
-					vec2Index = vec2OldIndex;
-					vec2NumMicroSteps.x = 0;
-				}
-			}
-			//Check if the player is in mid-air, suck as walking off a platform
-			if (IsMidAir() == true)
-			{
-				if (cPhysics2D.GetStatus() != CPhysics2D::STATUS::JUMP)
-					cPhysics2D.SetStatus(CPhysics2D::STATUS::FALL);
-			}
-			//Player is not idle
-			idle = false;
-
-			//Set Direction
-			Direction = 1;
-
-			// Constraint the player's position within the screen boundary
-			Constraint(RIGHT);
-
-			//CS: Play the "right" animation
-			animatedSprites->PlayAnimation("right", -1, 1.0f);
-
-			//CS: Init the color to white
-			runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
-		}
-		if (OnLadder == true)
-		{
-			if (cKeyboardController->IsKeyDown(GLFW_KEY_W))
-			{
-				// Calculate the new position up
-				if (vec2Index.y < (int)cSettings->NUM_TILES_YAXIS)
-				{
-					vec2NumMicroSteps.y += 1 * speedmodifier;
-					if (vec2NumMicroSteps.y > cSettings->NUM_STEPS_PER_TILE_YAXIS)
-					{
-						vec2NumMicroSteps.y = 0;
-						vec2Index.y++;
-					}
-				}
-
-				// If the new position is not feasible, then revert to old position
-				if (CheckPosition(UP) == false)
-				{
-					if (PhaseThroughWall == false)
-					{
-						vec2NumMicroSteps.y = 0;
-					}
-				}
-				//Player is not idle
-				idle = false;
-
-				//Set Direction
-				Direction = 2;
-
-				// Constraint the player's position within the screen boundary
-				Constraint(UP);
-
-				//CS: Play the "up" animation
-				animatedSprites->PlayAnimation("up", -1, 1.0f);
-
-			}
-			else if (cKeyboardController->IsKeyDown(GLFW_KEY_S))
-			{
-				// Calculate the new position down
-				if (vec2Index.y >= 0)
-				{
-					vec2NumMicroSteps.y -= 1 * speedmodifier;
-					if (vec2NumMicroSteps.y < 0)
-					{
-						vec2NumMicroSteps.y = ((int)cSettings->NUM_STEPS_PER_TILE_YAXIS) - 1;
-						vec2Index.y--;
-					}
-				}
-				// If the new position is not feasible, then revert to old position
-				if (CheckPosition(DOWN) == false)
-				{
-					vec2Index = vec2OldIndex;
-					vec2NumMicroSteps.y = 0;
-				}
-
-				//Player is not idle
-				idle = false;
-
-				//Set Direction
-				Direction = 3;
-
-				// Constraint the player's position within the screen boundary
-				Constraint(DOWN);
-
-				//CS: Play the "down" animation
-				animatedSprites->PlayAnimation("down", -1, 1.0f);
+				vec2NumMicroSteps.x = ((int)cSettings->NUM_STEPS_PER_TILE_XAXIS) - 1;
+				vec2Index.x--;
 			}
 		}
-		else
+		//If the new position is not feasible, then revert to old position
+		if (CheckPosition(LEFT) == false)
 		{
-			if (cKeyboardController->IsKeyPressed(GLFW_KEY_W))
-			{
-				if (cPhysics2D.GetStatus() == CPhysics2D::STATUS::IDLE)
-				{
-					cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
-					cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 2.5f * jumpheightmodifier));
-					iJumpCount += 1;
-					cSoundController->PlaySoundByID(12);
-				}
-				else
-				{
-					if (iJumpCount < jumpcount)
-					{
-						cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
-						cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 2.0f));
-						iJumpCount += 1;
-						cSoundController->PlaySoundByID(12);
-					}
-				}
-			}
-			else if (cKeyboardController->IsKeyPressed(GLFW_KEY_SPACE) )
-			{
-				//Player is not idle
-				idle = false;
-				if (Direction == 1)
-				{
-					//CS: Play the "right" animation
-					attackAnim = 1;
-					animatedSprites->PlayAnimation("AttackRight", -1, attackAnim);
-					attack = !attack;
-					CSoundController::GetInstance()->PlaySoundByID(14);
-				}
-				else if (Direction == 0)
-				{
-					//CS: Play the "left" animation
-					attackAnim = 1;
-					animatedSprites->PlayAnimation("AttackLeft", -1, attackAnim);
-					attack = !attack;
-					CSoundController::GetInstance()->PlaySoundByID(14);
-				}
-
-				//CS: Init the color to white
-				runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
-			}
+			vec2NumMicroSteps.x += 1;
 		}
+
+
+		//Player is not idle
+		idle = false;
+
+		//Set Direction
+		Direction = 0;
+
+
+		// Constraint the player's position within the screen boundary
+		Constraint(LEFT);
+
+		//CS: Play the "left" animation
+		animatedSprites->PlayAnimation("left", -1, 1.0f);
+
+		//CS: Change Color
+		runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
 	}
-	else if (attack)
+	else if (cKeyboardController->IsKeyDown(GLFW_KEY_D))
 	{
+		// Calculate the new position to the right
+		if (vec2Index.x < (int)cSettings->NUM_TILES_XAXIS)
+		{
+			vec2NumMicroSteps.x += 1;
 
+			if (vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
+			{
+				vec2NumMicroSteps.x = 0;
+				vec2Index.x++;
+			}
+		}
+		//If the new position is not feasible, then revert to old position
+		if (CheckPosition(RIGHT) == false)
+		{
+			vec2NumMicroSteps.x -= 1;
+		}
+		//Player is not idle
+		idle = false;
+
+		//Set Direction
+		Direction = 1;
+
+		// Constraint the player's position within the screen boundary
+		Constraint(RIGHT);
+
+		//CS: Play the "right" animation
+		animatedSprites->PlayAnimation("right", -1, 1.0f);
+
+		//CS: Init the color to white
+		runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
+	}
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_W))
+	{
+		// Calculate the new position up
+		if (vec2Index.y < (int)cSettings->NUM_TILES_YAXIS)
+		{
+			vec2NumMicroSteps.y += 1;
+			if (vec2NumMicroSteps.y > cSettings->NUM_STEPS_PER_TILE_YAXIS)
+			{
+				vec2NumMicroSteps.y += 1;
+			}
+		}
+
+		// If the new position is not feasible, then revert to old position
+		if (CheckPosition(UP) == false)
+		{
+			vec2NumMicroSteps.y -= 1;
+		}
+		//Player is not idle
+		idle = false;
+
+		//Set Direction
+		Direction = 2;
+
+		// Constraint the player's position within the screen boundary
+		Constraint(UP);
+
+		//CS: Play the "up" animation
+		animatedSprites->PlayAnimation("up", -1, 1.0f);
+
+	}
+	else if (cKeyboardController->IsKeyDown(GLFW_KEY_S))
+	{
+		// Calculate the new position down
+		if (vec2Index.y >= 0)
+		{
+			vec2NumMicroSteps.y -= 1;
+			if (vec2NumMicroSteps.y < 0)
+			{
+				vec2NumMicroSteps.y = ((int)cSettings->NUM_STEPS_PER_TILE_YAXIS) - 1;
+				vec2Index.y--;
+			}
+		}
+		// If the new position is not feasible, then revert to old position
+		if (CheckPosition(DOWN) == false)
+		{
+			vec2NumMicroSteps.y += 1;
+		}
+
+		//Player is not idle
+		idle = false;
+
+		//Set Direction
+		Direction = 3;
+
+		// Constraint the player's position within the screen boundary
+		Constraint(DOWN);
+
+		//CS: Play the "down" animation
+		animatedSprites->PlayAnimation("down", -1, 1.0f);
 	}
 			
-	static bool Button_Pressed1 = false;
-	if (!Button_Pressed1 && (cKeyboardController->IsKeyPressed(GLFW_KEY_A) || cKeyboardController->IsKeyPressed(GLFW_KEY_D)))
-	{
-		if (TapCount == 0)
-		{
-			if (cKeyboardController->IsKeyPressed(GLFW_KEY_A))
-			{
-				PreviousTapDirection = 65;
-			}
-			else if (cKeyboardController->IsKeyPressed(GLFW_KEY_D))
-			{
-				PreviousTapDirection = 68;
-			}
-
-		}
-		else if (TapCount == 1)
-		{
-			if (cKeyboardController->IsKeyPressed(GLFW_KEY_A))
-			{
-				CurrentTapDirection = 65;
-			}
-			else if (cKeyboardController->IsKeyPressed(GLFW_KEY_D))
-			{
-				CurrentTapDirection = 68;
-			}
-		}
-		Button_Pressed1 = true;
-		TapCount++;
-	}
-	else if (Button_Pressed1 && !(cKeyboardController->IsKeyPressed(GLFW_KEY_A) || cKeyboardController->IsKeyPressed(GLFW_KEY_D)))
-	{
-		Button_Pressed1 = false;
-	}
 	
-	if (TapCount == 1)
-	{
-		DoubleTapTimer += dElapsedTime;
-	}
-	else if (TapCount == 2 && PreviousTapDirection == CurrentTapDirection)
-	{
-		if (DoubleTapTimer < 0.4f)
-		{
-			if(Player == 1)
-			{
-				// Press A
-				if (CurrentTapDirection == 65)
-				{
-					Teleport(LEFT);
-				}
-				// Press D
-				if (CurrentTapDirection == 68)
-				{
-					Teleport(RIGHT);
-				}
-			}
-			else if (Player == 2)
-			{
-				// Press Left
-				if (CurrentTapDirection == 263)
-				{
-					Teleport(LEFT);
-				}
-				// Press Right
-				if (CurrentTapDirection == 262)
-				{
-					Teleport(RIGHT);
-				}
-			}
-		}
-		DoubleTapTimer = 0;
-		TapCount = 0;
-	}
-	else if (TapCount == 2)
-	{
-		PreviousTapDirection = CurrentTapDirection = NULL;
-		DoubleTapTimer = 0;
-		TapCount = 0;
-	}
 
 	if (idle == true)
 	{
@@ -655,52 +425,9 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 			}
 		}
 	}
+
 	
-	OnLadder = false;
 
-	UpdateJumpFall(dElapsedTime);
-
-	jumpheightmodifier = 1;
-
-	if (Timer <= 0)
-	{
-		speedmodifier = 1;
-	}
-	else
-	{
-		Timer -= dElapsedTime;
-	}
-
-	if (PhaseTimer <= 0)
-	{
-		PhaseThroughWall = false;
-	}
-	else
-	{
-		PhaseTimer -= dElapsedTime;
-	}
-
-
-	//Player colour based on speed modifier buffs
-	{
-		if (speedmodifier == 0)
-		{
-			//FreezeTrap
-			runtimeColour = glm::vec4(0.0, 0.0, 1.0, 1.0);
-		}
-		if (speedmodifier == 0.5)
-		{
-			//SlowTrap
-			runtimeColour = glm::vec4(0.5, 0.5, 0.5, 1.0);
-		}
-		if (speedmodifier == 2)
-		{
-			//SpeedBoost
-			runtimeColour = glm::vec4(1.0, 0.0, 0.0, 1.0);
-		}
-	}
-
-	AtExit = false;
 
 	//Interact with Map
 	InteractWithMap();
@@ -785,25 +512,6 @@ void CPlayer2D_V2::PostRender(void)
 	glDisable(GL_BLEND);
 }
 
-void CPlayer2D_V2::SetTeleportPower(bool newState)
-{
-	teleportpower = newState;
-}
-
-bool CPlayer2D_V2::GetTeleportPower(void)
-{
-	return teleportpower;
-}
-unsigned int CPlayer2D_V2::GetJumpCount(void)
-{
-	return jumpcount;
-}
-
-unsigned int CPlayer2D_V2::GetAtExit(void)
-{
-	return AtExit;
-}
-
 void CPlayer2D_V2::SetHealth(unsigned int Health)
 {
 	this->Health = Health;
@@ -824,21 +532,12 @@ float CPlayer2D_V2::GetInvulnerabilityFrame(void)
 	return this->InvulnerabilityFrame;
 }
 
-bool CPlayer2D_V2::Getattack(void)
-{
-	return attack;
-}
 
 unsigned int CPlayer2D_V2::GetDirection(void)
 {
 	return Direction;
 }
 
-
-void CPlayer2D_V2::SetJumpCount(unsigned int newCount)
-{
-	jumpcount = newCount;
-}
 
 /**
  @brief Constraint the player's position within a boundary
@@ -890,31 +589,6 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 
 	switch (cMap2D->GetMapInfo(vec2Index.y + ydisplacement,vec2Index.x + xdisplacement))
 	{
-	//Teleport
-	case 15:
-		if (xdisplacement == 0 && ydisplacement == 0)
-		{
-			cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
-			teleportpower = true;
-		}
-		break;
-	//PhaseThroughWall
-	case 16:
-		if (xdisplacement == 0 && ydisplacement == 0)
-		{
-			cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
-			PhaseThroughWall = true;
-			PhaseTimer = 5;
-		}
-		break;
-	//ExtraJump
-	case 17:
-		if (xdisplacement == 0 && ydisplacement == 0)
-		{
-			cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
-			jumpcount += 1;
-		}
-		break;
 	//Exit
 	case 18:  
 		cInventoryItem = cInventoryManager->GetItem("Rune");
@@ -922,9 +596,6 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 		{
 			cInventoryItem = cInventoryManager->GetItem("Lives");
 			cInventoryItem->iItemCount = cInventoryItem->GetMaxCount();
-			Prejumpcount = jumpcount;
-			teleportpower = false;
-			AtExit = true;
 		}
 		break;
 	//Holy Water
@@ -963,14 +634,6 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 			cSoundController->PlaySoundByID(1);
 		}
 		break;
-	//Ladder
-	case 23:
-		if (xdisplacement == 0 && ydisplacement == 0)
-		{
-			//Allow user to move up and down
-			OnLadder = true;
-		}
-		break;
 	//Chest
 	case 24:
 		cInventoryItem = cInventoryManager->GetItem("Key");
@@ -990,12 +653,6 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 			}
 		}
 		break;
-	//case 25:
-	//	//Erase Coin from this position
-	//	cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
-	//	cInventoryItem = cInventoryManager->GetItem("Coin");
-	//	cInventoryItem->Add(1);
-	//	break;
 	//Key
 	case 26:
 		cInventoryItem = cInventoryManager->GetItem("Key");
@@ -1069,41 +726,7 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 		}
 		break;
 
-	//SpeedBoost
-	case 104:
-		if (xdisplacement == 0 && ydisplacement == -1)
-		{
-			speedmodifier = 2;
-			Timer = 5;
-		}
-		break;
-	//SlowTrap
-	case 101:
-		if (xdisplacement == 0 && ydisplacement == -1)
-		{
-			speedmodifier = 0.5;
-			Timer = 5;
-		}
-		break;
-	//JumpBoost
-	case 102:
-		if (xdisplacement == 0 && ydisplacement == -1)
-		{
-			jumpheightmodifier = 1.5;
-			runtimeColour = glm::vec4(0.0, 1.0, 0.0, 1.0);
-		}
-		break;
-	//FreezeTrap
-	case 103:
-		if (xdisplacement == 0 && ydisplacement == -1)
-		{
-			speedmodifier = 0;
-			Timer = 5;
-			//Erase Freeze Trap from this position and replace with normal tile
-			cMap2D->SetMapInfo(vec2Index.y-1, vec2Index.x, 100);
 
-		}
-		break;
 	default:
 		break;
 	}
@@ -1226,146 +849,4 @@ bool CPlayer2D_V2::CheckPosition(DIRECTION eDirection)
 
 	return true;
 }
-
-void CPlayer2D_V2::Teleport(DIRECTION direction)
-{
-	glm::vec2 Tempvec2Index;
-	Tempvec2Index = this->vec2Index;
-	if (teleportpower == true)
-	{
-		if (direction == RIGHT)
-		{
-			Tempvec2Index.x += 5;
-			vec2Index = Tempvec2Index;
-		}
-		else if (direction == LEFT)
-		{
-			Tempvec2Index.x -= 5;
-			vec2Index = Tempvec2Index;
-		}
-	}
-}
-
-// Update Jump or Fall
-void CPlayer2D_V2::UpdateJumpFall(const double dElapsedTime)
-{
-	if (cPhysics2D.GetStatus() == CPhysics2D::STATUS::JUMP)
-	{
-		// Update the elapsed time to the physics engine
-		cPhysics2D.SetTime((float)dElapsedTime);
-		// Call the physics engine update method to calculate the final velocity and displacement
-		cPhysics2D.Update();
-		// Get the displacement from the physics engine
-		glm::vec2 v2Displacement = cPhysics2D.GetDisplacement();
-
-		// Store the current vec2Index.y
-		int iIndex_YAxis_OLD = vec2Index.y;
-
-		int iDisplacement_MicroSteps = (int)(v2Displacement.y / cSettings->MICRO_STEP_YAXIS); //Displacement divide by distance for 1 microstep
-		if (vec2Index.y < (int)cSettings->NUM_TILES_YAXIS)
-		{
-			vec2NumMicroSteps.y += iDisplacement_MicroSteps;
-			if (vec2NumMicroSteps.y > cSettings->NUM_STEPS_PER_TILE_YAXIS)
-			{
-				vec2NumMicroSteps.y -= cSettings->NUM_STEPS_PER_TILE_YAXIS;
-				if (vec2NumMicroSteps.y < 0)
-					vec2NumMicroSteps.y = 0;
-				vec2Index.y++;
-			}
-		}
-
-		// Constraint the player's position within the screen boundary
-		Constraint(UP);
-
-		// Iterate through all rows until the proposed row
-		// Check if the player will hit a tile; stop jump if so.
-		int iIndex_YAxis_Proposed = vec2Index.y;
-		for (int i = iIndex_YAxis_OLD; i <= iIndex_YAxis_Proposed; i++)
-		{
-			// Change the player's index to the current i value
-			vec2Index.y = i;
-			// If the new position is not feasible, then revert to old position
-			if (CheckPosition(UP) == false)
-			{
-				// Align with the row
-				vec2NumMicroSteps.y = 0;
-				// Set the Physics to fall status
-				cPhysics2D.SetStatus(CPhysics2D::STATUS::FALL);
-				break;
-			}
-		}
-
-		// If the player is still jumping and the initial velocity has reached zero or below zero, 
-		// then it has reach the peak of its jump
-		if ((cPhysics2D.GetStatus() == CPhysics2D::STATUS::JUMP) && (cPhysics2D.GetDisplacement().y <= 0.0f))
-		{
-			// Set status to fall
-			cPhysics2D.SetStatus(CPhysics2D::STATUS::FALL);
-		}
-	}
-	else if (cPhysics2D.GetStatus() == CPhysics2D::STATUS::FALL)
-	{
-		// Update the elapsed time to the physics engine
-		cPhysics2D.SetTime((float)dElapsedTime);
-		// Call the physics engine update method to calculate the final velocity and displacement
-		cPhysics2D.Update();
-		// Get the displacement from the physics engine
-		glm::vec2 v2Displacement = cPhysics2D.GetDisplacement();
-
-		// Store the current vec2Index.y
-		int iIndex_YAxis_OLD = vec2Index.y;
-
-		// Translate the displacement from pixels to indices
-		int iDisplacement_MicroSteps = (int)(v2Displacement.y / cSettings->MICRO_STEP_YAXIS);
-
-		if (vec2Index.y >= 0)
-		{
-			vec2NumMicroSteps.y -= fabs(iDisplacement_MicroSteps);
-			if (vec2NumMicroSteps.y < 0)
-			{
-				vec2NumMicroSteps.y = ((int)cSettings->NUM_STEPS_PER_TILE_YAXIS) - 1;
-				vec2Index.y--;
-			}
-		}
-
-		// Constraint the player's position within the screen boundary
-		Constraint(DOWN);
-
-		// Iterate through all rows until the proposed row
-		// Check if the player will hit a tile; stop fall if so.
-		int iIndex_YAxis_Proposed = vec2Index.y;
-		for (int i = iIndex_YAxis_OLD; i >= iIndex_YAxis_Proposed; i--)
-		{
-			// Change the player's index to the current i value
-			vec2Index.y = i;
-			// If the new position is not feasible, then revert to old position
-			if (CheckPosition(DOWN) == false)
-			{
-				// Revert to the previous position
-				if (i != iIndex_YAxis_OLD)
-					vec2Index.y = i + 1;
-				// Set the Physics to idle status
-				cPhysics2D.SetStatus(CPhysics2D::STATUS::IDLE);
-				cSoundController->PlaySoundByID(13);
-				iJumpCount = 0;
-				vec2NumMicroSteps.y = 0;
-				break;
-			}
-		}
-	}
-}
-bool CPlayer2D_V2::IsMidAir(void)
-{
-	//if the player is at the bottom row, then he is not in mid-air for sure
-	if (vec2Index.y == 0)
-		return false;
-
-	//Check if the tile below the player's current positon is empty
-	if ((vec2NumMicroSteps.x == 0) && (cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x) < 100 && cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x) != 23))
-	{
-		return true;
-	}
-	return false;
-}
-
 

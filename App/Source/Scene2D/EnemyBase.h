@@ -17,9 +17,6 @@
 // Include Settings
 #include "GameControl\Settings.h"
 
-// Include Physics2D
-#include "Physics2D.h"
-
 // Include Player2D_V2
 #include "Player2D_V2.h"
 
@@ -55,7 +52,6 @@ public:
 	
 	// boolean flag to indicate if this enemy is active
 	bool bIsActive;
-	void SetPlayer(CPlayer2D_V2* newPlayer);
 
 	//Getter and Setter for Health and InvulnerabilityFrames
 	virtual void SetHealth(unsigned int);
@@ -144,12 +140,6 @@ protected:
 
 	// Check if a position is possible to move into
 	virtual bool CheckPosition(DIRECTION eDirection);
-
-	// Check if the enemy2D is in mid-air
-	virtual bool IsMidAir(void);
-
-	// Update Jump or Fall
-	virtual void UpdateJumpFall(const double dElapsedTime = 0.0166666666666667);
 
 	// Let enemy2D interact with the player
 	virtual bool InteractWithPlayer(void);

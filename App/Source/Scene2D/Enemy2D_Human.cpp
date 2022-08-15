@@ -574,8 +574,6 @@ void CEnemy2D_Human::Update(const double dElapsedTime)
 	}
 
 	++iFSMCounter;
-	// Update Jump or Fall
-	UpdateJumpFall(dElapsedTime);
 
 	// Update the UV Coordinates
 	vec2UVCoordinate.x = cSettings->ConvertIndexToUVSpace(cSettings->x, vec2Index.x, false, vec2NumMicroSteps.x * cSettings->MICRO_STEP_XAXIS);

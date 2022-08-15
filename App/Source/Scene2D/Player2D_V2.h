@@ -79,12 +79,6 @@ public:
 	//LoadObject Setter and Getter
 	void SetLoadObject(bool);
 	bool GetLoadObject(void);
-	//Getter and Setter for jumpcount and teleportcount
-	void SetTeleportPower(bool);
-	bool GetTeleportPower(void);
-	void SetJumpCount(unsigned int);
-	unsigned int GetJumpCount(void);
-	unsigned int GetAtExit(void);
 
 	//Getter and Setter for Health and InvulnerabilityFrames
 	void SetHealth(unsigned int);
@@ -92,7 +86,6 @@ public:
 	unsigned int GetHealth(void);
 	float GetInvulnerabilityFrame(void);
 
-	bool Getattack(void);
 	unsigned int GetDirection(void);
 
 protected:
@@ -144,30 +137,7 @@ protected:
 	// Player's Current Direction
 	unsigned int Direction;
 	bool idle;
-	bool attack;
 	float attackAnim;
-
-	// Player interactions
-	bool OnLadder;
-	unsigned int jumpcount;  //Number of Times player can jump
-	bool teleportpower; //teleport
-	float jumpheightmodifier;  //How powerful the players 1st jump is
-	float speedmodifier; //How fast the player can go
-	float Timer;   //modifier Timer
-	bool PhaseThroughWall;
-	float PhaseTimer; //Phasethroughwall Timer
-	float DoubleTapTimer;
-	unsigned int TapCount;
-	unsigned int PreviousTapDirection;
-	unsigned int CurrentTapDirection;
-	bool AtExit;
-
-	//If before restart already own those amount of jumps dont change
-	unsigned int Prejumpcount;
-
-
-	//Amount of times player jumped
-	int iJumpCount = 0;
 
 	//If player interact with map and creates a new object
 	bool LoadObject;
@@ -181,14 +151,6 @@ protected:
 	//Check direction feasible to move in
 	bool CheckPosition(DIRECTION);
 
-	//Teleport to suitable position (move 5 blocks in x-axis in either direction depending on available space to move)
-	void Teleport(DIRECTION);
-
-	//Update Jump Fall
-	void UpdateJumpFall(const double dElaspedTime);
-	
-	//Check if player is in mid-air
-	bool IsMidAir(void);
 
 private:
 	unsigned int Player;
