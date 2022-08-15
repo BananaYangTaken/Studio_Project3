@@ -313,7 +313,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		//If the new position is not feasible, then revert to old position
 		if (CheckPosition(RIGHT) == false)
 		{
-			vec2Index.x = vec2OldIndex.x;
+			//vec2Index.x = vec2OldIndex.x;
 			vec2NumMicroSteps.x = 0;
 		}
 		//Player is not idle
@@ -347,7 +347,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		// If the new position is not feasible, then revert to old position
 		if (CheckPosition(UP) == false)
 		{
-			vec2Index.y = vec2OldIndex.y;
+			//vec2Index.y = vec2OldIndex.y;
 			vec2NumMicroSteps.y = 0;
 		}
 		//Player is not idle
