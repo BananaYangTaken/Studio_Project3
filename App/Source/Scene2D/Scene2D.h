@@ -27,7 +27,7 @@
 #include <vector>
 
 // Include Keyboard controller
-#include "Inputs\KeyboardController.h"]
+#include "Inputs\KeyboardController.h"
 
 // Include SoundController
 #include "..\SoundController\SoundController.h"

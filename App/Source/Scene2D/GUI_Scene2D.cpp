@@ -64,7 +64,7 @@ bool CGUI_Scene2D::Init(void)
 {
 	// Get the handler to the CSettings instance
 	cSettings = CSettings::GetInstance();
-
+	cKeyboardController = CKeyboardController::GetInstance();
 	// Store the CFPSCounter singleton instance here
 	cFPSCounter = CFPSCounter::GetInstance();
 
@@ -142,10 +142,16 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 			// Render the inventory items
 			if (checkinginventory == true)
 			{
-				ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 2, cSettings->iWindowHeight / 2));
+				ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 6));
 				ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
 				ImGui::SetWindowFontScale(2.5f * relativeScale_y);
 				ImGui::TextColored(ImVec4(1, 1, 0, 1), "INVENTORY", cFPSCounter->GetFrameRate());
+				ImGuiWindowFlags inventoryWindowFlags =
+					ImGuiWindowFlags_AlwaysAutoResize |
+					ImGuiWindowFlags_NoTitleBar |
+					ImGuiWindowFlags_NoResize |
+					ImGuiWindowFlags_NoCollapse |
+					ImGuiWindowFlags_NoScrollbar;
 				for (int i = 0; i < inventory_size; i++)
 				{
 					level++;
@@ -159,12 +165,6 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					
 					recName = inventory_item_name_list[i];
 					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));  // Set a background color
-					ImGuiWindowFlags inventoryWindowFlags =
-						ImGuiWindowFlags_AlwaysAutoResize |
-						ImGuiWindowFlags_NoTitleBar |
-						ImGuiWindowFlags_NoResize |
-						ImGuiWindowFlags_NoCollapse |
-						ImGuiWindowFlags_NoScrollbar;
 					const char* c = inventory_item_name_list[i].c_str();
 					std::string cText = std::string(c) + ": %d / %d";
 					{
@@ -184,6 +184,190 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				}
 			}
 
+			if (crafting == true && recipeactive == false)
+			{
+				if (cKeyboardController->IsKeyPressed('0'))
+				{
+					reckey = 0;
+					recipeactive = true;
+				}
+				else if (cKeyboardController->IsKeyPressed('1'))
+				{
+					reckey = 1;
+					recipeactive = true;
+				}
+				else if (cKeyboardController->IsKeyPressed('2'))
+				{
+					reckey = 2;
+					recipeactive = true;
+				}
+				else if (cKeyboardController->IsKeyPressed('3'))
+				{
+					reckey = 3;
+					recipeactive = true;
+				}
+				else if (cKeyboardController->IsKeyPressed('4'))
+				{
+					reckey = 4;
+					recipeactive = true;
+				}
+
+			}
+			if (crafting == true && recipeactive == false)
+			{
+		
+				ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 6));
+				ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
+				ImGui::SetWindowFontScale(2.5f * relativeScale_y);
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), "CRAFTING", cFPSCounter->GetFrameRate());
+				ImGuiWindowFlags inventoryWindowFlags =
+					ImGuiWindowFlags_AlwaysAutoResize |
+					ImGuiWindowFlags_NoTitleBar |
+					ImGuiWindowFlags_NoResize |
+					ImGuiWindowFlags_NoCollapse |
+					ImGuiWindowFlags_NoScrollbar;
+				for (int i = 0; i < Crafting_list_size; i++)
+				{
+					level++;
+					if (level >= 3)
+					{
+						level = 0;
+						hspace += 0.1f;
+						wspace = 0.0f;
+					}
+					wspace = wspace + 0.20f;
+
+					recName = Crafting_item_name_list[i];
+					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));  // Set a background color
+					const char* c = Crafting_item_name_list[i].c_str();
+					std::string cText = "Press (" + std::to_string(i) + ") to view recipe";
+					{
+						ImGui::Begin(c, NULL, inventoryWindowFlags);
+						{
+							ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wspace, cSettings->iWindowHeight * hspace));
+							ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
+							cInventoryItem = cInventoryManager->GetItem(Crafting_item_name_list[i]);
+							ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(50, 50), ImVec2(0, 1), ImVec2(1, 0));
+							ImGui::SameLine();
+							ImGui::SetWindowFontScale(1.0f * relativeScale_y);
+							ImGui::TextColored(ImVec4(1, 1, 0, 1), cText.c_str(), cFPSCounter->GetFrameRate());
+						}
+						ImGui::End();
+					}
+					ImGui::PopStyleColor();
+				}
+			}
+			else if (crafting == true && recipeactive == true)
+			{
+				std::string seltext = "RECIPE SELECTED: " + Crafting_item_name_list[reckey];
+				ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 6));
+				ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
+				ImGui::SetWindowFontScale(2.5f * relativeScale_y);
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), seltext.c_str());
+
+				ImGuiWindowFlags inventoryWindowFlags =
+					ImGuiWindowFlags_AlwaysAutoResize |
+					ImGuiWindowFlags_NoTitleBar |
+					ImGuiWindowFlags_NoResize |
+					ImGuiWindowFlags_NoCollapse |
+					ImGuiWindowFlags_NoScrollbar;
+				ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));  // Set a background color
+				if (reckey == 0)
+				{
+					const char* c = Crafting_item_name_list[reckey].c_str();
+					{
+						ImGui::Begin(c, NULL, inventoryWindowFlags);
+						{
+							ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.3f, cSettings->iWindowHeight * 0.3f));
+							ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
+							cInventoryItem = cInventoryManager->GetItem(Crafting_item_name_list[reckey]);
+							ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(100, 100), ImVec2(0, 1), ImVec2(1, 0));
+							ImGui::SameLine();
+							ImGui::SetWindowFontScale(1.5f * relativeScale_y);
+							ImGui::TextColored(ImVec4(1, 1, 0, 1), "REQUIREMENTS\n25 Scrap Metal\n25 Wood\nMakes: 25\nPress C to craft!\nPress R to return!");
+						}
+						ImGui::End();
+					}
+					ImGui::PopStyleColor();
+				}
+				if (reckey == 1)
+				{
+					const char* c = Crafting_item_name_list[reckey].c_str();
+					{
+						ImGui::Begin(c, NULL, inventoryWindowFlags);
+						{
+							ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.3f, cSettings->iWindowHeight * 0.3f));
+							ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
+							cInventoryItem = cInventoryManager->GetItem(Crafting_item_name_list[reckey]);
+							ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(100, 100), ImVec2(0, 1), ImVec2(1, 0));
+							ImGui::SameLine();
+							ImGui::SetWindowFontScale(1.5f * relativeScale_y);
+							ImGui::TextColored(ImVec4(1, 1, 0, 1), "REQUIREMENTS\n15 Scrap Metal\n10 Wood\nMakes: 25\nPress C to craft!\nPress R to return!");
+						}
+						ImGui::End();
+					}
+					ImGui::PopStyleColor();
+				}
+				if (reckey == 2)
+				{
+					const char* c = Crafting_item_name_list[reckey].c_str();
+					{
+						ImGui::Begin(c, NULL, inventoryWindowFlags);
+						{
+							ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.3f, cSettings->iWindowHeight * 0.3f));
+							ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
+							cInventoryItem = cInventoryManager->GetItem(Crafting_item_name_list[reckey]);
+							ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(100, 100), ImVec2(0, 1), ImVec2(1, 0));
+							ImGui::SameLine();
+							ImGui::SetWindowFontScale(1.5f * relativeScale_y);
+							ImGui::TextColored(ImVec4(1, 1, 0, 1), "REQUIREMENTS\n15 Stone\n10 Wood\nMakes: 15\nPress C to craft!\nPress R to return!");
+						}
+						ImGui::End();
+					}
+					ImGui::PopStyleColor();
+				}
+				if (reckey == 3)
+				{
+					const char* c = Crafting_item_name_list[reckey].c_str();
+					{
+						ImGui::Begin(c, NULL, inventoryWindowFlags);
+						{
+							ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.3f, cSettings->iWindowHeight * 0.3f));
+							ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
+							cInventoryItem = cInventoryManager->GetItem(Crafting_item_name_list[reckey]);
+							ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(100, 100), ImVec2(0, 1), ImVec2(1, 0));
+							ImGui::SameLine();
+							ImGui::SetWindowFontScale(1.5f * relativeScale_y);
+							ImGui::TextColored(ImVec4(1, 1, 0, 1), "REQUIREMENTS\n5 Wood\n15 Fabric\nMakes: 10\nPress C to craft!\nPress R to return!");
+						}
+						ImGui::End();
+					}
+					ImGui::PopStyleColor();
+				}
+				if (reckey == 4)
+				{
+					const char* c = Crafting_item_name_list[reckey].c_str();
+					{
+						ImGui::Begin(c, NULL, inventoryWindowFlags);
+						{
+							ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.3f, cSettings->iWindowHeight * 0.3f));
+							ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
+							cInventoryItem = cInventoryManager->GetItem(Crafting_item_name_list[reckey]);
+							ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(100, 100), ImVec2(0, 1), ImVec2(1, 0));
+							ImGui::SameLine();
+							ImGui::SetWindowFontScale(1.5f * relativeScale_y);
+							ImGui::TextColored(ImVec4(1, 1, 0, 1), "REQUIREMENTS\n5 Wood\n5 bandages\nMakes: 1\nPress C to craft!\nPress R to return!");
+						}
+						ImGui::End();
+					}
+					ImGui::PopStyleColor();
+				}
+				if (cKeyboardController->IsKeyPressed('R'))
+				{
+					recipeactive = false;
+					crafting = true;
+				}
+			}
 			float buttonWidth = 256;
 			float buttonHeight = 128;
 			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));  // Set a background color

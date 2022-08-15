@@ -28,7 +28,7 @@
 #include <includes/glm.hpp>
 #include <includes/gtc/matrix_transform.hpp>
 #include <includes/gtc/type_ptr.hpp>
-
+#include "Inputs\KeyboardController.h"
 // Include IMGUI
 // Important: GLEW and GLFW must be included before IMGUI
 #ifndef IMGUI_ACTIVE
@@ -49,11 +49,20 @@ class CGUI_Scene2D : public CSingletonTemplate<CGUI_Scene2D>, public CEntity2D
 public:
 	// Init
 	bool Init(void);
-	int inventory_size = 6;
-	std::string inventory_item_name_list[6] = {"Scrap Metal", "Stone Ore", "Hard wood", "Key", "Pistol Bullets", "Rifle Bullets"};
-	int inventory_item_quantity[6] = {0,0,0,0,0,0};
-	int inventory_item_max_quantity[6] = {50,50,50,50,100,100};
+	int inventory_size = 8;
+	std::string inventory_item_name_list[8] = {"Scrap Metal", "Stone Ore", "Hard wood", "Fabric", "Pistol Bullets", "Rifle Bullets", "Bandage", "Medkit"};
+	int inventory_item_quantity[8] = {0,0,0,0,0,0,0,0};
+	int inventory_item_max_quantity[8] = {50,50,50,50,100,100, 5,2};
+
+
+	int Crafting_list_size = 5;
+	std::string Crafting_item_name_list[5] = { "Rifle Bullets", "Pistol Bullets", "Scrap Metal","Bandage","Medkit" };
+	int Crafting_item_Quantity[5] = {25,50,30,5,1};
+	int reckey;
+
 	bool checkinginventory = false;
+	bool crafting = false;
+	bool recipeactive = false;
 	// Update
 	void Update(const double dElapsedTime);
 
@@ -91,7 +100,7 @@ protected:
 	ImGuiWindowFlags window_flags;
 	// For progress bar demo only
 	float m_fProgressBar;
-	
+	CKeyboardController* cKeyboardController;
 	// The handler containing the instance of CInventoryManager
 	CInventoryManager* cInventoryManager;
 	// The handler containing the instance of CInventoryItem

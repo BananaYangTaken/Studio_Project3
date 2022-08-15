@@ -197,6 +197,15 @@ bool CPlayer2D_V2::Init(void)
 	cInventoryItem = cInventoryManager->Add("Pistol", "Image/pistol.tga", 1, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
+	cInventoryItem = cInventoryManager->Add("Medkit", "Image/Medkit.tga", 1, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+	cInventoryItem = cInventoryManager->Add("Bandage", "Image/Bandage.tga", 1, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+	cInventoryItem = cInventoryManager->Add("Fabric", "Image/Fabric.tga", 1, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
 	cInventoryItem = cInventoryManager->Add("empty", "Image/BlankBox.tga", 1, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 	return true;
