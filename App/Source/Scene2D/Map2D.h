@@ -190,6 +190,8 @@ protected:
 	glm::vec2 m_startPos;
 	glm::vec2 m_targetPos;
 
+	glm::vec2 Displacement;
+
 	std::priority_queue<Grid> m_openList;
 	std::vector<bool> m_closedList;
 	std::vector<Grid> m_cameFromList;

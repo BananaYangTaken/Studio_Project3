@@ -411,7 +411,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 	}
 
 	
-	//std::cout << "x: " << vec2Index.x << " y: " << vec2Index.y << " xsteps: " << vec2NumMicroSteps.x << " ysteps: " << vec2NumMicroSteps.y << std::endl;
+	std::cout << "x: " << vec2Index.x << " y: " << vec2Index.y << " xsteps: " << vec2NumMicroSteps.x << " ysteps: " << vec2NumMicroSteps.y << std::endl;
 	
 
 	if (idle == true)

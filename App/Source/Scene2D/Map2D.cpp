@@ -89,7 +89,7 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 			}
 		}
 	}
-
+	Displacement = glm::vec2(0, 0);
 	// Store the map sizes in cSettings
 	uiCurLevel = 0;
 	this->uiNumLevels = uiNumLevels;
@@ -381,14 +381,37 @@ void CMap2D::Render(void)
 	unsigned int transformLoc = glGetUniformLocation(CShaderManager::GetInstance()->activeShader->ID, "transform");
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
 
-	// Render
-	for (unsigned int uiRow = 0; uiRow < cSettings->NUM_TILES_YAXIS; uiRow++)
+	
+	Displacement =  glm::vec2(0,0);
+	Displacement.x = vec2Index.x - cSettings->VIEW_TILES_XAXIS * 0.5;
+	if (Displacement.x < 0)
 	{
-		for (unsigned int uiCol = 0; uiCol < cSettings->NUM_TILES_XAXIS; uiCol++)
+		Displacement.x = 0;
+	}
+	else if (Displacement.x > cSettings->NUM_TILES_XAXIS - cSettings->VIEW_TILES_XAXIS)
+	{
+		Displacement.x = cSettings->NUM_TILES_XAXIS - cSettings->VIEW_TILES_XAXIS;
+	}
+	
+	Displacement.y = cSettings->NUM_TILES_YAXIS - vec2Index.y - cSettings->VIEW_TILES_YAXIS * 0.5;
+	if (Displacement.y < 0)
+	{
+		Displacement.y = 0;
+	}
+	else if (Displacement.y > cSettings->NUM_TILES_YAXIS - cSettings->VIEW_TILES_YAXIS)
+	{
+		Displacement.y = cSettings->NUM_TILES_YAXIS - cSettings->VIEW_TILES_YAXIS;
+	}
+	
+	std::cout <<"x:"<< Displacement.x << " y:" << Displacement.y << std::endl;
+	// Render
+	for (unsigned int uiRow = Displacement.y; uiRow < Displacement.y + cSettings->VIEW_TILES_YAXIS; uiRow++)
+	{
+		for (unsigned int uiCol = Displacement.x; uiCol < Displacement.x + cSettings->VIEW_TILES_XAXIS; uiCol++)
 		{
 			transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-			transform = glm::translate(transform, glm::vec3(cSettings->ConvertIndexToUVSpace(cSettings->x, uiCol, false, 0),
-															cSettings->ConvertIndexToUVSpace(cSettings->y, uiRow, true, 0),
+			transform = glm::translate(transform, glm::vec3(cSettings->ConvertIndexToUVSpace(cSettings->x, uiCol - Displacement.x, false, 0),
+															cSettings->ConvertIndexToUVSpace(cSettings->y, uiRow - Displacement.y, true, 0),
 															0.0f));
 			//transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
 
