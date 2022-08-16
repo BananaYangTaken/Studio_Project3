@@ -175,25 +175,25 @@ bool CPlayer2D_V2::Init(void)
 	cInventoryItem = cInventoryManager->Add("Key", "Image/Key.tga", 1, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("Hard wood", "Image/Hardwood.tga", 1, 0);
+	cInventoryItem = cInventoryManager->Add("Hard wood", "Image/Hard wood.tga", 1, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("Stone Ore", "Image/Stone.tga", 1, 0);
+	cInventoryItem = cInventoryManager->Add("Stone Ore", "Image/Stone Ore.tga", 1, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("Scrap Metal", "Image/Iron_Ore.tga", 1, 0);
+	cInventoryItem = cInventoryManager->Add("Scrap Metal", "Image/Scrap Metal.tga", 1, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("Pistol Bullets", "Image/PistolBullet.tga", 1, 0);
+	cInventoryItem = cInventoryManager->Add("Pistol Bullets", "Image/Pistol Bullets.tga", 1, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("Rifle Bullets", "Image/RifleBullet.tga", 1, 0);
+	cInventoryItem = cInventoryManager->Add("Rifle Bullets", "Image/Rifle Bullets.tga", 1, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
 	cInventoryItem = cInventoryManager->Add("Rifle", "Image/Rifle.tga", 1, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("Pistol", "Image/pistol.tga", 1, 0);
+	cInventoryItem = cInventoryManager->Add("Pistol", "Image/Pistol.tga", 1, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
 	cInventoryItem = cInventoryManager->Add("Medkit", "Image/Medkit.tga", 1, 0);

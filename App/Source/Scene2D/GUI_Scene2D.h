@@ -8,7 +8,7 @@
 
 // Include SingletonTemplate
 #include "DesignPatterns/SingletonTemplate.h"
-
+#include "System\ImageLoader.h"
 // Include CEntity2D
 #include "Primitives/Entity2D.h"
 
@@ -51,15 +51,15 @@ public:
 	bool Init(void);
 	bool selectinventory = true;
 	const int inventory_size = 9;
-	std::string inventory_item_name_list[9] = {"Fabric", "Hard wood", "Stone Ore", "Pistol Bullets", "Rifle Bullets", "Rifle", "Pistol", "Medkit", "Bandage"};
-	int inventory_item_quantity[9] = {55,150,0,0,0,0,0,0,0};
+	std::string inventory_item_name_list[9] = {"Scrap Metal", "empty2", "Stone Ore", "Pistol Bullets", "Rifle Bullets", "Rifle", "Pistol", "Medkit", "Bandage"};
+	int inventory_item_quantity[9] = {155,150,50,45,0,0,0,0,0};
 	int inventory_item_max_quantity[9] = {200,200,200,200,200,200,200,200,200};
-
 
 	int Crafting_list_size = 5;
 	std::string Crafting_item_name_list[5] = { "Rifle Bullets", "Pistol Bullets", "Scrap Metal","Bandage","Medkit" };
 	int Crafting_item_Quantity[5] = {25,50,30,5,1};
-	int reckey, deskey;
+	int reckey = 999, deskey;
+	std::string description = "";
 
 	int Chest_size = 8;
 	std::string chest_item_name_list[8] = { "empty2", "empty3", "empty4", "empty5", "empty6", "empty7", "empty8", "empty9"};
@@ -82,10 +82,12 @@ public:
 	void DecreaseInventoryItemCount(std::string arrayindex, int decrementvalue);
 	bool CheckCrafting(int recipeIngredientCount, std::string Ingredients[4], int IngredientRequiredCount[4], std::string ResultantCraft, int CraftedQuantity);
 	void InventoryItemSetZero(std::string arrayindex);
+	void ChestItemSetZero(std::string arrayindex);
 	// PreRender
 	void PreRender(void);
 	int TransferToChest(std::string itemName, int quantity);
-	void TransferTohand(std::string itemName, int quantity);
+	int TransferTohand(std::string itemName, int quantity);
+	void decreaseChestQuantity(std::string itemname, int quantity);
 	// Render
 	void Render(void);
 
@@ -115,10 +117,20 @@ protected:
 	// For progress bar demo only
 	float m_fProgressBar;
 	CKeyboardController* cKeyboardController;
+	CImageLoader* il;
 	// The handler containing the instance of CInventoryManager
 	CInventoryManager* cInventoryManager;
 	// The handler containing the instance of CInventoryItem
 	CInventoryItem* cInventoryItem;
+	ButtonData inventorybuttons1;
+	ButtonData inventorybuttons2;
+	ButtonData inventorybuttons3;
+	ButtonData inventorybuttons4;
+	ButtonData inventorybuttons5;
+	ButtonData inventorybuttons6;
+	ButtonData inventorybuttons7;
+	ButtonData inventorybuttons8;
+	ButtonData inventorybuttons9;
 	ButtonData Add1Button;
 	ButtonData Add10Button;
 	ButtonData AddAllButton;
