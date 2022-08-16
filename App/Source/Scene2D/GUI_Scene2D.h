@@ -122,15 +122,6 @@ protected:
 	CInventoryManager* cInventoryManager;
 	// The handler containing the instance of CInventoryItem
 	CInventoryItem* cInventoryItem;
-	ButtonData inventorybuttons1;
-	ButtonData inventorybuttons2;
-	ButtonData inventorybuttons3;
-	ButtonData inventorybuttons4;
-	ButtonData inventorybuttons5;
-	ButtonData inventorybuttons6;
-	ButtonData inventorybuttons7;
-	ButtonData inventorybuttons8;
-	ButtonData inventorybuttons9;
 	ButtonData Add1Button;
 	ButtonData Add10Button;
 	ButtonData AddAllButton;
