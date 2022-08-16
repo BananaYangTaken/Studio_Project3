@@ -73,7 +73,6 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 {
 	// Get the handler to the CSettings instance
 	cSettings = CSettings::GetInstance();
-
 	// Create the arrMapInfo and initialise to 0
 	// Start by initialising the number of levels
 	arrMapInfo = new Grid** [uiNumLevels];

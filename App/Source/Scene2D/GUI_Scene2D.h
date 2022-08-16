@@ -62,7 +62,7 @@ public:
 	int reckey, deskey;
 
 	int Chest_size = 8;
-	std::string chest_item_name_list[8] = { "empty", "empty2", "empty3", "empty4", "empty5", "empty6", "empty7", "empty8"};
+	std::string chest_item_name_list[8] = { "empty2", "empty3", "empty4", "empty5", "empty6", "empty7", "empty8", "empty9"};
 	int chest_item_quantity[8] = { 0,0,0,0,0,0,0,0};
 	int chest_item_max_quantity[8] = { 999,999,999,999,999,999,999,999};
 	int chestactive = false;
@@ -81,11 +81,11 @@ public:
 	int IncreaseInventoryItemCount(std::string arrayindex, int incrementValue);
 	void DecreaseInventoryItemCount(std::string arrayindex, int decrementvalue);
 	bool CheckCrafting(int recipeIngredientCount, std::string Ingredients[4], int IngredientRequiredCount[4], std::string ResultantCraft, int CraftedQuantity);
-	void InventoryItemSetZero(std::string arrayindex, int incrementValue);
+	void InventoryItemSetZero(std::string arrayindex);
 	// PreRender
 	void PreRender(void);
-	void TransferToChest(void);
-	void TransferTohand(void);
+	int TransferToChest(std::string itemName, int quantity);
+	void TransferTohand(std::string itemName, int quantity);
 	// Render
 	void Render(void);
 
