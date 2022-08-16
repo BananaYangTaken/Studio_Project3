@@ -21,7 +21,6 @@ class CImageLoader : public CSingletonTemplate<CImageLoader>
 public:
 	// Init
 	bool Init(void);
-
 	// Load an image and return as unsigned char*
 	unsigned char * Load(	const char* filename, 
 							int& width, int& height, 

@@ -110,15 +110,21 @@ void CGUI_Scene2D::DecreaseInventoryItemCount(std::string arrayindex, int decrem
 
 	}
 	inventory_item_quantity[ind] -= decrementValue;
+	if (inventory_item_quantity[ind] <= 0)
+	{
+		inventory_item_quantity[ind] = 0;
+		InventoryItemSetZero(inventory_item_name_list[ind]);
+	}
 }
 
-void CGUI_Scene2D::InventoryItemSetZero(std::string arrayindex, int incrementValue)
+void CGUI_Scene2D::InventoryItemSetZero(std::string arrayindex)
 {
 	int ind = 0;
 	for (int i = 0; i < inventory_size; i++)
 	{
 		if (arrayindex == inventory_item_name_list[i])
 		{
+			inventory_item_name_list[i] = "empty" + i;
 			ind = i;
 			break;
 		}
@@ -127,6 +133,56 @@ void CGUI_Scene2D::InventoryItemSetZero(std::string arrayindex, int incrementVal
 	inventory_item_quantity[ind] == 0;
 }
 
+int CGUI_Scene2D::TransferToChest(std::string itemName, int quantity)
+{
+	DecreaseInventoryItemCount(itemName, quantity);
+	int ind = 0;
+	bool found = false;
+	for (int i = 0; i < Chest_size; i++)
+	{
+		if (itemName == chest_item_name_list[i])
+		{
+			ind = i;
+			found = true;
+			break;
+		}
+
+	}
+	if (found == true)
+	{
+		chest_item_quantity[ind] += quantity;
+		if (chest_item_quantity[ind] >= chest_item_max_quantity[ind])
+		{
+			cout << "RESOURCE FULL!";
+			float difference = chest_item_quantity[ind] - chest_item_max_quantity[ind];
+			chest_item_quantity[ind] = chest_item_max_quantity[ind];
+			return difference;
+		}
+		else return 0;
+	}
+	else
+	{
+		for (int u = 0; u < inventory_size; u++)
+		{
+			if (chest_item_name_list[u].find("empty") != string::npos)
+			{
+				chest_item_quantity[u] = quantity;
+				chest_item_name_list[u] = itemName;
+				return 0;
+			}
+
+		}
+		cout << "INVENTORY FULL!";
+		{
+			return quantity;
+		}
+	}
+
+}
+void CGUI_Scene2D::TransferTohand(std::string itemName, int quantity)
+{
+
+}
 bool CGUI_Scene2D::Init(void)
 {
 	// Get the handler to the CSettings instance
@@ -736,7 +792,11 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 
 				// Load the menu state
 				//cout << "Loading PlayGameState" << endl;
-				cout << "ADDING 1";
+				if (selectinventory == true)
+				{
+					TransferToChest(inventory_item_name_list[chestkey - 1], 1);
+				}
+				else TransferTohand(inventory_item_name_list[chestkey - 1], 1);
 			}
 			if (ImGui::ImageButton((ImTextureID)Add10Button.textureID,
 				ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
@@ -746,17 +806,20 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 
 				// Load the menu state
 				//cout << "Loading PlayGameState" << endl;
-				cout << "ADDING 10";
+				if (selectinventory == true)
+				{
+					TransferToChest(inventory_item_name_list[chestkey - 1], 10);
+				}
+				else TransferTohand(inventory_item_name_list[chestkey - 1], 10);
 			}
 			if (ImGui::ImageButton((ImTextureID)AddAllButton.textureID,
 				ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
 			{
-				// Reset the CKeyboardController
-				CKeyboardController::GetInstance()->Reset();
-
-				// Load the menu state
-				//cout << "Loading PlayGameState" << endl;
-				cout << "ADDING ALL";
+				if (selectinventory == true)
+				{
+					TransferToChest(inventory_item_name_list[chestkey - 1], 100);
+				}
+				else TransferTohand(inventory_item_name_list[chestkey - 1], 100);
 			}
 			ImGui::PopStyleColor(4);
 			std::string selecttext = "";
@@ -795,7 +858,8 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 
 					recName = chest_item_name_list[i];
 					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.f, 0.f, 1.0f));  // Set a background color
-					const char* c = chest_item_name_list[i].c_str();
+					std::string ctxt = (chest_item_name_list[i] + "2");
+					const char* c = ctxt.c_str();
 					{
 						ImGui::Begin(c, NULL, inventoryWindowFlags);
 						{
