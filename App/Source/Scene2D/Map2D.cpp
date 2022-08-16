@@ -445,6 +445,35 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 			MapOfTextureIDs.insert(pair<int, int>(22, iTextureID));
 		}
 	}
+	//load Divider texture
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Divider.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Envi/Divider.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(23, iTextureID));
+		}
+	}
+	//load Divider texture
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Fence.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Envi/Fence.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(106, iTextureID));
+		}
+	}
+
 
 
 
@@ -776,7 +805,7 @@ unsigned int CMap2D::GetCurrentLevel(void) const
 {
 	return uiCurLevel;
 }
-
+ 
 /**
  @brief Render a tile at a position based on its tile index
  @param iRow A const int variable containing the row index of the tile

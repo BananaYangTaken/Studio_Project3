@@ -21,7 +21,6 @@
     <ClCompile Include="Source\GameStateManagement\WinState.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Scene2D\BackgroundEntity.cpp" />
-    <ClCompile Include="Source\Scene2D\Enemy2D_Creeper.cpp" />
     <ClCompile Include="Source\Scene2D\Enemy2D_Human.cpp" />
     <ClCompile Include="Source\Scene2D\Enemy2D_Zombie.cpp" />
     <ClCompile Include="Source\Scene2D\EnemyBase.cpp" />
@@ -49,9 +48,7 @@
     <ClInclude Include="Source\GameStateManagement\PlayGameState.h" />
     <ClInclude Include="Source\GameStateManagement\WinState.h" />
     <ClInclude Include="Source\Scene2D\BackgroundEntity.h" />
-    <ClInclude Include="Source\Scene2D\Enemy2D_Creeper.h" />
     <ClInclude Include="Source\Scene2D\Enemy2D_Human.h" />
-    <ClInclude Include="Source\Scene2D\Enemy2DManager.h" />
     <ClInclude Include="Source\Scene2D\Enemy2D_Zombie.h" />
     <ClInclude Include="Source\Scene2D\EnemyBase.h" />
     <ClInclude Include="Source\Scene2D\GameManager.h" />

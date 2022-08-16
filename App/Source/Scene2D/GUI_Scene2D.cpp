@@ -162,6 +162,15 @@ bool CGUI_Scene2D::Init(void)
 
 	// Load the images for buttons
 	CImageLoader* il = CImageLoader::GetInstance();
+
+	Add1Button.fileName = "Image\\GUI\\Plus1.png";
+	Add1Button.textureID = il->LoadTextureGetID(Add1Button.fileName.c_str(), false);
+	
+	Add10Button.fileName = "Image\\GUI\\Plus10.png";
+	Add10Button.textureID = il->LoadTextureGetID(Add10Button.fileName.c_str(), false);
+	
+	AddAllButton.fileName = "Image\\GUI\\Minus1.png";
+	AddAllButton.textureID = il->LoadTextureGetID(AddAllButton.fileName.c_str(), false);
 	//KnightIcon.fileName = "Image\\HumanKnightIcon.png";
 	//.textureID = il->LoadTextureGetID(KnightIcon.fileName.c_str(), true);
 
@@ -224,8 +233,8 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 	// Calculate the relative scale to our default windows width
 	const float relativeScale_x = cSettings->iWindowWidth / 800.0f;
 	const float relativeScale_y = cSettings->iWindowHeight / 600.0f;
-	float wspace = 0.1f;
-	float hspace = 0.4f;
+	float wspace = 0.075f;
+	float hspace = 0.15f;
 	// Start the Dear ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
@@ -245,13 +254,11 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 			// Render the inventory items
 			if (checkinginventory == true)
 			{
-				ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 6));
+				ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, 1));
 				ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
 				ImGui::SetWindowFontScale(2.5f * relativeScale_y);
 				ImGui::TextColored(ImVec4(1, 1, 0, 1), "INVENTORY", cFPSCounter->GetFrameRate());
-				ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 5));
-				ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
-				ImGui::SetWindowFontScale(1.0f * relativeScale_y);
+				ImGui::SetWindowFontScale(1.5f * relativeScale_y);
 				ImGui::TextColored(ImVec4(1, 1, 0, 1), "press 1 - 9 to view the item in the slot", cFPSCounter->GetFrameRate());
 				ImGuiWindowFlags inventoryWindowFlags =
 					ImGuiWindowFlags_AlwaysAutoResize |
@@ -266,7 +273,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					{
 						level = 0;
 						hspace += 0.1f;
-						wspace = 0.1f;
+						wspace = 0.075f;
 					}
 					wspace = wspace + 0.15f;
 					
@@ -290,122 +297,125 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					}
 					ImGui::PopStyleColor();
 				}
-				if (cKeyboardController->IsKeyPressed('1'))
+				if (checkinginventory == true && chestactive == false)
 				{
-					if (deskey == 1)
+					if (cKeyboardController->IsKeyPressed('1'))
 					{
-						deskey = 0;
-						descactive = false;
+						if (deskey == 1)
+						{
+							deskey = 0;
+							descactive = false;
+						}
+						else
+						{
+							deskey = 1;
+							descactive = true;
+						}
+
 					}
-					else
+					else if (cKeyboardController->IsKeyPressed('2'))
 					{
-						deskey = 1;
-						descactive = true;
+						if (deskey == 2)
+						{
+							deskey = 0;
+							descactive = false;
+						}
+						else
+						{
+							deskey = 2;
+							descactive = true;
+						}
 					}
-					
-				}
-				else if (cKeyboardController->IsKeyPressed('2'))
-				{
-					if (deskey == 2)
+					else if (cKeyboardController->IsKeyPressed('3'))
 					{
-						deskey = 0;
-						descactive = false;
+						if (deskey == 3)
+						{
+							deskey = 0;
+							descactive = false;
+						}
+						else
+						{
+							deskey = 3;
+							descactive = true;
+						}
 					}
-					else
+					else if (cKeyboardController->IsKeyPressed('4'))
 					{
-						deskey = 2;
-						descactive = true;
+						if (deskey == 4)
+						{
+							deskey = 0;
+							descactive = false;
+						}
+						else
+						{
+							deskey = 4;
+							descactive = true;
+						}
 					}
-				}
-				else if (cKeyboardController->IsKeyPressed('3'))
-				{
-					if (deskey == 3)
+					else if (cKeyboardController->IsKeyPressed('5'))
 					{
-						deskey = 0;
-						descactive = false;
+						if (deskey == 5)
+						{
+							deskey = 0;
+							descactive = false;
+						}
+						else
+						{
+							deskey = 5;
+							descactive = true;
+						}
 					}
-					else
+					else if (cKeyboardController->IsKeyPressed('6'))
 					{
-						deskey = 3;
-						descactive = true;
+						if (deskey == 6)
+						{
+							deskey = 0;
+							descactive = false;
+						}
+						else
+						{
+							deskey = 6;
+							descactive = true;
+						}
 					}
-				}
-				else if (cKeyboardController->IsKeyPressed('4'))
-				{
-					if (deskey == 4)
+					else if (cKeyboardController->IsKeyPressed('7'))
 					{
-						deskey = 0;
-						descactive = false;
+						if (deskey == 7)
+						{
+							deskey = 0;
+							descactive = false;
+						}
+						else
+						{
+							deskey = 7;
+							descactive = true;
+						}
 					}
-					else
+					else if (cKeyboardController->IsKeyPressed('8'))
 					{
-						deskey = 4;
-						descactive = true;
+						if (deskey == 8)
+						{
+							deskey = 0;
+							descactive = false;
+						}
+						else
+						{
+							deskey = 8;
+							descactive = true;
+						}
 					}
-				}
-				else if (cKeyboardController->IsKeyPressed('5'))
-				{
-					if (deskey == 5)
+					else if (cKeyboardController->IsKeyPressed('9'))
 					{
-						deskey = 0;
-						descactive = false;
-					}
-					else
-					{
-						deskey = 5;
-						descactive = true;
-					}
-				}
-				else if (cKeyboardController->IsKeyPressed('6'))
-				{
-					if (deskey == 6)
-					{
-						deskey = 0;
-						descactive = false;
-					}
-					else
-					{
-						deskey = 6;
-						descactive = true;
-					}
-				}
-				else if (cKeyboardController->IsKeyPressed('7'))
-				{
-					if (deskey == 7)
-					{
-						deskey = 0;
-						descactive = false;
-					}
-					else
-					{
-						deskey = 7;
-						descactive = true;
-					}
-				}
-				else if (cKeyboardController->IsKeyPressed('8'))
-				{
-					if (deskey == 8)
-					{
-						deskey = 0;
-						descactive = false;
-					}
-					else
-					{
-						deskey = 8;
-						descactive = true;
-					}
-				}
-				else if (cKeyboardController->IsKeyPressed('9'))
-				{
-				if (deskey == 9)
-				{
-					deskey = 0;
-					descactive = false;
-				}
-					else
-					{
-						deskey = 9;
-						descactive = true;
+						if (deskey == 9)
+						{
+							deskey = 0;
+							descactive = false;
+						}
+						else
+						{
+							deskey = 9;
+							descactive = true;
+						}
 					}
 				}
 			}
@@ -464,7 +474,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					wspace = wspace + 0.20f;
 
 					recName = Crafting_item_name_list[i];
-					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));  // Set a background color
+					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.2f,0.0f,0.2f, 1.0f));  // Set a background color
 					const char* c = Crafting_item_name_list[i].c_str();
 					std::string cText = "Press (" + std::to_string(i) + ") to view recipe";
 					{
@@ -497,7 +507,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					ImGuiWindowFlags_NoResize |
 					ImGuiWindowFlags_NoCollapse |
 					ImGuiWindowFlags_NoScrollbar;
-				ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));  // Set a background color
+				ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.2f,0.0f,0.2f, 1.0f));  // Set a background color
 				if (reckey == 0)
 				{
 					const char* c = Crafting_item_name_list[reckey].c_str();
@@ -685,7 +695,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						ImGuiWindowFlags_NoResize |
 						ImGuiWindowFlags_NoCollapse |
 						ImGuiWindowFlags_NoScrollbar;
-					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));  // Set a background color
+					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.2f,0.0f,0.2f, 1.0f));  // Set a background color
 					{
 						ImGui::Begin("M", NULL, inventoryDesc);
 						{
@@ -703,9 +713,132 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					ImGui::PopStyleColor();
 				}
 			}
-			float buttonWidth = 256;
-			float buttonHeight = 128;
-			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));  // Set a background color
+			else if (chestactive == true)
+			{
+			ImGuiWindowFlags chestbutton =
+				ImGuiWindowFlags_AlwaysAutoResize |
+				ImGuiWindowFlags_NoTitleBar |
+				ImGuiWindowFlags_NoResize |
+				ImGuiWindowFlags_NoCollapse |
+				ImGuiWindowFlags_NoScrollbar;
+			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.f, 0.f, 1.0f));  // Set a background color
+			ImGui::SetWindowPos(ImVec2(CSettings::GetInstance()->iWindowWidth * 0.70,
+				CSettings::GetInstance()->iWindowHeight / 5.0));				// Set the top-left of the window at (10,10)
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 0.2f));
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.f, 0.f, 0.f, 1.f));
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.2f, 0.2f, 1.f));
+			// Add codes for Start button here
+			if (ImGui::ImageButton((ImTextureID)Add1Button.textureID,
+				ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
+			{
+				// Reset the CKeyboardController
+				CKeyboardController::GetInstance()->Reset();
+
+				// Load the menu state
+				//cout << "Loading PlayGameState" << endl;
+				cout << "ADDING 1";
+			}
+			if (ImGui::ImageButton((ImTextureID)Add10Button.textureID,
+				ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
+			{
+				// Reset the CKeyboardController
+				CKeyboardController::GetInstance()->Reset();
+
+				// Load the menu state
+				//cout << "Loading PlayGameState" << endl;
+				cout << "ADDING 10";
+			}
+			if (ImGui::ImageButton((ImTextureID)AddAllButton.textureID,
+				ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
+			{
+				// Reset the CKeyboardController
+				CKeyboardController::GetInstance()->Reset();
+
+				// Load the menu state
+				//cout << "Loading PlayGameState" << endl;
+				cout << "ADDING ALL";
+			}
+			ImGui::PopStyleColor(4);
+			std::string selecttext = "";
+			float hhspace = 0.65f;
+			float wwspace = 0.1f;
+			if(selectinventory == true) selecttext = "Selected item : " + inventory_item_name_list[chestkey - 1];
+			else if (selectinventory == false) selecttext = "Selected item : " + chest_item_name_list[chestkey - 1];
+			level = 0; 
+				ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 6.55));
+				ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
+				ImGui::SetWindowFontScale(2.5f * relativeScale_y);
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), "CHEST INVENTORY", cFPSCounter->GetFrameRate());
+				ImGui::SetWindowFontScale(1.0f * relativeScale_y);
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), "press C to change between chest and inventory selection", cFPSCounter->GetFrameRate());
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), "press 1 - 9 to select item in chest / inventory", cFPSCounter->GetFrameRate());
+				if(selectinventory == true) ImGui::TextColored(ImVec4(1, 1, 0, 1), "Currently selected: Inventory", cFPSCounter->GetFrameRate());
+				else ImGui::TextColored(ImVec4(1, 1, 0, 1), "Currently selected: Chest", cFPSCounter->GetFrameRate());
+				if(chestkey != 0) ImGui::TextColored(ImVec4(1, 1, 0, 1), selecttext.c_str(), cFPSCounter->GetFrameRate());
+				ImGuiWindowFlags inventoryWindowFlags =
+					ImGuiWindowFlags_AlwaysAutoResize |
+					ImGuiWindowFlags_NoTitleBar |
+					ImGuiWindowFlags_NoResize |
+					ImGuiWindowFlags_NoCollapse |
+					ImGuiWindowFlags_NoScrollbar;
+
+				for (int i = 0; i < Chest_size; i++)
+				{
+					level++;
+					if (level >= 5)
+					{
+						level = 0;
+						hhspace += 0.1f;
+						wwspace = 0.1f;
+					}
+					wwspace = wwspace + 0.15f;
+
+					recName = chest_item_name_list[i];
+					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.f, 0.f, 1.0f));  // Set a background color
+					const char* c = chest_item_name_list[i].c_str();
+					{
+						ImGui::Begin(c, NULL, inventoryWindowFlags);
+						{
+							ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wwspace, cSettings->iWindowHeight * hhspace));
+							ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
+							cInventoryItem = cInventoryManager->GetItem(chest_item_name_list[i]);
+							ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(75, 75), ImVec2(0, 1), ImVec2(1, 0));
+							ImGui::SameLine();
+							ImGui::SetWindowFontScale(1.0f * relativeScale_y);
+							if (chest_item_name_list[i].find("empty") == string::npos)
+								ImGui::TextColored(ImVec4(1, 1, 1, 1), "%d", chest_item_quantity[i], chest_item_max_quantity[i]);
+							else ImGui::TextColored(ImVec4(1, 1, 1, 1), " ", chest_item_quantity[i], chest_item_max_quantity[i]);
+						}
+						ImGui::End();
+					}
+					ImGui::PopStyleColor();
+				}
+		
+				if (cKeyboardController->IsKeyPressed('C'))
+				{
+					std::cout << selectinventory;
+					if (selectinventory == true)
+					{
+						selectinventory = false;
+					}
+					else if (selectinventory == false)
+					{
+						selectinventory = true;
+					}
+				}
+				if (cKeyboardController->IsKeyPressed('1')) chestkey = 1;
+				else if (cKeyboardController->IsKeyPressed('2')) chestkey = 2;
+				else if (cKeyboardController->IsKeyPressed('3')) chestkey = 3;
+				else if (cKeyboardController->IsKeyPressed('4')) chestkey = 4;
+				else if (cKeyboardController->IsKeyPressed('5')) chestkey = 5;
+				else if (cKeyboardController->IsKeyPressed('6')) chestkey = 6;
+				else if (cKeyboardController->IsKeyPressed('7')) chestkey = 7;
+				else if (cKeyboardController->IsKeyPressed('8')) chestkey = 8;
+				else if (cKeyboardController->IsKeyPressed('9')) chestkey = 9;
+
+				
+			}
+			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.2f,0.0f,0.2f, 1.0f));  // Set a background color
 			ImGuiWindowFlags topRightWindowFlags = ImGuiWindowFlags_AlwaysAutoResize |
 				ImGuiWindowFlags_NoTitleBar |
 				ImGuiWindowFlags_NoMove |
@@ -727,7 +860,6 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				ImGui::End();
 			}
 			ImGui::PopStyleColor();
-
 		}
 		ImGui::End();
 	}

@@ -212,8 +212,16 @@ bool CScene2D::Update(const double dElapsedTime)
 	}
 	if (cKeyboardController->IsKeyPressed(GLFW_KEY_TAB))
 	{
-		if(cGUI_Scene2D->checkinginventory == false) cGUI_Scene2D->checkinginventory = true;
-		else cGUI_Scene2D->checkinginventory = false;
+		if (cGUI_Scene2D->checkinginventory == false)
+		{
+			cGUI_Scene2D->checkinginventory = true;
+			cGUI_Scene2D->crafting = false;
+		}
+		else
+		{
+			cGUI_Scene2D->checkinginventory = false;
+			cGUI_Scene2D->crafting = false;
+		}
 	}
 	if (cKeyboardController->IsKeyPressed('U'))
 	{
@@ -228,7 +236,21 @@ bool CScene2D::Update(const double dElapsedTime)
 			cGUI_Scene2D->checkinginventory = false;
 		}
 	}
-	
+	if (cKeyboardController->IsKeyPressed('X'))
+	{
+		if (cGUI_Scene2D->checkinginventory == false)
+		{
+			cGUI_Scene2D->checkinginventory = true;
+			cGUI_Scene2D->chestactive = true;
+			cGUI_Scene2D->crafting = false;
+		}
+		else
+		{
+			cGUI_Scene2D->checkinginventory = false;
+			cGUI_Scene2D->chestactive = false;
+			cGUI_Scene2D->crafting = false;
+		}
+	}
 	//check if the player can proceed to next level
 	if (cGameManager->bLevelCompleted == true)
 	{

@@ -49,6 +49,7 @@ class CGUI_Scene2D : public CSingletonTemplate<CGUI_Scene2D>, public CEntity2D
 public:
 	// Init
 	bool Init(void);
+	bool selectinventory = true;
 	const int inventory_size = 9;
 	std::string inventory_item_name_list[9] = {"Fabric", "Hard wood", "Stone Ore", "Pistol Bullets", "Rifle Bullets", "Rifle", "Pistol", "Medkit", "Bandage"};
 	int inventory_item_quantity[9] = {55,150,0,0,0,0,0,0,0};
@@ -59,6 +60,15 @@ public:
 	std::string Crafting_item_name_list[5] = { "Rifle Bullets", "Pistol Bullets", "Scrap Metal","Bandage","Medkit" };
 	int Crafting_item_Quantity[5] = {25,50,30,5,1};
 	int reckey, deskey;
+
+	int Chest_size = 8;
+	std::string chest_item_name_list[8] = { "empty", "empty2", "empty3", "empty4", "empty5", "empty6", "empty7", "empty8"};
+	int chest_item_quantity[8] = { 0,0,0,0,0,0,0,0};
+	int chest_item_max_quantity[8] = { 999,999,999,999,999,999,999,999};
+	int chestactive = false;
+	int chestkey = 1;
+	float buttonWidth = 64;
+	float buttonHeight = 64;
 
 
 	bool checkinginventory = false;
@@ -74,7 +84,8 @@ public:
 	void InventoryItemSetZero(std::string arrayindex, int incrementValue);
 	// PreRender
 	void PreRender(void);
-
+	void TransferToChest(void);
+	void TransferTohand(void);
 	// Render
 	void Render(void);
 
@@ -108,7 +119,9 @@ protected:
 	CInventoryManager* cInventoryManager;
 	// The handler containing the instance of CInventoryItem
 	CInventoryItem* cInventoryItem;
-
+	ButtonData Add1Button;
+	ButtonData Add10Button;
+	ButtonData AddAllButton;
 	// These variables are for IMGUI demo only
 	bool show_demo_window;
 	bool show_another_window;
