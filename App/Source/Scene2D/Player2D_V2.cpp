@@ -669,18 +669,6 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 			InvulnerabilityFrame += 0.5;
 		}
 		break;
-	//Lives
-	case 22:
-		if (xdisplacement == 0 && ydisplacement == 0)
-		{
-			//Erase Lives from this position
-			cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
-			cInventoryItem = cInventoryManager->GetItem("Lives");
-			Health = 5;
-			cInventoryItem->Add(1);
-			cSoundController->PlaySoundByID(1);
-		}
-		break;
 	//Chest
 	case 24:
 		cInventoryItem = cInventoryManager->GetItem("Key");
