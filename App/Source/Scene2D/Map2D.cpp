@@ -792,13 +792,18 @@ void CMap2D::RenderTile(const unsigned int uiRow, const unsigned int uiCol)
 {
 	if ((arrMapInfo[uiCurLevel][uiRow][uiCol].value > 0)&& (arrMapInfo[uiCurLevel][uiRow][uiCol].value <200) && (arrMapInfo[uiCurLevel][uiRow][uiCol].value < 24 || arrMapInfo[uiCurLevel][uiRow][uiCol].value > 28))
 	{
-		//if (arrMapInfo[uiCurLevel][uiRow][uiCol].value < 3)
-		glBindTexture(GL_TEXTURE_2D, MapOfTextureIDs.at(arrMapInfo[uiCurLevel][uiRow][uiCol].value));
+		if (arrMapInfo[uiCurLevel][uiRow][uiCol].value != 100)
+		{
+			//if (arrMapInfo[uiCurLevel][uiRow][uiCol].value < 3)
+			//std::cout << (arrMapInfo[uiCurLevel][uiRow][uiCol].value) << std::endl;
+			glBindTexture(GL_TEXTURE_2D, MapOfTextureIDs.at(arrMapInfo[uiCurLevel][uiRow][uiCol].value));
 
-		glBindVertexArray(VAO);
-		//CS: Render the tile
-		quadMesh->Render();
-		glBindVertexArray(0);
+			glBindVertexArray(VAO);
+			//CS: Render the tile
+			quadMesh->Render();
+			glBindVertexArray(0);
+		}
+		
 	}
 }
 

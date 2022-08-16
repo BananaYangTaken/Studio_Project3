@@ -271,6 +271,7 @@ bool CPlayer2D_V2::Reset()
 void CPlayer2D_V2::Update(const double dElapsedTime)
 {
 	// Store the old position
+	std::cout << Health << endl;
 	vec2OldIndex = vec2Index;
 	idle = true;
 	if (InvulnerabilityFrame > 0)
@@ -667,14 +668,6 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 	case 20:
 		if (Player == 2 && (xdisplacement == 0 && ydisplacement == 0) && InvulnerabilityFrame <= 0)
 		{ 
-			Health -= 1;
-			InvulnerabilityFrame += 0.5;
-		}
-		break;
-	//Lava
-	case 21:
-		if (xdisplacement == 0 && ydisplacement == 0 && InvulnerabilityFrame <= 0)
-		{
 			Health -= 1;
 			InvulnerabilityFrame += 0.5;
 		}
