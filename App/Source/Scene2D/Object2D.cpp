@@ -27,6 +27,7 @@ CObject2D::CObject2D(void)
 	, runtimeColour(glm::vec4(1.0f))
 	, Idle(NULL)
 	, Transition(NULL)
+
 {
 	transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 
@@ -38,6 +39,7 @@ CObject2D::CObject2D(void)
 
 	// Initialise vec2UVCoordinate
 	vec2UVCoordinate = glm::vec2(0.0f);
+	InteractedWith = false;
 }
 CObject2D::CObject2D(int newObjectID)
 	: animatedSprites(NULL)
@@ -104,6 +106,16 @@ bool CObject2D::GetIdle(void)
 void CObject2D::SetPlayervec2Index(glm::vec2 Playervec2Index)
 {
 	this->Playervec2Index = Playervec2Index;
+}
+
+void CObject2D::Interact(void)
+{
+	InteractedWith = true;
+}
+
+void CObject2D::SetruntimeColour(glm::vec4 newColour)
+{
+	runtimeColour = newColour;
 }
 
 

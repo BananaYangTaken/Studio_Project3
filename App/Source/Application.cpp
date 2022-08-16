@@ -176,13 +176,18 @@ bool Application::Init(void)
 
 	//Create a window and create its OpenGL context
 	cSettings->pWindow = glfwCreateWindow(	cSettings->iWindowWidth, cSettings->iWindowHeight,
-											"NYP Framework", NULL, NULL);
+											"StudioProject3", NULL, NULL);
+	
 	//If the window couldn't be created, then return false
 	if (cSettings->pWindow == NULL)
 	{
 		fprintf(stderr, "Failed to open GLFW window.\n");
 		glfwTerminate();
 		return false;
+	}
+	else
+	{
+		m_window = cSettings->pWindow;
 	}
 
 	// Set OpenGL window position

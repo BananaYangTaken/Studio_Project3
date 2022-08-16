@@ -66,16 +66,18 @@ public:
 	void SetIdle(bool);
 	bool GetIdle(void);
 	void SetPlayervec2Index(glm::vec2);
+	void Interact(void);
+
+	void SetruntimeColour(glm::vec4);
 
 protected:
 	// Handler to the CMap2D instance
 	CMap2D* cMap2D;
+	bool InteractedWith;
 
 	//Object Type
 	int ObjectID;
-
 	bool Transition;
-
 	bool Idle;
 
 	//Object Animation

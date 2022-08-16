@@ -67,9 +67,6 @@ public:
 	// PostRender
 	void PostRender(void);
 
-	//Restart Level
-	void RestartLevel(void);
-
 	//Load in Objects
 	void LoadObjects(void);
 
@@ -93,6 +90,8 @@ protected:
 	CSettings* cSettings;
 	//Handler to the CSoundController
 	CSoundController* cSoundController;
+	//Handler to Physics
+	CPhysics2D cPhysics2D;
 
 	//A vector containing instances of CEnemyBase Derived Class
 	std::vector<CEnemyBase*> cEnemyList;

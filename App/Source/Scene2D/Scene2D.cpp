@@ -13,6 +13,8 @@ using namespace std;
 
 #include "System\filesystem.h"
 #include "..\SoundController\SoundInfo.h"
+#include "Physics2D.h"
+#include "..\Application.h"
 
 //Enemies
 #include "Enemy2D_Zombie.h"
@@ -85,7 +87,7 @@ bool CScene2D::Init(void)
 	CShaderManager::GetInstance()->Use("Shader2D_Colour");
 	// Get the handler to the CSettings instance
 	cSettings = CSettings::GetInstance();
-
+	cPhysics2D.Init();
 	cKeyboardController = CKeyboardController::GetInstance();
 
 	//Create and initialise the Map2D
@@ -160,6 +162,7 @@ bool CScene2D::Update(const double dElapsedTime)
 	{
 		cObjectList[i]->SetPlayervec2Index(Player->vec2Index);
 		cObjectList[i]->Update(dElapsedTime);
+		cObjectList[i]->SetruntimeColour(glm::vec4(1, 1, 1, 1));
 	}
 	LoadObjects();
 	for (int i = 0; i < cEnemyList.size(); i++)
@@ -206,10 +209,7 @@ bool CScene2D::Update(const double dElapsedTime)
 		}
 	}
 
-	if (cKeyboardController->IsKeyPressed('R'))
-	{
-		RestartLevel();
-	}
+	
 	if (cKeyboardController->IsKeyPressed(GLFW_KEY_TAB))
 	{
 		if (cGUI_Scene2D->checkinginventory == false)
@@ -251,23 +251,39 @@ bool CScene2D::Update(const double dElapsedTime)
 			cGUI_Scene2D->crafting = false;
 		}
 	}
-	//check if the player can proceed to next level
-	if (cGameManager->bLevelCompleted == true)
-	{
-		cMap2D->SetCurrentLevel(cMap2D->GetCurrentLevel() + 1);
-		cGameManager->bLevelCompleted = false;
-		cGameManager->bLevelToReplay = true; 
-		if (cMap2D->GetCurrentLevel() == 3)
-		{
-			cGameManager->bPlayerWon = true;
-		}
+	
+	//Mouse Position
+	double x, y;
+	Application::GetCursorPos(&x, &y);
+	float mousexpos = ((x / cSettings->iWindowWidth) * cSettings->VIEW_TILES_XAXIS);
+	float mouseypos = (abs((y - cSettings->iWindowHeight) / cSettings->iWindowHeight) * cSettings->VIEW_TILES_YAXIS);
 
-	}
-	//Check if player should restart the level
-	if (cGameManager->bLevelToReplay == true)
+	//Convert Mouse Position to vec2UVCoords
+	glm::vec2 MouseUVCoords;
+	MouseUVCoords.x = (mousexpos - cSettings->VIEW_TILES_XAXIS * 0.5) / (cSettings->VIEW_TILES_XAXIS * 0.5);
+	MouseUVCoords.y = (mouseypos - cSettings->VIEW_TILES_YAXIS * 0.5) / (cSettings->VIEW_TILES_YAXIS * 0.5);
+	
+	//Hovered Object green
+	for (int i = 0; i < cObjectList.size(); ++i)
 	{
-		RestartLevel();
-		cGameManager->bLevelToReplay = false;
+		//Check if object within reach of player
+		if (cPhysics2D.CalculateDistance(cObjectList[i]->vec2UVCoordinate, MouseUVCoords) <= 1/cSettings->VIEW_TILES_XAXIS)
+		{
+			cObjectList[i]->SetruntimeColour(glm::vec4(0,1,0,1));
+		}
+	}
+	std::cout << cPhysics2D.CalculateDistance(cObjectList[0]->vec2UVCoordinate, MouseUVCoords) << std::endl;
+	//cObjectList[i]->SetruntimeColour(glm::vec4(0, 1, 0, 1));
+	if (cKeyboardController->IsKeyPressed('F'))
+	{
+		for (int i = 0; i < cObjectList.size(); ++i)
+		{
+			//Check if object within reach of player
+			if (cPhysics2D.CalculateDistance(cObjectList[i]->vec2Index, Player->vec2Index) <= 1)
+			{
+				//cObjectList[i]->Interact();
+			}
+		}
 	}
 }
 
@@ -338,19 +354,6 @@ void CScene2D::PostRender(void)
 {
 }
 
-void CScene2D::RestartLevel(void)
-{
-	if (cMap2D->GetCurrentLevel() == 0)
-		cMap2D->LoadMap("Maps/DM2213_Map_Level_01.csv", 0);
-	Player->Reset();
-
-	cObjectList.clear();
-	cEnemyList.clear();
-	//Load Objects
-	LoadObjects();
-	//Load Enemy
-	LoadEnemies();
-}
 
 void CScene2D::LoadObjects(void)
 {

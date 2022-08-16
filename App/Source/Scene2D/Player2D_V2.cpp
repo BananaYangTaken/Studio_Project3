@@ -306,6 +306,8 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 				vec2Index.x--;
 			}
 		}
+		// Constraint the player's position within the screen boundary
+		Constraint(LEFT);
 		//If the new position is not feasible, then revert to old position
 		if (CheckPosition(LEFT) == false)
 		{
@@ -319,10 +321,6 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 
 		//Set Direction
 		Direction = 0;
-
-
-		// Constraint the player's position within the screen boundary
-		Constraint(LEFT);
 
 		//CS: Play the "left" animation
 		animatedSprites->PlayAnimation("left", -1, 1.0f);
@@ -343,6 +341,8 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 				vec2Index.x++;
 			}
 		}
+		// Constraint the player's position within the screen boundary
+		Constraint(RIGHT);
 		//If the new position is not feasible, then revert to old position
 		if (CheckPosition(RIGHT) == false)
 		{
@@ -355,8 +355,6 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		//Set Direction
 		Direction = 1;
 
-		// Constraint the player's position within the screen boundary
-		Constraint(RIGHT);
 
 		//CS: Play the "right" animation
 		animatedSprites->PlayAnimation("right", -1, 1.0f);
@@ -377,6 +375,8 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 			}
 		}
 
+		// Constraint the player's position within the screen boundary
+		Constraint(UP);
 		// If the new position is not feasible, then revert to old position
 		if (CheckPosition(UP) == false)
 		{
@@ -389,8 +389,6 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		//Set Direction
 		Direction = 2;
 
-		// Constraint the player's position within the screen boundary
-		Constraint(UP);
 
 		//CS: Play the "up" animation
 		animatedSprites->PlayAnimation("up", -1, 1.0f);
@@ -408,6 +406,8 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 				vec2Index.y--;
 			}
 		}
+		// Constraint the player's position within the screen boundary
+		Constraint(DOWN);
 		// If the new position is not feasible, then revert to old position
 		if (CheckPosition(DOWN) == false)
 		{
@@ -421,8 +421,6 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		//Set Direction
 		Direction = 3;
 
-		// Constraint the player's position within the screen boundary
-		Constraint(DOWN);
 
 		//CS: Play the "down" animation
 		animatedSprites->PlayAnimation("down", -1, 1.0f);
