@@ -104,12 +104,12 @@ bool CScene2D::Init(void)
 	//Loading Maps
 	{
 		//Load Map onto Array
-		if (cMap2D->LoadMap("Maps/Map.csv", 0) == false)
+		if (cMap2D->LoadMap("Maps/DM2213_Map_Level_01.csv", 0) == false)
 		{
 			//Map loading failed, return false
 			return false;
 		}
-		cMap2D->LoadMap("Maps/Map.csv", 0);
+		cMap2D->LoadMap("Maps/DM2213_Map_Level_01.csv", 0);
 	}
 	//cMap2D->SetCurrentLevel(1);
 	
