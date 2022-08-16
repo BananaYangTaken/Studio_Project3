@@ -52,7 +52,7 @@ public:
 	const int inventory_size = 9;
 	std::string inventory_item_name_list[9] = {"empty", "empty2", "empty3", "empty4", "empty5", "empty6", "empty7", "empty8", "empty9"};
 	int inventory_item_quantity[9] = {0,0,0,0,0,0,0,0,0};
-	int inventory_item_max_quantity[9] = {50,50,50,50,50,50,50,50,50};
+	int inventory_item_max_quantity[9] = {200,200,200,200,200,200,200,200,200 };
 
 
 	int Crafting_list_size = 5;

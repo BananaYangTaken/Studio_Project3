@@ -110,7 +110,6 @@ bool CPlayer2D_V2::Init(void)
 	LoadObject = false;
 
 	Health = 5;
-
 	InvulnerabilityFrame = 0;
 
 	// Find the indices for the player in arrMapInfo, and assign it to cPlayer2D

@@ -54,6 +54,7 @@ void CGUI_Scene2D::setInventoryItem(int arrayVal, std::string item, int quantity
 
 void CGUI_Scene2D::IncreaseInventoryItemCount(std::string arrayindex, int incrementValue)
 {
+	std::cout << "CHECKING INVENTORY";
 	int ind = 0;
 	bool found = false;
 	for (int i = 0; i < inventory_size; i++)
@@ -69,6 +70,11 @@ void CGUI_Scene2D::IncreaseInventoryItemCount(std::string arrayindex, int increm
 	if (found == true)
 	{
 		inventory_item_quantity[ind] += incrementValue;
+		if (inventory_item_quantity[ind] >= inventory_item_max_quantity[ind])
+		{
+			cout << "RESOURCE FULL!";
+			inventory_item_quantity[ind] == inventory_item_max_quantity[ind];
+		}
 	}
 	else
 	{
@@ -76,8 +82,9 @@ void CGUI_Scene2D::IncreaseInventoryItemCount(std::string arrayindex, int increm
 		{
 			if (inventory_item_name_list[u].find("empty") != string::npos)
 			{
-				inventory_item_quantity[u] == incrementValue;
-				inventory_item_name_list[u] == arrayindex;
+				inventory_item_quantity[u] = incrementValue;
+				inventory_item_name_list[u] = arrayindex;
+				break;
 			}
 
 		}
