@@ -426,48 +426,25 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 	}
 
 	
-	//std::cout << "x: " << vec2Index.x << " y: " << vec2Index.y << " xsteps: " << vec2NumMicroSteps.x << " ysteps: " << vec2NumMicroSteps.y << std::endl;
 	
 
 	if (idle == true)
 	{
-		if (Player == 1)
+		if (Direction == 0)
 		{
-			if (Direction == 0)
-			{
-				animatedSprites->PlayAnimation("idleleft", -1, 1.0f);
-			}
-			else if (Direction == 1)
-			{
-				animatedSprites->PlayAnimation("idleright", -1, 1.0f);
-			}
-			else if (Direction == 2)
-			{
-				animatedSprites->PlayAnimation("idleup", -1, 1.0f);
-			}
-			else if (Direction == 3)
-			{
-				animatedSprites->PlayAnimation("idledown", -1, 1.0f);
-			}
+			animatedSprites->PlayAnimation("idleleft", -1, 1.0f);
 		}
-		else if (Player == 2)
+		else if (Direction == 1)
 		{
-			if (Direction == 0)
-			{
-				animatedSprites->PlayAnimation("idleleft", -1, 1.0f);
-			}
-			else if (Direction == 1)
-			{
-				animatedSprites->PlayAnimation("idleright", -1, 1.0f);
-			}
-			else if (Direction == 2)
-			{
-				animatedSprites->PlayAnimation("idleup", -1, 1.0f);
-			}
-			else if (Direction == 3)
-			{
-				animatedSprites->PlayAnimation("idledown", -1, 1.0f);
-			}
+			animatedSprites->PlayAnimation("idleright", -1, 1.0f);
+		}
+		else if (Direction == 2)
+		{
+			animatedSprites->PlayAnimation("idleup", -1, 1.0f);
+		}
+		else if (Direction == 3)
+		{
+			animatedSprites->PlayAnimation("idledown", -1, 1.0f);
 		}
 	}
 
@@ -485,20 +462,52 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		InteractWithMap(1, 0);
 	}
 
-	//Check if no lives left
- 	cInventoryItem = cInventoryManager->GetItem("Lives");
-	if (cInventoryItem->GetCount() < 0)
-	{
-		//Player loses the game
-		cGameManager->bPlayerLost = true;
-	}
-
 	//CS: Update the animated sprite
 	animatedSprites->Update(dElapsedTime);
 
 	// Update the UV Coordinates
-	vec2UVCoordinate.x = cSettings->ConvertIndexToUVSpace(cSettings->x, vec2Index.x, false, vec2NumMicroSteps.x*cSettings->MICRO_STEP_XAXIS);
-	vec2UVCoordinate.y = cSettings->ConvertIndexToUVSpace(cSettings->y, vec2Index.y, false, vec2NumMicroSteps.y*cSettings->MICRO_STEP_YAXIS);
+	//vec2UVCoordinate.x = cSettings->ConvertIndexToUVSpace(cSettings->x, vec2Index.x, false, vec2NumMicroSteps.x * cSettings->MICRO_STEP_XAXIS);
+	//vec2UVCoordinate.y = cSettings->ConvertIndexToUVSpace(cSettings->y, vec2Index.y, false, vec2NumMicroSteps.y * cSettings->MICRO_STEP_YAXIS);
+	
+	//Calculate Position of Player on Screen
+	glm::vec2 PlayerScreenPos = glm::vec2(0,0);
+
+	//Check if Map View/Camera at Borders
+	if (vec2Index.x < cSettings->VIEW_TILES_XAXIS*0.5) // Left Side Border
+	{
+		PlayerScreenPos.x = vec2Index.x + 1;
+	}
+	else if (vec2Index.x > (cSettings->NUM_TILES_XAXIS - (cSettings->VIEW_TILES_XAXIS * 0.5))) //Right Side Border
+	{
+		PlayerScreenPos.x = cSettings->VIEW_TILES_XAXIS - (cSettings->NUM_TILES_XAXIS - vec2Index.x) + 1;
+	}
+
+	if (vec2Index.y > (cSettings->NUM_TILES_YAXIS - (cSettings->VIEW_TILES_YAXIS * 0.5))) //Top Side Border
+	{
+		PlayerScreenPos.y = cSettings->VIEW_TILES_YAXIS - (cSettings->NUM_TILES_YAXIS - vec2Index.y) + 1;
+	}
+	else if (vec2Index.y < cSettings->VIEW_TILES_YAXIS * 0.5) //Bottom Side Border
+	{
+		PlayerScreenPos.y = vec2Index.y + 1;
+	}
+	
+
+	//If not at Border, Player at Center of Screen displaced by x:1 y:1
+	if (PlayerScreenPos.x == 0)
+	{
+		PlayerScreenPos.x = cSettings->VIEW_TILES_XAXIS * 0.5 + 1;
+	}
+	if (PlayerScreenPos.y == 0)
+	{
+		PlayerScreenPos.y = cSettings->VIEW_TILES_YAXIS * 0.5 + 1;
+	}
+
+	//Convert position to UV Coords
+	vec2UVCoordinate.x = cSettings->ConvertIndexToUVSpace(cSettings->x, PlayerScreenPos.x - 1, false, vec2NumMicroSteps.x * cSettings->MICRO_STEP_XAXIS);
+	vec2UVCoordinate.y = cSettings->ConvertIndexToUVSpace(cSettings->y, PlayerScreenPos.y - 1, false, vec2NumMicroSteps.y * cSettings->MICRO_STEP_YAXIS);
+	
+	std::cout << "x:" << vec2Index.x << " y:" << vec2Index.y << " Disx: " << cMap2D->GetDisplacement().x << " Disy: " << cMap2D->GetDisplacement().y  << " xUV:" << vec2UVCoordinate.x << " yUV:" << vec2UVCoordinate.y << std::endl;	
+
 }
 
 /**
