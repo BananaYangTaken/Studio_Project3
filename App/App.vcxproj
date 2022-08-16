@@ -23,7 +23,6 @@
     <ClCompile Include="Source\Scene2D\BackgroundEntity.cpp" />
     <ClCompile Include="Source\Scene2D\Enemy2D_Creeper.cpp" />
     <ClCompile Include="Source\Scene2D\Enemy2D_Human.cpp" />
-    <ClCompile Include="Source\Scene2D\Enemy2DManager.cpp" />
     <ClCompile Include="Source\Scene2D\Enemy2D_Zombie.cpp" />
     <ClCompile Include="Source\Scene2D\EnemyBase.cpp" />
     <ClCompile Include="Source\Scene2D\GameManager.cpp" />
