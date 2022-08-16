@@ -158,6 +158,11 @@ int CGUI_Scene2D::TransferToChest(std::string itemName, int quantity)
 			chest_item_quantity[ind] = chest_item_max_quantity[ind];
 			return difference;
 		}
+		if (inventory_item_quantity[ind] <= quantity)
+		{
+			cout << "Not enough to init full transfer";
+			chest_item_quantity[ind] += inventory_item_quantity[ind];
+		}
 		else return 0;
 	}
 	else
@@ -166,10 +171,17 @@ int CGUI_Scene2D::TransferToChest(std::string itemName, int quantity)
 		{
 			if (chest_item_name_list[u].find("empty") != string::npos)
 			{
+				if (inventory_item_quantity[ind] <= quantity)
+				{
+					cout << "Not enough to init full transfer";
+					chest_item_quantity[ind] += inventory_item_quantity[ind];
+					return 0;
+				}
 				chest_item_quantity[u] = quantity;
 				chest_item_name_list[u] = itemName;
 				return 0;
 			}
+
 
 		}
 		cout << "INVENTORY FULL!";
