@@ -208,6 +208,22 @@ bool CPlayer2D_V2::Init(void)
 
 	cInventoryItem = cInventoryManager->Add("empty", "Image/BlankBox.tga", 1, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
+	cInventoryItem = cInventoryManager->Add("empty2", "Image/BlankBox.tga", 1, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+	cInventoryItem = cInventoryManager->Add("empty3", "Image/BlankBox.tga", 1, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+	cInventoryItem = cInventoryManager->Add("empty4", "Image/BlankBox.tga", 1, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+	cInventoryItem = cInventoryManager->Add("empty5", "Image/BlankBox.tga", 1, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+	cInventoryItem = cInventoryManager->Add("empty6", "Image/BlankBox.tga", 1, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+	cInventoryItem = cInventoryManager->Add("empty7", "Image/BlankBox.tga", 1, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+	cInventoryItem = cInventoryManager->Add("empty8", "Image/BlankBox.tga", 1, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+	cInventoryItem = cInventoryManager->Add("empty9", "Image/BlankBox.tga", 1, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
 	return true;
 }
 

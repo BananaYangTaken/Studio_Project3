@@ -49,10 +49,10 @@ class CGUI_Scene2D : public CSingletonTemplate<CGUI_Scene2D>, public CEntity2D
 public:
 	// Init
 	bool Init(void);
-	int inventory_size = 8;
-	std::string inventory_item_name_list[8] = {"Scrap Metal", "Stone Ore", "Hard wood", "Fabric", "Pistol Bullets", "Rifle Bullets", "Bandage", "Medkit"};
-	int inventory_item_quantity[8] = {0,0,0,0,0,0,0,0};
-	int inventory_item_max_quantity[8] = {50,50,50,50,100,100, 5,2};
+	const int inventory_size = 9;
+	std::string inventory_item_name_list[9] = {"empty", "empty2", "empty3", "empty4", "empty5", "empty6", "empty7", "empty8", "empty9"};
+	int inventory_item_quantity[9] = {0,0,0,0,0,0,0,0,0};
+	int inventory_item_max_quantity[9] = {50,50,50,50,50,50,50,50,50};
 
 
 	int Crafting_list_size = 5;
@@ -65,10 +65,10 @@ public:
 	bool recipeactive = false;
 	// Update
 	void Update(const double dElapsedTime);
-
 	void setInventoryItem(int arrayVal, std::string item, int quantity, int maxQuantity);
-	void IncreaseInventoryItemCount(int arrayVal, int incrementValue);
-	void DecreaseInventoryItemCount(int arrayVal, int decrementValue);
+	void IncreaseInventoryItemCount(std::string arrayindex, int incrementValue);
+	void DecreaseInventoryItemCount(std::string arrayindex, int decrementvalue);
+	void InventoryItemSetZero(std::string arrayindex, int incrementValue);
 	// PreRender
 	void PreRender(void);
 

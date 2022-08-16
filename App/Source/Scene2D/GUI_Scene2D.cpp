@@ -52,13 +52,65 @@ void CGUI_Scene2D::setInventoryItem(int arrayVal, std::string item, int quantity
 	inventory_item_max_quantity[arrayVal] = maxQuantity;
 }
 
-void CGUI_Scene2D::IncreaseInventoryItemCount(int arrayVal, int incrementValue)
+void CGUI_Scene2D::IncreaseInventoryItemCount(std::string arrayindex, int incrementValue)
 {
-	inventory_item_quantity[arrayVal] = incrementValue;
+	int ind = 0;
+	bool found = false;
+	for (int i = 0; i < inventory_size; i++)
+	{
+		if (arrayindex == inventory_item_name_list[i])
+		{
+			ind = i;
+			found = true;
+			break;
+		}
+			
+	}
+	if (found == true)
+	{
+		inventory_item_quantity[ind] += incrementValue;
+	}
+	else
+	{
+		for (int u = 0; u < inventory_size; u++)
+		{
+			if (inventory_item_name_list[u].find("empty") != string::npos)
+			{
+				inventory_item_quantity[u] == incrementValue;
+				inventory_item_name_list[u] == arrayindex;
+			}
+
+		}
+	}
 }
-void CGUI_Scene2D::DecreaseInventoryItemCount(int arrayVal, int decrementValue)
+void CGUI_Scene2D::DecreaseInventoryItemCount(std::string arrayindex, int decrementValue)
 {
-	inventory_item_quantity[arrayVal] = decrementValue;
+	int ind = 0;
+	for (int i = 0; i < inventory_size; i++)
+	{
+		if (arrayindex == inventory_item_name_list[i])
+		{
+			ind = i;
+			break;
+		}
+
+	}
+	inventory_item_quantity[ind] -= decrementValue;
+}
+
+void CGUI_Scene2D::InventoryItemSetZero(std::string arrayindex, int incrementValue)
+{
+	int ind = 0;
+	for (int i = 0; i < inventory_size; i++)
+	{
+		if (arrayindex == inventory_item_name_list[i])
+		{
+			ind = i;
+			break;
+		}
+
+	}
+	inventory_item_quantity[ind] == 0;
 }
 bool CGUI_Scene2D::Init(void)
 {
@@ -121,7 +173,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 	// Calculate the relative scale to our default windows width
 	const float relativeScale_x = cSettings->iWindowWidth / 800.0f;
 	const float relativeScale_y = cSettings->iWindowHeight / 600.0f;
-	float wspace = 0.0f;
+	float wspace = 0.2f;
 	float hspace = 0.3f;
 	// Start the Dear ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
@@ -159,24 +211,25 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					{
 						level = 0;
 						hspace += 0.1f;
-						wspace = 0.0f;
+						wspace = 0.2f;
 					}
-					wspace = wspace + 0.20f;
+					wspace = wspace + 0.07f;
 					
 					recName = inventory_item_name_list[i];
-					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));  // Set a background color
+					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.f, 0.f, 1.0f));  // Set a background color
 					const char* c = inventory_item_name_list[i].c_str();
-					std::string cText = std::string(c) + ": %d / %d";
 					{
 						ImGui::Begin(c, NULL, inventoryWindowFlags);
 						{
 							ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wspace, cSettings->iWindowHeight * hspace ));
 							ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
 							cInventoryItem = cInventoryManager->GetItem(inventory_item_name_list[i]);
-							ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(50, 50), ImVec2(0, 1), ImVec2(1, 0));
+							ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(75, 75), ImVec2(0, 1), ImVec2(1, 0));
 							ImGui::SameLine();
 							ImGui::SetWindowFontScale(1.0f * relativeScale_y);
-							ImGui::TextColored(ImVec4(1, 1, 0, 1), cText.c_str(), inventory_item_quantity[i], inventory_item_max_quantity[i]);
+							if(inventory_item_name_list[i].find("empty") == string::npos)
+								ImGui::TextColored(ImVec4(1, 1, 1, 1), "%d", inventory_item_quantity[i], inventory_item_max_quantity[i]);
+							else ImGui::TextColored(ImVec4(1, 1, 1, 1), " ", inventory_item_quantity[i], inventory_item_max_quantity[i]);
 						}
 						ImGui::End();
 					}
