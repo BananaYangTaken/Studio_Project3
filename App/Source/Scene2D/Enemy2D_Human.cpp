@@ -613,9 +613,6 @@ void CEnemy2D_Human::Update(const double dElapsedTime)
 				ScreenPos.y = vec2Index.y + 1 - Player->vec2Index.y + cSettings->VIEW_TILES_YAXIS * 0.5;
 			}
 
-			std::cout << "x: " << ScreenPos.x << " y: " << ScreenPos.y << std::endl;
-
-
 			//Convert position to UV Coords
 			vec2UVCoordinate.x = cSettings->ConvertIndexToUVSpace(cSettings->x, ScreenPos.x - 1, false, vec2NumMicroSteps.x * cSettings->MICRO_STEP_XAXIS);
 			vec2UVCoordinate.y = cSettings->ConvertIndexToUVSpace(cSettings->y, ScreenPos.y - 1, false, vec2NumMicroSteps.y * cSettings->MICRO_STEP_YAXIS);
