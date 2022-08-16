@@ -103,235 +103,343 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 	//CS: Create the Quad Mesh using the mesh builder
 	quadMesh = CMeshBuilder::GenerateQuad(glm::vec4(1, 1, 1, 1), cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
 
-	// Load and create textures
-	{
-		// Load the tree texture
-		{
-			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_TreeTile.tga", true);
-			if (iTextureID == 0)
-			{
-				cout << "Unable to load Image/Scene2D_TreeTile.tga" << endl;
-				return false;
-			}
-			else
-			{
-				// Store the texture ID into MapOfTextureIDs
-				MapOfTextureIDs.insert(pair<int, int>(2, iTextureID));
-			}
-		}
-		// Load the spruce tree texture
-		{
-			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/SpruceTree.tga", true);
-			if (iTextureID == 0)
-			{
-				cout << "Unable to load Image/SpruceTree.tga" << endl;
-				return false;
-			}
-			else
-			{
-				// Store the texture ID into MapOfTextureIDs
-				MapOfTextureIDs.insert(pair<int, int>(3, iTextureID));
-			}
-		}
-		// Load the Exit texture
-		{
-			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_Exit.tga", true);
-			if (iTextureID == 0)
-			{
-				cout << "Unable to load Image/Scene2D_Exit.tga" << endl;
-				return false;
-			}
-			else
-			{
-				// Store the texture ID into MapOfTextureIDs
-				MapOfTextureIDs.insert(pair<int, int>(18, iTextureID));
-			}
-		}
-		// Load the Teleport texture
-		{
-			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Teleport.tga", true);
-			if (iTextureID == 0)
-			{
-				cout << "Unable to load Image/Teleport.tga" << endl;
-				return false;
-			}
-			else
-			{
-				// Store the texture ID into MapOfTextureIDs
-				MapOfTextureIDs.insert(pair<int, int>(15, iTextureID));
-			}
-		}
-		// Load the PhaseThroughWall texture
-		{
-			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/PhaseThroughWall.tga", true);
-			if (iTextureID == 0)
-			{
-				cout << "Unable to load Image/PhaseThroughWall.tga" << endl;
-				return false;
-			}
-			else
-			{
-				// Store the texture ID into MapOfTextureIDs
-				MapOfTextureIDs.insert(pair<int, int>(16, iTextureID));
-			}
-		}
-		// Load the ExtraJump texture
-		{
-			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/ExtraJump.tga", true);
-			if (iTextureID == 0)
-			{
-				cout << "Unable to load Image/ExtraJump.tga" << endl;
-				return false;
-			}
-			else
-			{
-				// Store the texture ID into MapOfTextureIDs
-				MapOfTextureIDs.insert(pair<int, int>(17, iTextureID));
-			}
-		}
 
-		// Load the HolyWater texture
+	// Load and create textures
+	//{
+	//	// Load the tree texture
+	//	{
+	//		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_TreeTile.tga", true);
+	//		if (iTextureID == 0)
+	//		{
+	//			cout << "Unable to load Image/Scene2D_TreeTile.tga" << endl;
+	//			return false;
+	//		}
+	//		else
+	//		{
+	//			// Store the texture ID into MapOfTextureIDs
+	//			MapOfTextureIDs.insert(pair<int, int>(2, iTextureID));
+	//		}
+	//	}
+	//	// Load the spruce tree texture
+	//	{
+	//		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/SpruceTree.tga", true);
+	//		if (iTextureID == 0)
+	//		{
+	//			cout << "Unable to load Image/SpruceTree.tga" << endl;
+	//			return false;
+	//		}
+	//		else
+	//		{
+	//			// Store the texture ID into MapOfTextureIDs
+	//			MapOfTextureIDs.insert(pair<int, int>(3, iTextureID));
+	//		}
+	//	}
+	//	// Load the Exit texture
+	//	{
+	//		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_Exit.tga", true);
+	//		if (iTextureID == 0)
+	//		{
+	//			cout << "Unable to load Image/Scene2D_Exit.tga" << endl;
+	//			return false;
+	//		}
+	//		else
+	//		{
+	//			// Store the texture ID into MapOfTextureIDs
+	//			MapOfTextureIDs.insert(pair<int, int>(18, iTextureID));
+	//		}
+	//	}
+	//	// Load the Teleport texture
+	//	{
+	//		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Teleport.tga", true);
+	//		if (iTextureID == 0)
+	//		{
+	//			cout << "Unable to load Image/Teleport.tga" << endl;
+	//			return false;
+	//		}
+	//		else
+	//		{
+	//			// Store the texture ID into MapOfTextureIDs
+	//			MapOfTextureIDs.insert(pair<int, int>(15, iTextureID));
+	//		}
+	//	}
+	//	// Load the PhaseThroughWall texture
+	//	{
+	//		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/PhaseThroughWall.tga", true);
+	//		if (iTextureID == 0)
+	//		{
+	//			cout << "Unable to load Image/PhaseThroughWall.tga" << endl;
+	//			return false;
+	//		}
+	//		else
+	//		{
+	//			// Store the texture ID into MapOfTextureIDs
+	//			MapOfTextureIDs.insert(pair<int, int>(16, iTextureID));
+	//		}
+	//	}
+	//	// Load the ExtraJump texture
+	//	{
+	//		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/ExtraJump.tga", true);
+	//		if (iTextureID == 0)
+	//		{
+	//			cout << "Unable to load Image/ExtraJump.tga" << endl;
+	//			return false;
+	//		}
+	//		else
+	//		{
+	//			// Store the texture ID into MapOfTextureIDs
+	//			MapOfTextureIDs.insert(pair<int, int>(17, iTextureID));
+	//		}
+	//	}
+	//	// Load the HolyWater texture
+	//	{
+	//		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_Water.tga", true);
+	//		if (iTextureID == 0)
+	//		{
+	//			cout << "Unable to load Image/Scene2D_Water.tga" << endl;
+	//			return false;
+	//		}
+	//		else
+	//		{
+	//			// Store the texture ID into MapOfTextureIDs
+	//			MapOfTextureIDs.insert(pair<int, int>(19, iTextureID));
+	//		}
+	//	}
+	//	// Load the Spike texture
+	//	{
+	//		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_Spikes.tga", true);
+	//		if (iTextureID == 0)
+	//		{
+	//			cout << "Unable to load Image/Scene2D_Spikes.tga" << endl;
+	//			return false;
+	//		}
+	//		else
+	//		{
+	//			// Store the texture ID into MapOfTextureIDs
+	//			MapOfTextureIDs.insert(pair<int, int>(20, iTextureID));
+	//		}
+	//	}
+	//	// Load the Lava texture
+	//	{
+	//		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_Lava.tga", true);
+	//		if (iTextureID == 0)
+	//		{
+	//			cout << "Unable to load Image/Scene2D_Lava.tga" << endl;
+	//			return false;
+	//		}
+	//		else
+	//		{
+	//			// Store the texture ID into MapOfTextureIDs
+	//			MapOfTextureIDs.insert(pair<int, int>(21, iTextureID));
+	//		}
+//	}
+//	// Load the Lives texture
+//	{
+//		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_Lives.tga", true);
+//		if (iTextureID == 0)
+//		{
+//			cout << "Unable to load Image/Scene2D_Lives.tga" << endl;
+//			return false;
+//		}
+//		else
+//		{
+//			// Store the texture ID into MapOfTextureIDs
+//			MapOfTextureIDs.insert(pair<int, int>(22, iTextureID));
+//		}
+//	}
+//	// Load the Ladder texture
+//	{
+//		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_Ladder.tga", true);
+//		if (iTextureID == 0)
+//		{
+//			cout << "Unable to load Image/Scene2D_Ladder.tga" << endl;
+//			return false;
+//		}
+//		else
+//		{
+//			// Store the texture ID into MapOfTextureIDs
+//			MapOfTextureIDs.insert(pair<int, int>(23, iTextureID));
+//		}
+//	}
+//	// Load the ground texture
+//	{
+//		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_GroundTile.tga", true);
+//		if (iTextureID == 0)
+//		{
+//			cout << "Unable to load Image/Scene2D_GroundTile.tga" << endl;
+//			return false;
+//		}
+//		else
+//		{
+//			// Store the texture ID into MapOfTextureIDs
+//			MapOfTextureIDs.insert(pair<int, int>(100, iTextureID));
+//		}
+//	}
+//	// Load the SlowTrap texture
+//	{
+//		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/SlowTrap.tga", true);
+//		if (iTextureID == 0)
+//		{
+//			cout << "Unable to load Image/SlowTrap.tga" << endl;
+//			return false;
+//		}
+//		else
+//		{
+//			// Store the texture ID into MapOfTextureIDs
+//			MapOfTextureIDs.insert(pair<int, int>(101, iTextureID));
+//		}
+//	}
+//	// Load the JumpBoost texture
+//	{
+//		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/JumpBoost.tga", true);
+//		if (iTextureID == 0)
+//		{
+//			cout << "Unable to load Image/JumpBoost.tga" << endl;
+//			return false;
+//		}
+//		else
+//		{
+//			// Store the texture ID into MapOfTextureIDs
+//			MapOfTextureIDs.insert(pair<int, int>(102, iTextureID));
+//		}
+//	}
+//	// Load the FreezeTrap texture
+//	{
+//		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/FreezeTrap.tga", true);
+//		if (iTextureID == 0)
+//		{
+//			cout << "Unable to load Image/FreezeTrap.tga" << endl;
+//			return false;
+//		}
+//		else
+//		{
+//			// Store the texture ID into MapOfTextureIDs
+//			MapOfTextureIDs.insert(pair<int, int>(103, iTextureID));
+//		}
+//	}
+//	// Load the SpeedBoost texture
+//	{
+//		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/SpeedBoost.tga", true);
+//		if (iTextureID == 0)
+//		{
+//			cout << "Unable to load Image/SpeedBoost.tga" << endl;
+//			return false;
+//		}
+//		else
+//		{
+//			// Store the texture ID into MapOfTextureIDs
+//			MapOfTextureIDs.insert(pair<int, int>(104, iTextureID));
+//		}
+//	}
+//}
+
+
+	//load Horizontal Wall texture
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Hor_Wall.tga", true);
+		if (iTextureID == 0)
 		{
-			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_Water.tga", true);
-			if (iTextureID == 0)
-			{
-				cout << "Unable to load Image/Scene2D_Water.tga" << endl;
-				return false;
-			}
-			else
-			{
-				// Store the texture ID into MapOfTextureIDs
-				MapOfTextureIDs.insert(pair<int, int>(19, iTextureID));
-			}
+			cout << "Unable to load Image/Envi/Hor_Wall.tga" << endl;
+			return false;
 		}
-		// Load the Spike texture
+		else
 		{
-			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_Spikes.tga", true);
-			if (iTextureID == 0)
-			{
-				cout << "Unable to load Image/Scene2D_Spikes.tga" << endl;
-				return false;
-			}
-			else
-			{
-				// Store the texture ID into MapOfTextureIDs
-				MapOfTextureIDs.insert(pair<int, int>(20, iTextureID));
-			}
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(101, iTextureID));
 		}
-		// Load the Lava texture
+	}
+	//load Vertical Wall texture
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Ver_Wall.tga", true);
+		if (iTextureID == 0)
 		{
-			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_Lava.tga", true);
-			if (iTextureID == 0)
-			{
-				cout << "Unable to load Image/Scene2D_Lava.tga" << endl;
-				return false;
-			}
-			else
-			{
-				// Store the texture ID into MapOfTextureIDs
-				MapOfTextureIDs.insert(pair<int, int>(21, iTextureID));
-			}
+			cout << "Unable to load Image/Envi/Ver_Wall.tga" << endl;
+			return false;
 		}
-		// Load the Lives texture
+		else
 		{
-			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_Lives.tga", true);
-			if (iTextureID == 0)
-			{
-				cout << "Unable to load Image/Scene2D_Lives.tga" << endl;
-				return false;
-			}
-			else
-			{
-				// Store the texture ID into MapOfTextureIDs
-				MapOfTextureIDs.insert(pair<int, int>(22, iTextureID));
-			}
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(102, iTextureID));
 		}
-		// Load the Ladder texture
+	}
+	//load Horizontal Window texture
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Hor_Window.tga", true);
+		if (iTextureID == 0)
 		{
-			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_Ladder.tga", true);
-			if (iTextureID == 0)
-			{
-				cout << "Unable to load Image/Scene2D_Ladder.tga" << endl;
-				return false;
-			}
-			else
-			{
-				// Store the texture ID into MapOfTextureIDs
-				MapOfTextureIDs.insert(pair<int, int>(23, iTextureID));
-			}
+			cout << "Unable to load Image/Envi/Hor_Window.tga" << endl;
+			return false;
 		}
-		// Load the ground texture
+		else
 		{
-			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_GroundTile.tga", true);
-			if (iTextureID == 0)
-			{
-				cout << "Unable to load Image/Scene2D_GroundTile.tga" << endl;
-				return false;
-			}
-			else
-			{
-				// Store the texture ID into MapOfTextureIDs
-				MapOfTextureIDs.insert(pair<int, int>(100, iTextureID));
-			}
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(103, iTextureID));
 		}
-		// Load the SlowTrap texture
+	}
+	//load Vertical Window texture
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Ver_Window.tga", true);
+		if (iTextureID == 0)
 		{
-			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/SlowTrap.tga", true);
-			if (iTextureID == 0)
-			{
-				cout << "Unable to load Image/SlowTrap.tga" << endl;
-				return false;
-			}
-			else
-			{
-				// Store the texture ID into MapOfTextureIDs
-				MapOfTextureIDs.insert(pair<int, int>(101, iTextureID));
-			}
+			cout << "Unable to load Image/Envi/Ver_Window.tga" << endl;
+			return false;
 		}
-		// Load the JumpBoost texture
+		else
 		{
-			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/JumpBoost.tga", true);
-			if (iTextureID == 0)
-			{
-				cout << "Unable to load Image/JumpBoost.tga" << endl;
-				return false;
-			}
-			else
-			{
-				// Store the texture ID into MapOfTextureIDs
-				MapOfTextureIDs.insert(pair<int, int>(102, iTextureID));
-			}
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(104, iTextureID));
 		}
-		// Load the FreezeTrap texture
+	}
+	//load Wall texture
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Wall.tga", true);
+		if (iTextureID == 0)
 		{
-			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/FreezeTrap.tga", true);
-			if (iTextureID == 0)
-			{
-				cout << "Unable to load Image/FreezeTrap.tga" << endl;
-				return false;
-			}
-			else
-			{
-				// Store the texture ID into MapOfTextureIDs
-				MapOfTextureIDs.insert(pair<int, int>(103, iTextureID));
-			}
+			cout << "Unable to load Image/Envi/Wall.tga" << endl;
+			return false;
 		}
-		// Load the SpeedBoost texture
+		else
 		{
-			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/SpeedBoost.tga", true);
-			if (iTextureID == 0)
-			{
-				cout << "Unable to load Image/SpeedBoost.tga" << endl;
-				return false;
-			}
-			else
-			{
-				// Store the texture ID into MapOfTextureIDs
-				MapOfTextureIDs.insert(pair<int, int>(104, iTextureID));
-			}
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(105, iTextureID));
+		}
+	}
+	//load Wall texture
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Floor.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Envi/Floor.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(21, iTextureID));
+		}
+	}
+	//load Road texture
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Road.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Envi/Road.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(22, iTextureID));
 		}
 	}
 
+
+
+
+
+	
+
+
+	
 	// Initialise the variables for AStar
 	m_weight = 1;
 	m_startPos = glm::vec2(0, 0);
@@ -537,9 +645,31 @@ bool CMap2D::LoadMap(string filename, const unsigned int uiCurLevel)
 	if ((cSettings->NUM_TILES_XAXIS != (unsigned int)doc.GetColumnCount()) ||
 		(cSettings->NUM_TILES_YAXIS != (unsigned int)doc.GetRowCount()))
 	{
+		if (cSettings->NUM_TILES_XAXIS > (unsigned int)doc.GetColumnCount())
+		{
+			cout << "Declared x more than"<< (unsigned int)doc.GetColumnCount() << endl;
+		}
+		else if (cSettings->NUM_TILES_YAXIS < (unsigned int)doc.GetColumnCount())
+		{
+			cout << "Declared x less than"<< (unsigned int)doc.GetColumnCount() << endl;
+		}
+
+
+		if (cSettings->NUM_TILES_XAXIS > (unsigned int)doc.GetRowCount())
+		{
+			cout << "Declared y more than"<< (unsigned int)doc.GetRowCount() << endl;
+
+		}
+		if (cSettings->NUM_TILES_XAXIS < (unsigned int)doc.GetRowCount())
+		{
+			cout << "Declared y less than"<< (unsigned int)doc.GetRowCount() << endl;
+		}
+
 		cout << "Sizes of CSV map does not match declared arrMapInfo sizes." << endl;
 		return false;
 	}
+
+	
 
 	// Read the rows and columns of CSV data into arrMapInfo
 	for (unsigned int uiRow = 0; uiRow < cSettings->NUM_TILES_YAXIS; uiRow++)
@@ -662,13 +792,18 @@ void CMap2D::RenderTile(const unsigned int uiRow, const unsigned int uiCol)
 {
 	if ((arrMapInfo[uiCurLevel][uiRow][uiCol].value > 0)&& (arrMapInfo[uiCurLevel][uiRow][uiCol].value <200) && (arrMapInfo[uiCurLevel][uiRow][uiCol].value < 24 || arrMapInfo[uiCurLevel][uiRow][uiCol].value > 28))
 	{
-		//if (arrMapInfo[uiCurLevel][uiRow][uiCol].value < 3)
-		glBindTexture(GL_TEXTURE_2D, MapOfTextureIDs.at(arrMapInfo[uiCurLevel][uiRow][uiCol].value));
+		if (arrMapInfo[uiCurLevel][uiRow][uiCol].value != 100)
+		{
+			//if (arrMapInfo[uiCurLevel][uiRow][uiCol].value < 3)
+			//std::cout << (arrMapInfo[uiCurLevel][uiRow][uiCol].value) << std::endl;
+			glBindTexture(GL_TEXTURE_2D, MapOfTextureIDs.at(arrMapInfo[uiCurLevel][uiRow][uiCol].value));
 
-		glBindVertexArray(VAO);
-		//CS: Render the tile
-		quadMesh->Render();
-		glBindVertexArray(0);
+			glBindVertexArray(VAO);
+			//CS: Render the tile
+			quadMesh->Render();
+			glBindVertexArray(0);
+		}
+		
 	}
 }
 

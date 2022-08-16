@@ -224,8 +224,8 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 	// Calculate the relative scale to our default windows width
 	const float relativeScale_x = cSettings->iWindowWidth / 800.0f;
 	const float relativeScale_y = cSettings->iWindowHeight / 600.0f;
-	float wspace = 0.2f;
-	float hspace = 0.3f;
+	float wspace = 0.1f;
+	float hspace = 0.4f;
 	// Start the Dear ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
@@ -249,6 +249,10 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
 				ImGui::SetWindowFontScale(2.5f * relativeScale_y);
 				ImGui::TextColored(ImVec4(1, 1, 0, 1), "INVENTORY", cFPSCounter->GetFrameRate());
+				ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 5));
+				ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
+				ImGui::SetWindowFontScale(1.0f * relativeScale_y);
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), "press 1 - 9 to view the item in the slot", cFPSCounter->GetFrameRate());
 				ImGuiWindowFlags inventoryWindowFlags =
 					ImGuiWindowFlags_AlwaysAutoResize |
 					ImGuiWindowFlags_NoTitleBar |
@@ -262,9 +266,9 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					{
 						level = 0;
 						hspace += 0.1f;
-						wspace = 0.2f;
+						wspace = 0.1f;
 					}
-					wspace = wspace + 0.07f;
+					wspace = wspace + 0.15f;
 					
 					recName = inventory_item_name_list[i];
 					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.f, 0.f, 1.0f));  // Set a background color
@@ -285,6 +289,124 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						ImGui::End();
 					}
 					ImGui::PopStyleColor();
+				}
+				if (cKeyboardController->IsKeyPressed('1'))
+				{
+					if (deskey == 1)
+					{
+						deskey = 0;
+						descactive = false;
+					}
+					else
+					{
+						deskey = 1;
+						descactive = true;
+					}
+					
+				}
+				else if (cKeyboardController->IsKeyPressed('2'))
+				{
+					if (deskey == 2)
+					{
+						deskey = 0;
+						descactive = false;
+					}
+					else
+					{
+						deskey = 2;
+						descactive = true;
+					}
+				}
+				else if (cKeyboardController->IsKeyPressed('3'))
+				{
+					if (deskey == 3)
+					{
+						deskey = 0;
+						descactive = false;
+					}
+					else
+					{
+						deskey = 3;
+						descactive = true;
+					}
+				}
+				else if (cKeyboardController->IsKeyPressed('4'))
+				{
+					if (deskey == 4)
+					{
+						deskey = 0;
+						descactive = false;
+					}
+					else
+					{
+						deskey = 4;
+						descactive = true;
+					}
+				}
+				else if (cKeyboardController->IsKeyPressed('5'))
+				{
+					if (deskey == 5)
+					{
+						deskey = 0;
+						descactive = false;
+					}
+					else
+					{
+						deskey = 5;
+						descactive = true;
+					}
+				}
+				else if (cKeyboardController->IsKeyPressed('6'))
+				{
+					if (deskey == 6)
+					{
+						deskey = 0;
+						descactive = false;
+					}
+					else
+					{
+						deskey = 6;
+						descactive = true;
+					}
+				}
+				else if (cKeyboardController->IsKeyPressed('7'))
+				{
+					if (deskey == 7)
+					{
+						deskey = 0;
+						descactive = false;
+					}
+					else
+					{
+						deskey = 7;
+						descactive = true;
+					}
+				}
+				else if (cKeyboardController->IsKeyPressed('8'))
+				{
+					if (deskey == 8)
+					{
+						deskey = 0;
+						descactive = false;
+					}
+					else
+					{
+						deskey = 8;
+						descactive = true;
+					}
+				}
+				else if (cKeyboardController->IsKeyPressed('9'))
+				{
+				if (deskey == 9)
+				{
+					deskey = 0;
+					descactive = false;
+				}
+					else
+					{
+						deskey = 9;
+						descactive = true;
+					}
 				}
 			}
 
@@ -418,6 +540,13 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						ImGui::End();
 					}
 					ImGui::PopStyleColor();
+
+					if (cKeyboardController->IsKeyPressed('C'))
+					{
+						std::string requirementsarray[2] = { "Scrap Metal", "Hard wood" };
+						int requirementsCount[2] = { 15, 10 };
+						CheckCrafting(2, requirementsarray, requirementsCount, Crafting_item_name_list[reckey], 25);
+					}
 				}
 				if (reckey == 2)
 				{
@@ -436,6 +565,12 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						ImGui::End();
 					}
 					ImGui::PopStyleColor();
+					if (cKeyboardController->IsKeyPressed('C'))
+					{
+						std::string requirementsarray[2] = { "Stone Ore", "Hard wood" };
+						int requirementsCount[2] = { 15, 10 };
+						CheckCrafting(2, requirementsarray, requirementsCount, Crafting_item_name_list[reckey], 15);
+					}
 				}
 				if (reckey == 3)
 				{
@@ -454,6 +589,12 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						ImGui::End();
 					}
 					ImGui::PopStyleColor();
+					if (cKeyboardController->IsKeyPressed('C'))
+					{
+						std::string requirementsarray[2] = { "Fabric", "Hard wood" };
+						int requirementsCount[2] = { 15, 5 };
+						CheckCrafting(2, requirementsarray, requirementsCount, Crafting_item_name_list[reckey], 10);
+					}
 				}
 				if (reckey == 4)
 				{
@@ -472,11 +613,94 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						ImGui::End();
 					}
 					ImGui::PopStyleColor();
+					if (cKeyboardController->IsKeyPressed('C'))  
+					{
+						std::string requirementsarray[2] = { "Hard wood", "Bandage" };
+						int requirementsCount[2] = { 5, 5 };
+						CheckCrafting(2, requirementsarray, requirementsCount, Crafting_item_name_list[reckey], 1);
+					}
 				}
 				if (cKeyboardController->IsKeyPressed('R'))
 				{
 					recipeactive = false;
 					crafting = true;
+				}
+			}
+			else if (descactive == true && checkinginventory == true)
+			{
+				std::string description = "--Empty--";
+				std::string itemname = inventory_item_name_list[deskey - 1];
+				const char* c = inventory_item_name_list[deskey - 1].c_str();
+
+				if (itemname == "Hard wood")
+				{
+					description = "A piece of lumber, cut\ndown from a tree. You \ncan use this to build and \ncraft stuff.";
+				}
+				else if (itemname == "Stone Ore")
+				{
+					description = "A hard rock you picked up\n You can use this to build \nand craft stuff.";
+				}
+				else if (itemname == "Scrap Metal")
+				{
+					description = "Some pieces of metal junk\nIt contains spare parts, \nbolts, nuts, screws, nails\nall sorts of metal that you\ncan use to craft stuff with";
+				}
+				else if (itemname == "Stone Ore")
+				{
+					description = "A hard rock you picked up\n You can use this to build and \ncraft stuff.";
+				}
+				else if (itemname == "Pistol Bullets")
+				{
+					description = "Ammo used by light guns\nlike pistols and sub machine \nguns. litle damage but\neasy to find and craft";
+				}
+				else if (itemname == "Rifle Bullets")
+				{
+					description = "The stronger caliber\nAmmo used by bigger guns\nlike rifles and snipers\nhigh damage but\nsignificantly harder to\nfind and craft";
+				}
+				else if (itemname == "Rifle")
+				{
+					description = "High damage fully\nautomatic 5.56x45 rifle\nused in military purposes\nuses rifle ammo";
+				}
+				else if (itemname == "Pistol")
+				{
+					description = "Low damage semi\nautomatic 9x19 pistol\nused in the police force\nand for civilized use\nuses pistol ammo";
+				}
+				else if (itemname == "Medkit")
+				{
+					description = "A fully kitted medkit\ncontaining various medical\nsupplies, including disposable\nsyringes, anti inflamation\ntablets, and surgical tools\n Heals your player\nto max health.";
+				}
+				else if (itemname == "Bandage")
+				{
+					description = "An antiseptic bandage used\n for medical purposes\nHeals a small amount\nof health";
+				}
+				else if (itemname == "Fabric")
+				{
+					description = "A cloth like material crafted\nfrom fiber and hemp.\nused to craft all sorts\nof items";
+				}
+
+				if (itemname.find("empty") == string::npos)
+				{
+					ImGuiWindowFlags inventoryDesc =
+						ImGuiWindowFlags_AlwaysAutoResize |
+						ImGuiWindowFlags_NoTitleBar |
+						ImGuiWindowFlags_NoResize |
+						ImGuiWindowFlags_NoCollapse |
+						ImGuiWindowFlags_NoScrollbar;
+					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));  // Set a background color
+					{
+						ImGui::Begin("M", NULL, inventoryDesc);
+						{
+							ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.67f, cSettings->iWindowHeight * 0.2));
+							ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
+							ImGui::SetWindowFontScale(1.5f * relativeScale_y);
+							ImGui::TextColored(ImVec4(1, 1, 0, 1), itemname.c_str(), cFPSCounter->GetFrameRate());
+							cInventoryItem = cInventoryManager->GetItem(inventory_item_name_list[deskey - 1]);
+							ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(100, 100), ImVec2(0, 1), ImVec2(1, 0));
+							ImGui::SetWindowFontScale(1.0f * relativeScale_y);
+							ImGui::TextColored(ImVec4(1, 1, 0, 1), description.c_str(), cFPSCounter->GetFrameRate());
+						}
+						ImGui::End();
+					}
+					ImGui::PopStyleColor();
 				}
 			}
 			float buttonWidth = 256;

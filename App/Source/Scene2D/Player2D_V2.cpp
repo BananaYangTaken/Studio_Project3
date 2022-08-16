@@ -205,6 +205,9 @@ bool CPlayer2D_V2::Init(void)
 	cInventoryItem = cInventoryManager->Add("Fabric", "Image/Fabric.tga", 1, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
+	cInventoryItem = cInventoryManager->Add("Blueprint", "Image/Blueprint.tga", 1, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
 	cInventoryItem = cInventoryManager->Add("empty", "Image/BlankBox.tga", 1, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 	cInventoryItem = cInventoryManager->Add("empty2", "Image/BlankBox.tga", 1, 0);
@@ -268,6 +271,7 @@ bool CPlayer2D_V2::Reset()
 void CPlayer2D_V2::Update(const double dElapsedTime)
 {
 	// Store the old position
+	std::cout << Health << endl;
 	vec2OldIndex = vec2Index;
 	idle = true;
 	if (InvulnerabilityFrame > 0)
@@ -664,14 +668,6 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 	case 20:
 		if (Player == 2 && (xdisplacement == 0 && ydisplacement == 0) && InvulnerabilityFrame <= 0)
 		{ 
-			Health -= 1;
-			InvulnerabilityFrame += 0.5;
-		}
-		break;
-	//Lava
-	case 21:
-		if (xdisplacement == 0 && ydisplacement == 0 && InvulnerabilityFrame <= 0)
-		{
 			Health -= 1;
 			InvulnerabilityFrame += 0.5;
 		}
