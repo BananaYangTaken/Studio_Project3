@@ -574,9 +574,55 @@ void CEnemy2D_Human::Update(const double dElapsedTime)
 	}
 
 	++iFSMCounter;
-
-	// Update the UV Coordinates
-	vec2UVCoordinate.x = cSettings->ConvertIndexToUVSpace(cSettings->x, vec2Index.x, false, vec2NumMicroSteps.x * cSettings->MICRO_STEP_XAXIS);
-	vec2UVCoordinate.y = cSettings->ConvertIndexToUVSpace(cSettings->y, vec2Index.y, false, vec2NumMicroSteps.y * cSettings->MICRO_STEP_YAXIS);
 	animatedSprites->Update(dElapsedTime);
+	// Update the UV Coordinates
+	{
+		//if within viewing distance
+		if( ( abs(Player->vec2Index.x - vec2Index.x) <= cSettings->VIEW_TILES_XAXIS* 0.5 + 1 ) && (abs(Player->vec2Index.y - vec2Index.y) <= cSettings->VIEW_TILES_YAXIS * 0.5 + 1))
+		{
+			//Calculate Position of Entity on Screen
+			glm::vec2 ScreenPos = glm::vec2(0, 0);
+
+			//Check if Map View/Camera at Borders
+			if (Player->vec2Index.x < cSettings->VIEW_TILES_XAXIS * 0.5) // Left Side Border
+			{
+				ScreenPos.x = vec2Index.x + 1;
+			}
+			else if (Player->vec2Index.x > (cSettings->NUM_TILES_XAXIS - (cSettings->VIEW_TILES_XAXIS * 0.5))) //Right Side Border
+			{
+				ScreenPos.x = cSettings->VIEW_TILES_XAXIS - (cSettings->NUM_TILES_XAXIS - vec2Index.x) + 1;
+			}
+
+			if (Player->vec2Index.y > (cSettings->NUM_TILES_YAXIS - (cSettings->VIEW_TILES_YAXIS * 0.5))) //Top Side Border
+			{
+				ScreenPos.y = cSettings->VIEW_TILES_YAXIS - (cSettings->NUM_TILES_YAXIS - vec2Index.y) + 1;
+			}
+			else if (Player->vec2Index.y < cSettings->VIEW_TILES_YAXIS * 0.5) //Bottom Side Border
+			{
+				ScreenPos.y = vec2Index.y + 1;
+			}
+
+
+			//If not at Border, Entity at Center of Screen displaced by x:1 y:1
+			if (ScreenPos.x == 0)
+			{
+				ScreenPos.x = Player->vec2Index.x - vec2Index.x;
+			}
+			if (ScreenPos.y == 0)
+			{
+				ScreenPos.y = Player->vec2Index.y - vec2Index.y;
+			}
+
+			std::cout << "x: " << ScreenPos.x << " y: " << ScreenPos.y << std::endl;
+
+
+			//Convert position to UV Coords
+			vec2UVCoordinate.x = cSettings->ConvertIndexToUVSpace(cSettings->x, ScreenPos.x - 1, false, vec2NumMicroSteps.x * cSettings->MICRO_STEP_XAXIS);
+			vec2UVCoordinate.y = cSettings->ConvertIndexToUVSpace(cSettings->y, ScreenPos.y - 1, false, vec2NumMicroSteps.y * cSettings->MICRO_STEP_YAXIS);
+		}
+		else
+		{ 
+			vec2UVCoordinate = glm::vec2(2, 2);
+		}
+	}
 }
