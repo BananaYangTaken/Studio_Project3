@@ -659,26 +659,6 @@ bool CMap2D::LoadMap(string filename, const unsigned int uiCurLevel)
 	if ((cSettings->NUM_TILES_XAXIS != (unsigned int)doc.GetColumnCount()) ||
 		(cSettings->NUM_TILES_YAXIS != (unsigned int)doc.GetRowCount()))
 	{
-		if (cSettings->NUM_TILES_XAXIS > (unsigned int)doc.GetColumnCount())
-		{
-			cout << "Declared x more than"<< (unsigned int)doc.GetColumnCount() << endl;
-		}
-		else if (cSettings->NUM_TILES_YAXIS < (unsigned int)doc.GetColumnCount())
-		{
-			cout << "Declared x less than"<< (unsigned int)doc.GetColumnCount() << endl;
-		}
-
-
-		if (cSettings->NUM_TILES_XAXIS > (unsigned int)doc.GetRowCount())
-		{
-			cout << "Declared y more than"<< (unsigned int)doc.GetRowCount() << endl;
-
-		}
-		if (cSettings->NUM_TILES_XAXIS < (unsigned int)doc.GetRowCount())
-		{
-			cout << "Declared y less than"<< (unsigned int)doc.GetRowCount() << endl;
-		}
-
 		cout << "Sizes of CSV map does not match declared arrMapInfo sizes." << endl;
 		return false;
 	}
