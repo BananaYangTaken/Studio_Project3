@@ -776,7 +776,7 @@ unsigned int CMap2D::GetCurrentLevel(void) const
 {
 	return uiCurLevel;
 }
-
+ 
 /**
  @brief Render a tile at a position based on its tile index
  @param iRow A const int variable containing the row index of the tile

@@ -22,6 +22,7 @@ public:
 
 	// Boolean flag to indicate if the player won the game
 	bool bPlayerWon;
+
 	// Boolean flag to indicate if the player lost the game
 	bool bPlayerLost;
 	// Boolean flag to indicate if the level is completed

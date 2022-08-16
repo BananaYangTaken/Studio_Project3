@@ -367,7 +367,7 @@ bool CPauseState::Update(const double dElapsedTime)
 			ImGui::SetWindowSize(ImVec2(CSettings::GetInstance()->iWindowWidth, CSettings::GetInstance()->iWindowHeight));
 
 
-			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));  // Set a background color
+			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.2f,0.0f,0.2f, 1.0f));  // Set a background color
 
 			ImGuiWindowFlags window_flags1 = 0;
 			window_flags1 |= ImGuiWindowFlags_NoTitleBar;

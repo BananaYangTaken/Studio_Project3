@@ -41,7 +41,7 @@ public:
 				const bool bIsLooped = false, 
 				SOUNDGROUP eSoundGroup = Player,
 				SOUNDTYPE eSoundType = _2D,
-				vec3df vec3dfSoundPos = vec3df(0.0f, 0.0f, 0.0f));
+				vec3df vec3dfSoundPos = vec3df(0.2f,0.0f,0.2f));
 
 	// Get an sound from this map
 	ISoundSource* GetSound(void) const;

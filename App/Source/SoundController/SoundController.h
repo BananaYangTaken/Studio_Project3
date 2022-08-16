@@ -41,7 +41,7 @@ public:
 					const bool bIsLooped = false,
 					CSoundInfo::SOUNDGROUP eSoundGroup = CSoundInfo::SOUNDGROUP::Player,
 					CSoundInfo::SOUNDTYPE eSoundType = CSoundInfo::SOUNDTYPE::_2D,
-					vec3df vec3dfSoundPos = vec3df(0.0f, 0.0f, 0.0f));
+					vec3df vec3dfSoundPos = vec3df(0.2f,0.0f,0.2f));
 
 	void LoadSoundSystem(void);
 
