@@ -134,6 +134,7 @@ public:
 	// Print out details about this class instance in the console window
 	void PrintSelf(void) const;
 
+	glm::vec2 GetDisplacement(void);
 
 protected:
 	// The variable containing the rapidcsv::Document

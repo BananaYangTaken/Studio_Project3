@@ -212,7 +212,6 @@ bool CScene2D::Update(const double dElapsedTime)
 	}
 	if (cKeyboardController->IsKeyPressed(GLFW_KEY_TAB))
 	{
-		cGUI_Scene2D->IncreaseInventoryItemCount("Hard wood", 20);
 		if(cGUI_Scene2D->checkinginventory == false) cGUI_Scene2D->checkinginventory = true;
 		else cGUI_Scene2D->checkinginventory = false;
 	}

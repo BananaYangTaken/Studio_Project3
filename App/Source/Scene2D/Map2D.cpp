@@ -412,6 +412,7 @@ void CMap2D::Render(void)
 			transform = glm::translate(transform, glm::vec3(cSettings->ConvertIndexToUVSpace(cSettings->x, uiCol - Displacement.x, false, 0),
 															cSettings->ConvertIndexToUVSpace(cSettings->y, uiRow - Displacement.y, true, 0),
 															0.0f));
+
 			//transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
 
 			// Update the shaders with the latest transform
@@ -553,7 +554,7 @@ bool CMap2D::LoadMap(string filename, const unsigned int uiCurLevel)
 		}				
 	}
 
-	if (MorethanOneInstance(200, uiCurLevel) == true || MorethanOneInstance(201, uiCurLevel) == true)
+	if (MorethanOneInstance(200, uiCurLevel) == true)
 	{
 		std::cout << "More than 1 player exists on map" << std::endl;
 		return false;
@@ -837,6 +838,11 @@ void CMap2D::PrintSelf(void) const
 	cout << "m_closedList: " << m_closedList.size() << endl;
 
 	cout << "===== AStar::PrintSelf() =====" << endl;
+}
+
+glm::vec2 CMap2D::GetDisplacement(void)
+{
+	return Displacement;
 }
 
 /**
