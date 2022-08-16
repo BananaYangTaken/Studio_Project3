@@ -266,22 +266,21 @@ bool CScene2D::Update(const double dElapsedTime)
 	//Hovered Object green
 	for (int i = 0; i < cObjectList.size(); ++i)
 	{
-		//Check if object within reach of player
-		if (cPhysics2D.CalculateDistance(cObjectList[i]->vec2UVCoordinate, MouseUVCoords) <= 1/cSettings->VIEW_TILES_XAXIS)
+		//Check if mouse hovering over object
+		if (cPhysics2D.CalculateDistance(cObjectList[i]->vec2UVCoordinate, MouseUVCoords) <= 1.f/cSettings->VIEW_TILES_XAXIS)
 		{
 			cObjectList[i]->SetruntimeColour(glm::vec4(0,1,0,1));
 		}
 	}
-	std::cout << cPhysics2D.CalculateDistance(cObjectList[0]->vec2UVCoordinate, MouseUVCoords) << std::endl;
-	//cObjectList[i]->SetruntimeColour(glm::vec4(0, 1, 0, 1));
 	if (cKeyboardController->IsKeyPressed('F'))
 	{
 		for (int i = 0; i < cObjectList.size(); ++i)
 		{
-			//Check if object within reach of player
-			if (cPhysics2D.CalculateDistance(cObjectList[i]->vec2Index, Player->vec2Index) <= 1)
+			//Check if mouse hovering over object and whether player within radius to interact
+			if (cPhysics2D.CalculateDistance(cObjectList[i]->vec2UVCoordinate, MouseUVCoords) <= 1.f / cSettings->VIEW_TILES_XAXIS
+				&& cPhysics2D.CalculateDistance(Player->vec2Index, cObjectList[i]->vec2Index) <= 1)
 			{
-				//cObjectList[i]->Interact();
+				cObjectList[i]->Interact();
 			}
 		}
 	}
