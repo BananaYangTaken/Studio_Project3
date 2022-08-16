@@ -159,6 +159,7 @@ bool CScene2D::Update(const double dElapsedTime)
 	
 	for (int i = 0; i < cObjectList.size(); i++)
 	{
+		cObjectList[i]->SetPlayervec2Index(Player->vec2Index);
 		cObjectList[i]->Update(dElapsedTime);
 	}
 	LoadObjects();
@@ -359,6 +360,7 @@ void CScene2D::LoadObjects(void)
 					cObject2D = new CObject2D(Value);
 					cObject2D->SetShader("Shader2D_Colour");
 					cObject2D->Init(uiCol, cSettings->NUM_TILES_YAXIS-uiRow-1 );
+					cObject2D->SetPlayervec2Index(Player->vec2Index);
 					cObjectList.push_back(cObject2D);
 				}
 			}
