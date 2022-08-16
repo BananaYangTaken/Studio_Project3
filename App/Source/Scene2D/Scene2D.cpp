@@ -217,8 +217,16 @@ bool CScene2D::Update(const double dElapsedTime)
 	}
 	if (cKeyboardController->IsKeyPressed('U'))
 	{
-		if (cGUI_Scene2D->crafting == false) cGUI_Scene2D->crafting = true;
-		else cGUI_Scene2D->crafting = false;
+		if (cGUI_Scene2D->crafting == false)
+		{
+			cGUI_Scene2D->crafting = true;
+			cGUI_Scene2D->checkinginventory = false;
+		}
+		else
+		{
+			cGUI_Scene2D->crafting = false;
+			cGUI_Scene2D->checkinginventory = false;
+		}
 	}
 	
 	//check if the player can proceed to next level
