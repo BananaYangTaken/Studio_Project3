@@ -98,13 +98,13 @@
     <ClCompile Include="Source\GameStateManagement\IntroState.cpp">
       <Filter>GameStateManagement\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scene2D\Turret2D.cpp">
-      <Filter>Scene2D\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Scene2D\Enemy2D_Zombie.cpp">
       <Filter>Scene2D\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Scene2D\Enemy2D_Human.cpp">
+      <Filter>Scene2D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\TurretBase.cpp">
       <Filter>Scene2D\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -175,13 +175,13 @@
     <ClInclude Include="Source\GameStateManagement\IntroState.h">
       <Filter>GameStateManagement\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Scene2D\Turret2D.h">
-      <Filter>Scene2D\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Scene2D\Enemy2D_Zombie.h">
       <Filter>Scene2D\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scene2D\Enemy2D_Human.h">
+      <Filter>Scene2D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\TurretBase.h">
       <Filter>Scene2D\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
