@@ -50,9 +50,9 @@ public:
 	// Init
 	bool Init(void);
 	const int inventory_size = 9;
-	std::string inventory_item_name_list[9] = {"empty", "empty2", "empty3", "empty4", "empty5", "empty6", "empty7", "empty8", "empty9"};
-	int inventory_item_quantity[9] = {0,0,0,0,0,0,0,0,0};
-	int inventory_item_max_quantity[9] = {200,200,200,200,200,200,200,200,200 };
+	std::string inventory_item_name_list[9] = {"Scrap Metal", "Hard wood", "empty3", "empty4", "empty5", "empty6", "empty7", "empty8", "empty9"};
+	int inventory_item_quantity[9] = {55,150,0,0,0,0,0,0,0};
+	int inventory_item_max_quantity[9] = {200,200,200,200,200,200,200,200,200};
 
 
 	int Crafting_list_size = 5;
@@ -66,8 +66,9 @@ public:
 	// Update
 	void Update(const double dElapsedTime);
 	void setInventoryItem(int arrayVal, std::string item, int quantity, int maxQuantity);
-	void IncreaseInventoryItemCount(std::string arrayindex, int incrementValue);
+	int IncreaseInventoryItemCount(std::string arrayindex, int incrementValue);
 	void DecreaseInventoryItemCount(std::string arrayindex, int decrementvalue);
+	bool CheckCrafting(int recipeIngredientCount, std::string Ingredients[4], int IngredientRequiredCount[4], std::string ResultantCraft, int CraftedQuantity);
 	void InventoryItemSetZero(std::string arrayindex, int incrementValue);
 	// PreRender
 	void PreRender(void);

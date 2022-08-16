@@ -52,7 +52,7 @@ void CGUI_Scene2D::setInventoryItem(int arrayVal, std::string item, int quantity
 	inventory_item_max_quantity[arrayVal] = maxQuantity;
 }
 
-void CGUI_Scene2D::IncreaseInventoryItemCount(std::string arrayindex, int incrementValue)
+int CGUI_Scene2D::IncreaseInventoryItemCount(std::string arrayindex, int incrementValue)
 {
 	std::cout << "CHECKING INVENTORY";
 	int ind = 0;
@@ -73,8 +73,11 @@ void CGUI_Scene2D::IncreaseInventoryItemCount(std::string arrayindex, int increm
 		if (inventory_item_quantity[ind] >= inventory_item_max_quantity[ind])
 		{
 			cout << "RESOURCE FULL!";
-			inventory_item_quantity[ind] == inventory_item_max_quantity[ind];
+			float difference = inventory_item_quantity[ind] - inventory_item_max_quantity[ind];
+			inventory_item_quantity[ind] = inventory_item_max_quantity[ind];
+			return difference;
 		}
+		else return 0;
 	}
 	else
 	{
@@ -84,9 +87,13 @@ void CGUI_Scene2D::IncreaseInventoryItemCount(std::string arrayindex, int increm
 			{
 				inventory_item_quantity[u] = incrementValue;
 				inventory_item_name_list[u] = arrayindex;
-				break;
+				return 0;
 			}
 
+		}
+		cout << "INVENTORY FULL!";
+		{
+			return incrementValue;
 		}
 	}
 }
@@ -119,6 +126,7 @@ void CGUI_Scene2D::InventoryItemSetZero(std::string arrayindex, int incrementVal
 	}
 	inventory_item_quantity[ind] == 0;
 }
+
 bool CGUI_Scene2D::Init(void)
 {
 	// Get the handler to the CSettings instance
@@ -171,6 +179,42 @@ bool CGUI_Scene2D::Init(void)
 	return true;
 }
 
+bool CGUI_Scene2D::CheckCrafting(int recipeIngredientCount, std::string Ingredients[4], int IngredientRequiredCount[4], std::string ResultantCraft, int CraftedQuantity)
+{
+	int craftingpossible[4];
+	for (int i = 0; i < recipeIngredientCount; i++)
+	{
+		for (int u = 0; u < inventory_size; u++)
+		{
+			if (Ingredients[i] == inventory_item_name_list[u] && IngredientRequiredCount[i] <= inventory_item_quantity[u])
+			{
+				craftingpossible[i] = 1;
+				break;
+			}
+		}
+	}
+	for (int i = 0; i < recipeIngredientCount; i++)
+	{
+		if (craftingpossible[i] != 1)
+		{
+			cout << "NOT ENOUGH MATERIALS";
+			return false;
+		}
+	}
+	cout << "ABLE TO CRAFT!";
+	for (int i = 0; i < recipeIngredientCount; i++)
+	{
+		for (int u = 0; u < inventory_size; u++)
+		{
+			if (Ingredients[i] == inventory_item_name_list[u] && IngredientRequiredCount[i] <= inventory_item_quantity[u])
+			{
+				inventory_item_quantity[u] = inventory_item_quantity[u] - IngredientRequiredCount[i];
+			}
+		}
+	}
+	IncreaseInventoryItemCount(ResultantCraft, CraftedQuantity);
+	return true;
+}
 /**
  @brief Update this instance
  */
@@ -349,6 +393,13 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						ImGui::End();
 					}
 					ImGui::PopStyleColor();
+
+					if (cKeyboardController->IsKeyPressed('C'))
+					{
+						std::string requirementsarray[2] = { "Scrap Metal", "Hard wood" };
+						int requirementsCount[2] = { 25, 25 };
+						CheckCrafting(2, requirementsarray, requirementsCount, Crafting_item_name_list[reckey], 25);
+					}
 				}
 				if (reckey == 1)
 				{
