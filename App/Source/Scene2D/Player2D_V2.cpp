@@ -271,7 +271,6 @@ bool CPlayer2D_V2::Reset()
 void CPlayer2D_V2::Update(const double dElapsedTime)
 {
 	// Store the old position
-	std::cout << Health << endl;
 	vec2OldIndex = vec2Index;
 	idle = true;
 	if (InvulnerabilityFrame > 0)

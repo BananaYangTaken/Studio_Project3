@@ -65,7 +65,7 @@ public:
 	void SetTransition(bool);
 	void SetIdle(bool);
 	bool GetIdle(void);
-
+	void SetPlayervec2Index(glm::vec2);
 
 protected:
 	// Handler to the CMap2D instance
@@ -80,6 +80,8 @@ protected:
 
 	//Object Animation
 	CSpriteAnimation* animatedSprites;
+
+	glm::vec2 Playervec2Index;
 
 	// Object's colour
 	glm::vec4 runtimeColour;

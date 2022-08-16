@@ -331,7 +331,21 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 //		}
 //	}
 //}
-
+	
+	//Load the ground texture
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_GroundTile.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Scene2D_GroundTile.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(100, iTextureID));
+		}
+	}
 
 	//load Horizontal Wall texture
 	{
@@ -645,26 +659,6 @@ bool CMap2D::LoadMap(string filename, const unsigned int uiCurLevel)
 	if ((cSettings->NUM_TILES_XAXIS != (unsigned int)doc.GetColumnCount()) ||
 		(cSettings->NUM_TILES_YAXIS != (unsigned int)doc.GetRowCount()))
 	{
-		if (cSettings->NUM_TILES_XAXIS > (unsigned int)doc.GetColumnCount())
-		{
-			cout << "Declared x more than"<< (unsigned int)doc.GetColumnCount() << endl;
-		}
-		else if (cSettings->NUM_TILES_YAXIS < (unsigned int)doc.GetColumnCount())
-		{
-			cout << "Declared x less than"<< (unsigned int)doc.GetColumnCount() << endl;
-		}
-
-
-		if (cSettings->NUM_TILES_XAXIS > (unsigned int)doc.GetRowCount())
-		{
-			cout << "Declared y more than"<< (unsigned int)doc.GetRowCount() << endl;
-
-		}
-		if (cSettings->NUM_TILES_XAXIS < (unsigned int)doc.GetRowCount())
-		{
-			cout << "Declared y less than"<< (unsigned int)doc.GetRowCount() << endl;
-		}
-
 		cout << "Sizes of CSV map does not match declared arrMapInfo sizes." << endl;
 		return false;
 	}
@@ -792,18 +786,14 @@ void CMap2D::RenderTile(const unsigned int uiRow, const unsigned int uiCol)
 {
 	if ((arrMapInfo[uiCurLevel][uiRow][uiCol].value > 0)&& (arrMapInfo[uiCurLevel][uiRow][uiCol].value <200) && (arrMapInfo[uiCurLevel][uiRow][uiCol].value < 24 || arrMapInfo[uiCurLevel][uiRow][uiCol].value > 28))
 	{
-		if (arrMapInfo[uiCurLevel][uiRow][uiCol].value != 100)
-		{
-			//if (arrMapInfo[uiCurLevel][uiRow][uiCol].value < 3)
+		//if (arrMapInfo[uiCurLevel][uiRow][uiCol].value < 3)
 			//std::cout << (arrMapInfo[uiCurLevel][uiRow][uiCol].value) << std::endl;
 			glBindTexture(GL_TEXTURE_2D, MapOfTextureIDs.at(arrMapInfo[uiCurLevel][uiRow][uiCol].value));
 
 			glBindVertexArray(VAO);
 			//CS: Render the tile
 			quadMesh->Render();
-			glBindVertexArray(0);
-		}
-		
+			glBindVertexArray(0);		
 	}
 }
 

@@ -606,15 +606,12 @@ void CEnemy2D_Human::Update(const double dElapsedTime)
 			//If not at Border, Entity at Center of Screen displaced by x:1 y:1
 			if (ScreenPos.x == 0)
 			{
-				ScreenPos.x = Player->vec2Index.x - vec2Index.x;
+				ScreenPos.x = vec2Index.x + 1 - Player->vec2Index.x + cSettings->VIEW_TILES_XAXIS * 0.5;
 			}
 			if (ScreenPos.y == 0)
 			{
-				ScreenPos.y = Player->vec2Index.y - vec2Index.y;
+				ScreenPos.y = vec2Index.y + 1 - Player->vec2Index.y + cSettings->VIEW_TILES_YAXIS * 0.5;
 			}
-
-			std::cout << "x: " << ScreenPos.x << " y: " << ScreenPos.y << std::endl;
-
 
 			//Convert position to UV Coords
 			vec2UVCoordinate.x = cSettings->ConvertIndexToUVSpace(cSettings->x, ScreenPos.x - 1, false, vec2NumMicroSteps.x * cSettings->MICRO_STEP_XAXIS);
