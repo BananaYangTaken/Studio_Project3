@@ -15,8 +15,7 @@ using namespace std;
 #include "..\SoundController\SoundInfo.h"
 
 //Enemies
-#include "Enemy2D_Human.h"
-#include "Enemy2D_Creeper.h"
+#include "Enemy2D_Zombie.h"
 
 /**
  @brief Constructor This constructor has protected access modifier as this class will be a Singleton
@@ -172,7 +171,7 @@ bool CScene2D::Update(const double dElapsedTime)
 	while (it != cEnemyList.end())
 	{
 		// remove odd numbers
-		if ((*it) && (*it)->GetHealth() <= 0)
+		if ((*it) && (*it)->GetHealth() <= 0 && (*it)->GetDeathState() == 1)
 		{
 			it = cEnemyList.erase(it);
 		}
@@ -395,9 +394,9 @@ void CScene2D::LoadEnemies(void)
 				{
 					CEnemyBase* cEnemy2D;
 					if (Value == 302)
-						cEnemy2D = new CEnemy2D_Human();
-					else if (Value == 303)
-						cEnemy2D = new CEnemy2D_Creeper();
+						cEnemy2D = new CEnemy2D_Zombie();
+					//else if (Value == 303)
+					//	cEnemy2D = new CEnemy2D_Creeper();
 					// Pass the shader to instance
 					cEnemy2D->SetShader("Shader2D_Colour");
 					if (cEnemy2D->Init(uiCol, cSettings->NUM_TILES_YAXIS - uiRow - 1))

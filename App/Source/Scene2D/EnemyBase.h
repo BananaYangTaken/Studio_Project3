@@ -55,8 +55,10 @@ public:
 
 	//Getter and Setter for Health and InvulnerabilityFrames
 	virtual void SetHealth(unsigned int);
+	virtual void SetDeathState(unsigned int);
 	virtual void SetInvulnerabilityFrame(float);
 	virtual unsigned int GetHealth(void);
+	virtual unsigned int GetDeathState(void);
 	virtual float GetInvulnerabilityFrame(void);
 
 	virtual void SetStun(bool);
@@ -81,12 +83,14 @@ protected:
 		RETREAT = 5,
 		HEAL = 6,
 		EXPLOSION = 7,
+		DEATH = 8,
 		NUM_FSM
 	};
 
 	glm::vec2 vec2OldIndex;
 
 	unsigned int Health;
+	unsigned int Death;
 	float InvulnerabilityFrame;
 	bool Stunned;
 	float StunDuration;

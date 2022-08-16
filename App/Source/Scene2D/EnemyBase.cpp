@@ -183,6 +183,11 @@ void CEnemyBase::SetHealth(unsigned int Health)
 	this->Health = Health;
 }
 
+void CEnemyBase::SetDeathState(unsigned int Health)
+{
+	this->Health = Health;
+}
+
 void CEnemyBase::SetInvulnerabilityFrame(float InvulnerabilityFrame)
 {
 	this->InvulnerabilityFrame = InvulnerabilityFrame;
@@ -191,6 +196,11 @@ void CEnemyBase::SetInvulnerabilityFrame(float InvulnerabilityFrame)
 unsigned int CEnemyBase::GetHealth(void)
 {
 	return this->Health;
+}
+
+unsigned int CEnemyBase::GetDeathState(void)
+{
+	return this->Death;
 }
 
 float CEnemyBase::GetInvulnerabilityFrame(void)
