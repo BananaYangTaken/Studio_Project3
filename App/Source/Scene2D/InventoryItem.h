@@ -12,6 +12,35 @@
 #include <map>
 #include <string>
 
+enum FIRING_TYPE
+{
+	FULLAUTO = 0,
+	SEMIAUTO = 1,
+	NUM_FIRING_TYPE
+};
+
+enum ITEM_TYPE
+{
+	RESOURCES = 0,
+	GUN = 1,
+	MELEE = 2,
+	CONSUMABLES = 3,
+	NUM_ITEM_TYPE
+};
+
+struct GunData
+{
+	unsigned int MaxAmmoSize;
+	unsigned int CurrentAmmoSize;
+	FIRING_TYPE firingtype;
+};
+struct WeaponData
+{
+	float Damage;
+	float Range;
+	float ReloadTime;
+};
+
 class CInventoryItem : public CEntity2D
 {
 public:
@@ -37,6 +66,13 @@ public:
 	std::string sName;
 	// The size of the image to render in the GUI
 	glm::vec2 vec2Size;
+	// Set the item type
+	ITEM_TYPE itemtype;
+	//Weapon Data only used for items which are melee or guns
+	WeaponData* WData;
+	//Gun Data only used for items which are melee or guns
+	GunData* GData;
+
 
 	// The amount of this item
 	int iItemCount;

@@ -18,6 +18,9 @@ CInventoryItem::CInventoryItem(const char* imagePath)
 	: iItemCount(0)
 	, iItemMaxCount(0)
 	, vec2Size(glm::vec2(0.0f))
+	, itemtype(ITEM_TYPE::RESOURCES)
+	, WData(NULL)
+	, GData(NULL)
 {
 	if (imagePath)
 	{
@@ -34,6 +37,16 @@ CInventoryItem::CInventoryItem(const char* imagePath)
 */
 CInventoryItem::~CInventoryItem(void)
 {
+	if (WData)
+	{
+		delete WData;
+		WData = NULL;
+	}
+	if (GData)
+	{
+		delete GData;
+		GData = NULL;
+	}
 }
 
 /**
