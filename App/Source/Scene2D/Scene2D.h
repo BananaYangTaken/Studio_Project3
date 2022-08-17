@@ -78,6 +78,21 @@ public:
 
 	void Destroy(void);
 
+	int WindowUpgradeLvl;
+	int TurretUpgradeLvl;
+	int BarbwireUpgrade;
+
+	int GetWindowUpgradeLvl();
+	int GetTurretUpgradeLvl();
+	int GetBarbwireUpgradeLvl();
+
+	void SetWindowUpgradeLvl(int newLV);
+	void SetTurretUpgradeLvl(int newLV);
+	void SetBarbwireUpgradeLvl(int newLV);
+
+	
+
+
 protected:
 	//Handler containing the instance of 2D Map
 	CMap2D* cMap2D;

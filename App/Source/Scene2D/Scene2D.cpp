@@ -98,6 +98,10 @@ bool CScene2D::Init(void)
 	//Set shader to this class
 	cMap2D->SetShader("Shader2D");
 
+	WindowUpgradeLvl = 0;
+	TurretUpgradeLvl = 0;
+	BarbwireUpgrade = 0;
+
 	//Initialse this instance
 	if (cMap2D->Init(5, CSettings::GetInstance()->NUM_TILES_YAXIS, CSettings::GetInstance()->NUM_TILES_XAXIS) == false)
 	{
@@ -190,6 +194,7 @@ bool CScene2D::Update(const double dElapsedTime)
 	for (int i = 0; i < cTurretList.size(); i++)
 	{
 		cTurretList[i]->Update(dElapsedTime);
+		cTurretList[i]->SetTurretLevel(TurretUpgradeLvl);
 	}
 	LoadTurret();
 
@@ -534,4 +539,34 @@ void CScene2D::Destroy(void)
 	cObjectList.clear();
 	cEnemyList.clear();
 	cTurretList.clear();
+}
+
+int CScene2D::GetWindowUpgradeLvl()
+{
+	return WindowUpgradeLvl;
+}
+
+int CScene2D::GetTurretUpgradeLvl()
+{
+	return TurretUpgradeLvl;
+}
+
+int CScene2D::GetBarbwireUpgradeLvl()
+{
+	return BarbwireUpgrade;
+}
+
+void CScene2D::SetWindowUpgradeLvl(int newLV)
+{
+	WindowUpgradeLvl = newLV;
+}
+
+void CScene2D::SetTurretUpgradeLvl(int newLV)
+{
+	TurretUpgradeLvl = newLV;
+}
+
+void CScene2D::SetBarbwireUpgradeLvl(int newLV)
+{
+	BarbwireUpgrade = newLV;
 }

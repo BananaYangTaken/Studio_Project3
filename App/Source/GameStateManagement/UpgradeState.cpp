@@ -65,6 +65,7 @@ bool CUpgradeState::Init(void)
 	cout << "CUpgradeState::Init()\n" << endl;
 
 	CShaderManager::GetInstance()->Use("Shader2D");
+	cScene2D = CScene2D::GetInstance();
 	//CShaderManager::GetInstance()->activeShader->setInt("texture1", 0);
 
 	// Load the images for buttons
@@ -163,6 +164,10 @@ bool CUpgradeState::Update(const double dElapsedTime)
 		ImGui::End();
 		ImGui::PopStyleColor();
 
+		CurrentWindowLv = cScene2D->GetWindowUpgradeLvl();
+		CurrentTurretLv = cScene2D->GetTurretUpgradeLvl();
+		CurrentBarbWireLv = cScene2D->GetBarbwireUpgradeLvl();
+
 		//Window for Window Upgrade Button
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.3f, 0.f, 0.3f, 1.0f));  // Set a background color
 		ImGui::Begin("Window Upgrade", NULL, window_flags);
@@ -175,29 +180,29 @@ bool CUpgradeState::Update(const double dElapsedTime)
 				ImGui::SetWindowFontScale(1.5f * relativeScale_y);
 				ImGui::TextColored(ImVec4(1, 1, 0, 1), "  Material cost:   ");
 				ImGui::SameLine();
-				if (WindowUpgradeLvl == 0)
+				if (CurrentWindowLv == 0)
 				{
 					if (ImGui::ImageButton((ImTextureID)WindowUpgrade[0].textureID,
 						ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
 					{
-						WindowUpgradeLvl += 1;
+						CurrentWindowLv += 1;
 						// Reset the CKeyboardController
 						CKeyboardController::GetInstance()->Reset();
 						CSoundController::GetInstance()->MasterVolumeIncrease(10);
 					}
 				}
-				if (WindowUpgradeLvl == 1)
+				if (CurrentWindowLv == 1)
 				{
 					if (ImGui::ImageButton((ImTextureID)WindowUpgrade[1].textureID,
 						ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
 					{
-						WindowUpgradeLvl += 1;
+						CurrentWindowLv += 1;
 						// Reset the CKeyboardController
 						CKeyboardController::GetInstance()->Reset();
 						CSoundController::GetInstance()->MasterVolumeIncrease(10);
 					}
 				}
-				if (WindowUpgradeLvl == 2)
+				if (CurrentWindowLv == 2)
 				{
 					if (ImGui::ImageButton((ImTextureID)WindowUpgrade[2].textureID,
 						ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
@@ -224,19 +229,19 @@ bool CUpgradeState::Update(const double dElapsedTime)
 				ImGui::SetWindowFontScale(1.5f * relativeScale_y);
 				ImGui::TextColored(ImVec4(1, 1, 0, 1), "  Material cost:   ");
 				ImGui::SameLine();
-				if (TurretUpgradeLvl == 0)
+				if (CurrentTurretLv == 0)
 				{
 					if (ImGui::ImageButton((ImTextureID)TurretUpgrade[0].textureID,
 						ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
 					{
-						TurretUpgradeLvl += 1;
+						CurrentTurretLv += 1;
 						// Reset the CKeyboardController
 						CKeyboardController::GetInstance()->Reset();
 
 						CSoundController::GetInstance()->MasterVolumeIncrease(10);
 					}
 				}
-				if (TurretUpgradeLvl == 1)
+				if (CurrentTurretLv == 1)
 				{
 					if (ImGui::ImageButton((ImTextureID)TurretUpgrade[1].textureID,
 						ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
@@ -265,18 +270,18 @@ bool CUpgradeState::Update(const double dElapsedTime)
 				ImGui::SetWindowFontScale(1.5f * relativeScale_y);
 				ImGui::TextColored(ImVec4(1, 1, 0, 1), "  Material cost:   ");
 				ImGui::SameLine();
-				if (BarbwireUpgrade == 0)
+				if (CurrentBarbWireLv == 0)
 				{
 					if (ImGui::ImageButton((ImTextureID)Barbwire[0].textureID,
 						ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
 					{
-						BarbwireUpgrade += 1;
+						CurrentBarbWireLv += 1;
 						// Reset the CKeyboardController
 						CKeyboardController::GetInstance()->Reset();
 						CSoundController::GetInstance()->MasterVolumeIncrease(10);
 					}
 				}
-				if (BarbwireUpgrade == 1)
+				if (CurrentBarbWireLv == 1)
 				{
 					if (ImGui::ImageButton((ImTextureID)Barbwire[1].textureID,
 						ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
@@ -292,6 +297,10 @@ bool CUpgradeState::Update(const double dElapsedTime)
 		ImGui::PopStyleColor();
 	
 	ImGui::EndFrame();
+
+	cScene2D->SetWindowUpgradeLvl(CurrentWindowLv);
+	cScene2D->SetTurretUpgradeLvl(CurrentTurretLv);
+	cScene2D->SetBarbwireUpgradeLvl(CurrentBarbWireLv);
 
 	//For keyboard controls
 	if (CKeyboardController::GetInstance()->IsKeyReleased(GLFW_KEY_ESCAPE) || CKeyboardController::GetInstance()->IsKeyReleased(GLFW_KEY_F10))

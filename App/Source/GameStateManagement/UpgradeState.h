@@ -8,7 +8,7 @@
  */
 
 #include "GameStateBase.h"
-
+#include "../Scene2D/Scene2D.h"
 #include "Primitives/Mesh.h"
 #include "../Scene2D/BackgroundEntity.h"
 
@@ -46,8 +46,6 @@ public:
 	// Destroy this class instance
 	virtual void Destroy(void);
 
-	
-
 protected:
 	struct ButtonData
 	{
@@ -63,11 +61,11 @@ protected:
 	CSettings* cSettings;
 	CSoundController* cSoundController;
 
-	int WindowUpgradeLvl=0;
-	int TurretUpgradeLvl=0;
-	int BarbwireUpgrade=0;
+	CScene2D* cScene2D;
 
-
+	int CurrentWindowLv = 0;
+	int CurrentTurretLv = 0;
+	int CurrentBarbWireLv = 0;
 
 
 };

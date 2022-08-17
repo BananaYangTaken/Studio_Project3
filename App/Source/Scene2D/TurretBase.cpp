@@ -32,7 +32,8 @@ CTurretBase::CTurretBase(void)
 	animatedSprites = NULL;
 	AStarCalculate = true;
 	Ammo = 100;
-	Level = 1;
+	Level = 0;
+	damageTimer = 0;
 
 	transform = glm::mat4(1.0f);	// make sure to initialize matrix to identity matrix first
 
@@ -83,8 +84,6 @@ bool CTurretBase::Init(int x, int y)
 	cSettings = CSettings::GetInstance();
 	// Get the handler to the CMap2D instance
 	cMap2D = CMap2D::GetInstance();
-
-
 	unsigned int uiRow = -1;
 	unsigned int uiCol = -1;
 	if (cMap2D->FindValue(401, uiRow, uiCol) == false)
@@ -139,6 +138,16 @@ void CTurretBase::Update(const double dElapsedTime)
 {
 	if (!bIsActive)
 		return;
+
+	if (damageTimer > 1 && Level == 0)
+	{
+		damageTimer -= dElapsedTime;
+	}
+	else if(damageTimer > 0.5 && Level >= 1)
+	{
+		damageTimer -= dElapsedTime;
+	}
+
 	switch (sCurrentFSM)
 	{
 	case IDLE:
@@ -158,7 +167,19 @@ void CTurretBase::Update(const double dElapsedTime)
 		}
 		iFSMCounter++;
 		//Animation
-		animatedSprites->PlayAnimation("L1idle", -1, 1.0f);
+		switch (Level)
+		{
+		case 0:
+			animatedSprites->PlayAnimation("L1idle", -1, 1.0f);
+			break;
+		case 1:
+			animatedSprites->PlayAnimation("L2idle", -1, 1.0f);
+			break;
+		case 2:
+			animatedSprites->PlayAnimation("L3idle", -1, 1.0f);
+			break;
+		}
+		
 		break;
 	case TARGET:
 		//FSM Transition
@@ -176,18 +197,42 @@ void CTurretBase::Update(const double dElapsedTime)
 			iFSMCounter = 0;
 		}
 		iFSMCounter++;
-		animatedSprites->PlayAnimation("L1idle", -1, 1.0f);
 		//Animation
+		switch (Level)
+		{
+		case 0:
+			animatedSprites->PlayAnimation("L1idle", -1, 1.0f);
+			break;
+		case 1:
+			animatedSprites->PlayAnimation("L2idle", -1, 1.0f);
+			break;
+		case 2:
+			animatedSprites->PlayAnimation("L3idle", -1, 1.0f);
+			break;
+		}
+
 		break;
 	case ATTACK:
 		//FSM Transition
 		for (int i = 0; i < cEnemyList->size(); i++)
 		{
 			if (cPhysics2D.CalculateDistance(vec2Index, (*cEnemyList)[i]->vec2Index) < 10.0f 
-				&& (*cEnemyList)[i]->bIsActive == true)
+				&& (*cEnemyList)[i]->bIsActive == true
+				&& damageTimer <= 0)
 			{
 				// Attack
-				animatedSprites->PlayAnimation("L1Attack", 1, 1.0f);
+				switch (Level)
+				{
+				case 0:
+					animatedSprites->PlayAnimation("L1Attack", 1, 1.0f);
+					break;
+				case 1:
+					animatedSprites->PlayAnimation("L2Attack", 1, 1.0f);
+					break;
+				case 2:
+					animatedSprites->PlayAnimation("L3Attack", 1, 1.0f);
+					break;
+				}
 				CSoundController::GetInstance()->PlaySoundByID(15);
 				(*cEnemyList)[i]->SetHealth((*cEnemyList)[i]->GetHealth() - 1);
 			}
@@ -678,4 +723,9 @@ void CTurretBase::PostRender(void)
 void CTurretBase::SetEnemyList(std::vector<CEnemyBase*>* newEnemyList)
 {
 	cEnemyList = newEnemyList;
+}
+
+void CTurretBase::SetTurretLevel(int newLevel)
+{
+	Level = newLevel;
 }

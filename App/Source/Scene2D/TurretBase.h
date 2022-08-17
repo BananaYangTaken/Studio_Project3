@@ -57,6 +57,7 @@ public:
 	bool bIsActive;
 
 	void SetEnemyList(std::vector<CEnemyBase*>* newEnemyList);
+	void SetTurretLevel(int level);
 
 protected:
 	enum DIRECTION
@@ -80,6 +81,7 @@ protected:
 
 	unsigned int Ammo;
 	unsigned int Level;
+	int damageTimer;
 
 	// Handler to the CMap2D instance
 	CMap2D* cMap2D;
