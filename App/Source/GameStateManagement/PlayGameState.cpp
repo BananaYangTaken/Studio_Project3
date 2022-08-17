@@ -80,6 +80,14 @@ bool CPlayGameState::Update(const double dElapsedTime)
 		//cout << "Loading PauseState" << endl;
 		CGameStateManager::GetInstance()->SetPauseGameState("PauseState");
 	}
+	else if (CKeyboardController::GetInstance()->IsKeyReleased(GLFW_KEY_F6))
+	{
+		// Reset the CKeyboardController
+		CKeyboardController::GetInstance()->Reset();
+
+		//load the upgrade state
+		CGameStateManager::GetInstance()->SetUpgradeState("UpgradeState");
+	}
 	if (CGameManager::GetInstance()->bPlayerLost)
 	{
 		CGameStateManager::GetInstance()->SetActiveGameState("LoseState");

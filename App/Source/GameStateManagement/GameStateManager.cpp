@@ -13,6 +13,7 @@ CGameStateManager::CGameStateManager(void)
 	, pauseGameState(nullptr)
 	, LoseState(nullptr)
 	, WinState(nullptr)
+	, UpgradeState(nullptr)
 {
 }
 
@@ -35,6 +36,7 @@ void CGameStateManager::Destroy(void)
 	pauseGameState = nullptr;
 	LoseState = nullptr;
 	WinState = nullptr;
+	UpgradeState = nullptr;
 
 	// Delete all scenes stored and empty the entire map
 	std::map<std::string, CGameStateBase*>::iterator it, end;
@@ -71,32 +73,43 @@ bool CGameStateManager::Update(const double dElapsedTime)
 	// Update the active CGameState
 	if (activeGameState)
 	{
-		//cout << "activeGameState->Update" << endl;
-		//if (activeGameState->Update(dElapsedTime) == false)
-			//return false;
-		//else
+		if (pauseGameState)
 		{
-			if (pauseGameState)
+			//cout << "pauseGameState->Update" << endl;
+			pauseGameState->Update(dElapsedTime);
+			//For keyboard controls
+			if (CKeyboardController::GetInstance()->IsKeyReleased(GLFW_KEY_ESCAPE) || CKeyboardController::GetInstance()->IsKeyReleased(GLFW_KEY_F10))
 			{
-				//cout << "pauseGameState->Update" << endl;
-				pauseGameState->Update(dElapsedTime);
-				//For keyboard controls
-				if (CKeyboardController::GetInstance()->IsKeyReleased(GLFW_KEY_ESCAPE) || CKeyboardController::GetInstance()->IsKeyReleased(GLFW_KEY_F10))
-				{
-					// Reset the CKeyboardController
-					CKeyboardController::GetInstance()->Reset();
+				// Reset the CKeyboardController
+				CKeyboardController::GetInstance()->Reset();
 
-					// Load the menu state
+				// Load the menu state
 
-					//cout << "UnLoading PauseState" << endl;
-					CGameStateManager::GetInstance()->OffPauseGameState();
-					return true;
-				}
+				//cout << "UnLoading PauseState" << endl;
+				CGameStateManager::GetInstance()->OffPauseGameState();
+				return true;
 			}
-			else
+		}
+		else if (UpgradeState)
+		{
+			//cout << "UpgradeState->Update" << endl;
+			UpgradeState->Update(dElapsedTime);
+			//For keyboard controls
+			if (CKeyboardController::GetInstance()->IsKeyReleased(GLFW_KEY_ESCAPE) || CKeyboardController::GetInstance()->IsKeyReleased(GLFW_KEY_F6))
 			{
-				activeGameState->Update(dElapsedTime);
+				// Reset the CKeyboardController
+				CKeyboardController::GetInstance()->Reset();
+
+				// Load the menu state
+
+				//cout << "UnLoading PauseState" << endl;
+				CGameStateManager::GetInstance()->OffUpgradeState();
+				return true;
 			}
+		}
+		else
+		{
+			activeGameState->Update(dElapsedTime);
 		}
 	}
 
@@ -113,6 +126,8 @@ void CGameStateManager::Render(void)
 		activeGameState->Render();
 	else if (pauseGameState)
 		pauseGameState->Render();
+	else if (UpgradeState)
+		UpgradeState->Render();
 
 }
 
@@ -226,4 +241,34 @@ bool CGameStateManager::SetPauseGameState(const std::string& _name)
 void CGameStateManager::OffPauseGameState(void)
 {
 	pauseGameState = nullptr;
+}
+
+bool CGameStateManager::SetUpgradeState(const std::string& _name)
+{
+	// Toggle to nullptr if UpgradeState already is in use
+	if (UpgradeState != nullptr)
+	{
+		UpgradeState = nullptr;
+		return true;
+	}
+
+	// Check if this _name does not exists in the map...
+	if (!CheckGameStateExist(_name))
+	{
+		// If it does not exist, then unable to proceed
+		cout << "CGameStateManager::SetUpgradeState - scene name does not exists" << endl;
+		return false;
+	}
+
+	// Scene exist, set the next scene pointer to that scene
+	UpgradeState = GameStateMap[_name];
+	// Init the new pause CGameState
+	UpgradeState->Init();
+
+	return true;
+}
+
+void CGameStateManager::OffUpgradeState(void)
+{
+	UpgradeState = nullptr;
 }

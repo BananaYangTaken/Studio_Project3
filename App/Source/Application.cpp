@@ -41,6 +41,8 @@
 #include "GameStateManagement/PauseState.h"
 #include "GameStateManagement/LoseState.h"
 #include "GameStateManagement/WinState.h"
+#include "GameStateManagement/UpgradeState.h"
+
 
 #include <iostream>
 using namespace std;
@@ -262,6 +264,8 @@ bool Application::Init(void)
 	CGameStateManager::GetInstance()->AddGameState("PauseState", new CPauseState());
 	CGameStateManager::GetInstance()->AddGameState("WinState", new CWinState());
 	CGameStateManager::GetInstance()->AddGameState("LoseState", new CLoseState());
+	CGameStateManager::GetInstance()->AddGameState("UpgradeState", new CUpgradeState());
+
 	
 	//Set the active scene
 	CGameStateManager::GetInstance()->SetActiveGameState("IntroState");
