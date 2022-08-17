@@ -39,6 +39,7 @@
 #include "Player2D_V2.h"
 #include "Object2D.h"
 #include "EnemyBase.h"
+#include "TurretBase.h"
 
 // Include GUI
 #include "GUI_Scene2D.h"
@@ -73,6 +74,8 @@ public:
 	//Load in Enemies
 	void LoadEnemies(void);
 
+	void LoadTurret(void);
+
 	void Destroy(void);
 
 protected:
@@ -97,6 +100,8 @@ protected:
 	std::vector<CEnemyBase*> cEnemyList;
 	//A vector containing instances of CObject2Ds
 	std::vector<CObject2D*> cObjectList;
+	//A vector containing instances of CTurretBase Derived Class
+	std::vector<CTurretBase*> cTurretList;
 
 	// A transformation matrix for controlling where to render the entities
 	glm::mat4 transform;

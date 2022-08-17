@@ -393,7 +393,6 @@ bool CEnemyBase::InteractWithPlayer(void)
 	{
 		cout << "Gotcha!" << endl;
 		// Since the player has been caught, then reset the FSM
-		sCurrentFSM = IDLE;
 		iFSMCounter = 0;
 		return true;
 	}
@@ -470,9 +469,6 @@ void CEnemyBase::UpdatePosition(void)
 			vec2NumMicroSteps.x = 0;
 		}
 
-
-		// Interact with the Player
-		InteractWithPlayer();
 	}
 	else if (vec2Direction.x > 0)
 	{
@@ -501,9 +497,6 @@ void CEnemyBase::UpdatePosition(void)
 			vec2NumMicroSteps.x = 0;
 		}
 
-		
-		// Interact with the Player
-		InteractWithPlayer();
 	}
 
 	// if the player is to the above or below of the enemy2D
@@ -531,8 +524,7 @@ void CEnemyBase::UpdatePosition(void)
 			vec2Index.y = vec2OldIndex.y;
 			vec2NumMicroSteps.y = 0;
 		}
-		// Interact with the Player
-		InteractWithPlayer();
+
 	}
 	else if (vec2Direction.y > 0)
 	{
@@ -559,8 +551,6 @@ void CEnemyBase::UpdatePosition(void)
 			vec2NumMicroSteps.y = 0;
 		}
 
-		// Interact with the Player
-		InteractWithPlayer();
 	}
 }
 

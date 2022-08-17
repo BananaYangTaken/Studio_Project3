@@ -31,7 +31,7 @@ CEnemy2D_Zombie::CEnemy2D_Zombie(void)
 	iFSMCounter = 0;
 	animatedSprites = NULL;
 	AStarCalculate = true;
-	Health = 3;
+	Health = 60;
 	Death = 0;
 	InvulnerabilityFrame = 0;
 	Direction = 2;
@@ -342,9 +342,6 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 			{
 				ScreenPos.y = vec2Index.y + 1 - Player->vec2Index.y + cSettings->VIEW_TILES_YAXIS * 0.5;
 			}
-
-			std::cout << "x: " << ScreenPos.x << " y: " << ScreenPos.y << std::endl;
-
 
 			//Convert position to UV Coords
 			vec2UVCoordinate.x = cSettings->ConvertIndexToUVSpace(cSettings->x, ScreenPos.x - 1, false, vec2NumMicroSteps.x * cSettings->MICRO_STEP_XAXIS);

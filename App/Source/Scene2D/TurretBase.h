@@ -26,6 +26,9 @@
 // Include Keyboard controller
 #include "Inputs/KeyboardController.h"
 
+// Include CEnemyBase
+#include "EnemyBase.h"
+
 class CTurretBase : public CEntity2D
 {
 public:
@@ -53,12 +56,8 @@ public:
 	// boolean flag to indicate if this enemy is active
 	bool bIsActive;
 
-	//Getter and Setter for Ammo & Levels
-	void SetAmmo(unsigned int);
-	unsigned int GetAmmo(void);
+	void SetEnemyList(std::vector<CEnemyBase*>* newEnemyList);
 
-	void SetLevel(unsigned int);
-	unsigned int GetDeathState(void);
 protected:
 	enum DIRECTION
 	{
@@ -122,6 +121,8 @@ protected:
 
 	// Max count in a state
 	const int iMaxFSMCounter = 60;
+
+	std::vector<CEnemyBase*>* cEnemyList;
 
 	void Constraint(DIRECTION eDirection = LEFT);
 

@@ -87,7 +87,7 @@ bool CTurretBase::Init(int x, int y)
 
 	unsigned int uiRow = -1;
 	unsigned int uiCol = -1;
-	if (cMap2D->FindValue(311, uiRow, uiCol) == false)
+	if (cMap2D->FindValue(401, uiRow, uiCol) == false)
 	{
 		return false;	// Unable to find the start position of the enemy, so quit this game
 	}
@@ -114,11 +114,13 @@ bool CTurretBase::Init(int x, int y)
 	//CS:Create Animated Sprites and setup animation
 
 
-	animatedSprites = CMeshBuilder::GenerateSpriteAnimation(9, 9, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
-	animatedSprites->AddAnimation("idle", 7, 9);
-	animatedSprites->AddAnimation("move", 0, 29);
-	animatedSprites->AddAnimation("attack", 30, 69);
-	animatedSprites->AddAnimation("death", 72, 77);
+	animatedSprites = CMeshBuilder::GenerateSpriteAnimation(1, 9, cSettings->TILE_WIDTH*3, cSettings->TILE_HEIGHT*3);
+	animatedSprites->AddAnimation("L1idle", 0, 0);
+	animatedSprites->AddAnimation("L1Attack", 0, 2);
+	animatedSprites->AddAnimation("L2idle", 3, 3);
+	animatedSprites->AddAnimation("L2Attack", 3, 5);
+	animatedSprites->AddAnimation("L3idle", 6, 6);
+	animatedSprites->AddAnimation("L3Attack", 6, 8);
 	runtimeColour = glm::vec4(1, 1, 1, 1.0);
 
 	// Set the Physics to fall status by default
@@ -141,53 +143,62 @@ void CTurretBase::Update(const double dElapsedTime)
 	{
 	case IDLE:
 		//FSM Transition
-		if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 20.0f)
+		for (int i = 0; i < cEnemyList->size(); i++)
 		{
-			sCurrentFSM = TARGET;
-			iFSMCounter = 0;
+			if (cPhysics2D.CalculateDistance(vec2Index, (*cEnemyList)[i]->vec2Index) < 20.0f)
+			{
+				sCurrentFSM = TARGET;
+				iFSMCounter = 0;
+			}
 		}
-		else if (iFSMCounter > iMaxFSMCounter)
+		if (iFSMCounter > iMaxFSMCounter)
 		{
 			sCurrentFSM = TARGET;
 			iFSMCounter = 0;
 		}
 		iFSMCounter++;
 		//Animation
-		animatedSprites->PlayAnimation("idle", -1, 1.0f);
+		animatedSprites->PlayAnimation("L1idle", -1, 1.0f);
 		break;
 	case TARGET:
 		//FSM Transition
-		if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 10.0f)
+		for (int i = 0; i < cEnemyList->size(); i++)
 		{
-			sCurrentFSM = ATTACK;
-			iFSMCounter = 0;
+			if (cPhysics2D.CalculateDistance(vec2Index, (*cEnemyList)[i]->vec2Index) < 10.0f)
+			{
+				sCurrentFSM = ATTACK;
+				iFSMCounter = 0;
+			}
 		}
-		else if (iFSMCounter > iMaxFSMCounter)
+		if (iFSMCounter > iMaxFSMCounter)
 		{
 			sCurrentFSM = IDLE;
 			iFSMCounter = 0;
 		}
 		iFSMCounter++;
+		animatedSprites->PlayAnimation("L1idle", -1, 1.0f);
 		//Animation
 		break;
 	case ATTACK:
 		//FSM Transition
-		if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 10.0f)
+		for (int i = 0; i < cEnemyList->size(); i++)
 		{
-			// Attack
-			animatedSprites->PlayAnimation("attack", 1, 1.0f);
-			CSoundController::GetInstance()->PlaySoundByID(15);
-		}
-		else
-		{
-			if (iFSMCounter > iMaxFSMCounter)
+			if (cPhysics2D.CalculateDistance(vec2Index, (*cEnemyList)[i]->vec2Index) < 10.0f)
 			{
-				sCurrentFSM = IDLE;
-				iFSMCounter = 0;
-				//cout << "ATTACK : Reset counter: " << iFSMCounter << endl;
+				// Attack
+				animatedSprites->PlayAnimation("L1Attack", 1, 1.0f);
+				CSoundController::GetInstance()->PlaySoundByID(15);
+				(*cEnemyList)[i]->SetHealth((*cEnemyList)[i]->GetHealth() - 1);
 			}
-			iFSMCounter++;
 		}
+
+		if (iFSMCounter > iMaxFSMCounter)
+		{
+			sCurrentFSM = IDLE;
+			iFSMCounter = 0;
+		}
+		iFSMCounter++;
+
 		break;
 	default:
 		break;
@@ -233,9 +244,6 @@ void CTurretBase::Update(const double dElapsedTime)
 			{
 				ScreenPos.y = vec2Index.y + 1 - Player->vec2Index.y + cSettings->VIEW_TILES_YAXIS * 0.5;
 			}
-
-			std::cout << "x: " << ScreenPos.x << " y: " << ScreenPos.y << std::endl;
-
 
 			//Convert position to UV Coords
 			vec2UVCoordinate.x = cSettings->ConvertIndexToUVSpace(cSettings->x, ScreenPos.x - 1, false, vec2NumMicroSteps.x * cSettings->MICRO_STEP_XAXIS);
@@ -664,4 +672,9 @@ void CTurretBase::PostRender(void)
 
 	// Disable blending
 	glDisable(GL_BLEND);
+}
+
+void CTurretBase::SetEnemyList(std::vector<CEnemyBase*>* newEnemyList)
+{
+	cEnemyList = newEnemyList;
 }

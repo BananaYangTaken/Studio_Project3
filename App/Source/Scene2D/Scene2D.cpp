@@ -32,6 +32,7 @@ CScene2D::CScene2D(void)
 	, cSoundController(NULL)
 	, cObjectList(NULL)
 	, cEnemyList(NULL)
+	, cTurretList(NULL)
 {
 }
 
@@ -71,6 +72,7 @@ CScene2D::~CScene2D(void)
 
 	cObjectList.clear();
 	cEnemyList.clear();
+	cTurretList.clear();
 
 	CInventoryManager::GetInstance()->Exit();
 	cGUI_Scene2D->Destroy();
@@ -125,7 +127,9 @@ bool CScene2D::Init(void)
 	}
 
 	LoadObjects();
-	//LoadEnemies();
+	LoadEnemies();
+	LoadTurret();
+
 	//Create and initialse 2D GUI
 	cGUI_Scene2D = CGUI_Scene2D::GetInstance();
 	//Initialise the instance
@@ -183,6 +187,13 @@ bool CScene2D::Update(const double dElapsedTime)
 		}
 	}
 	
+	for (int i = 0; i < cTurretList.size(); i++)
+	{
+		cTurretList[i]->Update(dElapsedTime);
+	}
+	LoadTurret();
+
+
 	//Call cGUI's update method
 	cGUI_Scene2D->Update(dElapsedTime);
 	//Call Sound Controller's update method
@@ -340,6 +351,16 @@ void CScene2D::Render(void)
 		cEnemyList[i]->PostRender();
 	}
 
+	for (unsigned int i = 0; i < cTurretList.size(); i++)
+	{
+		//Call CTurret2D's Pre Render()
+		cTurretList[i]->PreRender();
+		//Call CTurret2D's Render()
+		cTurretList[i]->Render();
+		//Call CTurret2D's Post Render()
+		cTurretList[i]->PostRender();
+	}
+
 	//Call cGUI_Scene2D's Pre Render()
 	cGUI_Scene2D->PreRender();
 	//Call Player2D's Render()
@@ -435,6 +456,46 @@ void CScene2D::LoadEnemies(void)
 	}
 }
 
+void CScene2D::LoadTurret(void)
+{
+	Grid*** arrMapInfo;
+	arrMapInfo = cMap2D->GetarrMapInfo();
+	unsigned int uiCurlLevel = cMap2D->GetCurrentLevel();
+	// Read the rows and columns of CSV data into arrMapInfo
+	for (unsigned int uiRow = 0; uiRow < cSettings->NUM_TILES_YAXIS; uiRow++)
+	{
+		// Load a particular CSV value into the arrMapInfo
+		for (unsigned int uiCol = 0; uiCol < cSettings->NUM_TILES_XAXIS; ++uiCol)
+		{
+			int Value = arrMapInfo[uiCurlLevel][uiRow][uiCol].value;
+			if (Value >= 400)
+			{
+				bool Turretnew = true;
+				for (int i = 0; i < cTurretList.size(); i++)
+				{
+					if (cTurretList.at(i)->vec2Index.x == uiCol && cTurretList.at(i)->vec2Index.y == cSettings->NUM_TILES_YAXIS - uiRow - 1)
+					{
+						Turretnew = false;
+						break;
+					}
+				}
+				if (Turretnew == true)
+				{
+					CTurretBase* cTurret2D;
+					if (Value == 401)
+						cTurret2D = new CTurretBase();
+					cTurret2D->SetShader("Shader2D_Colour");
+					if (cTurret2D->Init(uiCol, cSettings->NUM_TILES_YAXIS - uiRow - 1))
+					{
+						cTurret2D->SetEnemyList(&cEnemyList);
+						cTurretList.push_back(cTurret2D);
+					}
+				}
+			}
+		}
+	}
+}
+
 void CScene2D::Destroy(void)
 {
 	if (cSoundController)
@@ -472,4 +533,5 @@ void CScene2D::Destroy(void)
 	}
 	cObjectList.clear();
 	cEnemyList.clear();
+	cTurretList.clear();
 }
