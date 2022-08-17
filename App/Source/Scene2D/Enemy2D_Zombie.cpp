@@ -146,9 +146,9 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 	{
 		InvulnerabilityFrame -= dElapsedTime;
 	}
-	if (deathTimer > 1)
+	if (deathTimer > 2)
 	{
-		Death = 1;
+		bIsActive = false;
 	}
 	if (Health == 0)
 	{

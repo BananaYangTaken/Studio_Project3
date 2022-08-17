@@ -183,7 +183,8 @@ void CTurretBase::Update(const double dElapsedTime)
 		//FSM Transition
 		for (int i = 0; i < cEnemyList->size(); i++)
 		{
-			if (cPhysics2D.CalculateDistance(vec2Index, (*cEnemyList)[i]->vec2Index) < 10.0f)
+			if (cPhysics2D.CalculateDistance(vec2Index, (*cEnemyList)[i]->vec2Index) < 10.0f 
+				&& (*cEnemyList)[i]->bIsActive == true)
 			{
 				// Attack
 				animatedSprites->PlayAnimation("L1Attack", 1, 1.0f);
