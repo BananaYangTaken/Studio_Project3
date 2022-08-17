@@ -19,6 +19,7 @@ CGUI_Scene2D::CGUI_Scene2D(void)
 	, m_fProgressBar(0.0f)
 	, cInventoryManager(NULL)
 	, cInventoryItem(NULL)
+
 {
 }
 
@@ -113,10 +114,20 @@ void CGUI_Scene2D::DecreaseInventoryItemCount(std::string arrayindex, int decrem
 	if (inventory_item_quantity[ind] <= 0)
 	{
 		inventory_item_quantity[ind] = 0;
-		InventoryItemSetZero(inventory_item_name_list[ind]);
 	}
 }
-
+void CGUI_Scene2D::checkforzero()
+{
+	for (int i = 0; i < inventory_size; i++)
+	{
+		std::string emptyi = "empty" + std::to_string(i);
+		if (inventory_item_quantity[i] <= 0 && inventory_item_name_list[i] != "empty" + i)
+		{
+			std::string emptyi = "empty" + std::to_string(i);
+			inventory_item_name_list[i] = emptyi;
+		}
+	}
+}
 void CGUI_Scene2D::InventoryItemSetZero(std::string arrayindex)
 {
 	int ind = 0;
@@ -136,25 +147,22 @@ void CGUI_Scene2D::InventoryItemSetZero(std::string arrayindex)
 
 void CGUI_Scene2D::ChestItemSetZero(std::string arrayindex)
 {
-	int ind = 0;
-	for (int i = 0; i < Chest_size; i++)
+	for (int i = 0; i < inventory_size; i++)
 	{
-		if (arrayindex == chest_item_name_list[i])
+		std::string emptyi = "empty" + std::to_string(i);
+		if (chest_item_quantity[i] <= 0 && chest_item_name_list[i] != "empty" + i)
 		{
-			chest_item_name_list[i] = "empty" + i;
-			ind = i;
-			break;
+			std::string emptyi = "empty" + std::to_string(i);
+			chest_item_name_list[i] = emptyi;
 		}
-
 	}
-	inventory_item_quantity[ind] == 0;
 }
 void CGUI_Scene2D::decreaseChestQuantity(std::string arrayindex, int decrementValue)
 {
 	int ind = 0;
-	for (int i = 0; i < inventory_size; i++)
+	for (int i = 0; i < Chest_size; i++)
 	{
-		if (arrayindex == inventory_item_name_list[i])
+		if (arrayindex == chest_item_name_list[i])
 		{
 			ind = i;
 			break;
@@ -236,6 +244,7 @@ int CGUI_Scene2D::TransferToChest(std::string itemName, int quantity)
 }
 int CGUI_Scene2D::TransferTohand(std::string itemName, int quantity)
 {
+	cout << itemName << endl;
 	int ind = 0;
 	bool found = false;
 	for (int i = 0; i < inventory_size; i++)
@@ -250,7 +259,8 @@ int CGUI_Scene2D::TransferTohand(std::string itemName, int quantity)
 	}
 	if (found == true)
 	{
-
+		cout << "FOUND!" << endl;
+		cout << ind << endl;
 		if (inventory_item_quantity[ind] >= inventory_item_max_quantity[ind])
 		{
 			cout << "RESOURCE FULL!";
@@ -261,31 +271,33 @@ int CGUI_Scene2D::TransferTohand(std::string itemName, int quantity)
 		else if (chest_item_quantity[ind] < quantity)
 		{
 			cout << "Not enough to init full transfer";
-			inventory_item_quantity[ind] += chest_item_quantity[ind];
+			IncreaseInventoryItemCount(inventory_item_name_list[ind], chest_item_quantity[ind]);
 			decreaseChestQuantity(itemName, quantity);
 		}
 		else
 		{
-			inventory_item_quantity[ind] += quantity;
+			IncreaseInventoryItemCount(inventory_item_name_list[ind], quantity);
 			decreaseChestQuantity(itemName, quantity);
 			return 0;
 		}
+		
 	}
 	else
 	{
+		cout << "UNFOUND!" << endl;
 		for (int u = 0; u < inventory_size; u++)
 		{
 			if (inventory_item_name_list[u].find("empty") != string::npos)
 			{
+				inventory_item_name_list[u] = itemName;
 				if (chest_item_quantity[ind] <= quantity)
 				{
 					cout << "Not enough to init full transfer";
-					chest_item_quantity[ind] += inventory_item_quantity[ind];
+					inventory_item_quantity[ind] += chest_item_quantity[ind];
 					decreaseChestQuantity(itemName, quantity);
 					return 0;
 				}
-				inventory_item_quantity[u] = quantity;
-				inventory_item_name_list[u] = itemName;
+				inventory_item_quantity[u] += quantity;
 				decreaseChestQuantity(itemName, quantity);
 				return 0;
 			}
@@ -303,6 +315,7 @@ bool CGUI_Scene2D::Init(void)
 {
 	// Get the handler to the CSettings instance
 	cSettings = CSettings::GetInstance();
+	cMap2D = CMap2D::GetInstance();
 	cKeyboardController = CKeyboardController::GetInstance();
 	// Store the CFPSCounter singleton instance here
 	cFPSCounter = CFPSCounter::GetInstance();
@@ -407,14 +420,22 @@ void CGUI_Scene2D::PreloadInventoryTextures()
 {
 	for (int i = 0; i < inventory_size; i++)
 	{
-		std::string filenamestring = "Image\\BlankBoxButton.tga";
-		newInventorybutton.fileName = filenamestring;
+		newInventorybutton.fileName = "Image\\BlankBoxButton.tga";
 		newInventorybutton.textureID = il->LoadTextureGetID(newInventorybutton.fileName.c_str(), false);
+		
+		newChestbutton.fileName = "Image\\BlankBoxButton.tga";
+		newChestbutton.textureID = il->LoadTextureGetID(newChestbutton.fileName.c_str(), false);
+
 		newDescriptionButton.fileName = "Image\\GUI\\Dropbutton.png";
 		newDescriptionButton.textureID = il->LoadTextureGetID(newDescriptionButton.fileName.c_str(), false);
 	}
 }
+void CGUI_Scene2D::dropitem(int key)
+{
+	inventory_item_quantity[key] = 0;
+	//cMap2D->SetMapInfo()
 
+}
 void CGUI_Scene2D::SwapItems(int itemindex, int swapindex)
 {
 	std::string temp = inventory_item_name_list[itemindex];
@@ -511,19 +532,20 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					ImGui::PopStyleColor();
 
 					///
-					ImGuiWindowFlags inventoryWindowFlagsButton =
+					if (chestactive == false)
+					{
+						ImGuiWindowFlags inventoryWindowFlagsButton =
 						ImGuiWindowFlags_AlwaysAutoResize |
 						ImGuiWindowFlags_NoTitleBar |
 						ImGuiWindowFlags_NoResize |
 						ImGuiWindowFlags_NoCollapse |
 						ImGuiWindowFlags_NoBackground |
 						ImGuiWindowFlags_NoScrollbar;
-					if (inventory_item_name_list[i].find("empty") == string::npos)
-					{
+
 						std::string istr = std::to_string(i + 18);
-						ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 0.f));
-						ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.f, 0.f, 0.f, 0.1f));
-						ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.2f, 0.2f, 0.3f));
+						ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.3f, 0.f, 0.3f, 0.1f));
+						ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.5f, 0.f, 0.5f, 0.1f));
+						ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.5f, 0.2f, 0.5f, 0.3f));
 						{
 							if (inventoryloaded == false)
 							{
@@ -555,12 +577,55 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 										}
 									}
 								}
+				
 							}
 							ImGui::End();
 						}
 						ImGui::PopStyleColor(3);
 					}
-					else continue;
+					else if (chestactive == true)
+					{
+						ImGuiWindowFlags inventoryWindowFlagsButton =
+							ImGuiWindowFlags_AlwaysAutoResize |
+							ImGuiWindowFlags_NoTitleBar |
+							ImGuiWindowFlags_NoResize |
+							ImGuiWindowFlags_NoCollapse |
+							ImGuiWindowFlags_NoBackground |
+							ImGuiWindowFlags_NoScrollbar;
+						if (inventory_item_name_list[i].find("empty") == string::npos)
+						{
+							std::string istr = std::to_string(i + 18);
+							ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 0.f));
+							ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.f, 0.f, 0.f, 0.1f));
+							ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.2f, 0.2f, 0.3f));
+							{
+								if (inventoryloaded == false)
+								{
+									PreloadInventoryTextures();
+									inventoryloaded = true;
+								}
+								ctxt = (inventory_item_name_list[i] + istr);
+								c = ctxt.c_str();
+								ImGui::Begin(c, NULL, inventoryWindowFlagsButton);
+								{
+									ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wspace, cSettings->iWindowHeight * hspace));
+									ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
+									if (ImGui::ImageButton((ImTextureID)newInventorybutton.textureID,
+										ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(0.0, 0.0)))
+									{
+										CKeyboardController::GetInstance()->Reset();
+										chestkey = i;
+										selectinventory = true;
+										cout << chestkey;
+
+									}
+								}
+								ImGui::End();
+							}
+							ImGui::PopStyleColor(3);
+						}
+						else continue;
+					}
 				}
 			}
 			else if (checkinginventory == false && crafting == false && descactive == false && chestactive == false)
@@ -805,7 +870,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					}
 					else if (itemname == "Stone Ore")
 					{
-						description = "A hard rock you picked up\n You can use this to build \nand craft stuff.";
+						description = "A hard rock you picked up\nYou can use this to build \nand craft stuff.";
 					}
 					else if (itemname == "Scrap Metal")
 					{
@@ -813,7 +878,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					}
 					else if (itemname == "Pistol Bullets")
 					{
-						description = "Ammo used by light guns\nlike pistols and sub machine \nguns. litle damage but\neasy to find and craft";
+						description = "Ammo used by light guns\nlike pistols and sub machine \nguns. little damage but\neasy to find and craft";
 					}
 					else if (itemname == "Rifle Bullets")
 					{
@@ -829,11 +894,11 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					}
 					else if (itemname == "Medkit")
 					{
-						description = "A fully kitted medkit\ncontaining various medical\nsupplies, including disposable\nsyringes, anti inflamation\ntablets, and surgical tools\n Heals your player\nto max health.";
+						description = "A fully kitted medkit\ncontaining various medical\nsupplies, including disposable\nsyringes, anti inflamation\ntablets, and surgical tools\nHeals your player\nto max health.";
 					}
 					else if (itemname == "Bandage")
 					{
-						description = "An antiseptic bandage used\n for medical purposes\nHeals a small amount\nof health";
+						description = "An antiseptic bandage used\nfor medical purposes\nHeals a small amount\nof health";
 					}
 					else if (itemname == "Fabric")
 					{
@@ -882,6 +947,16 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 								swapactive = true;
 								OGclicked = deskey;
 							}
+							if (ImGui::ImageButton((ImTextureID)newDropbutton.textureID,
+								ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(0.0, 0.0)))
+							{
+								CKeyboardController::GetInstance()->Reset();
+								if (inventory_item_name_list[deskey].find("empty") == string::npos)
+								{
+									cout << "Dropped " + inventory_item_name_list[deskey];
+									dropitem(deskey);
+								}
+							}
 						}
 						ImGui::PopStyleColor(4);
 					}
@@ -911,9 +986,9 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						//cout << "Loading PlayGameState" << endl;
 						if (selectinventory == true)
 						{
-							TransferToChest(inventory_item_name_list[chestkey - 1], 1);
+							TransferToChest(inventory_item_name_list[chestkey], 1);
 						}
-						else TransferTohand(inventory_item_name_list[chestkey - 1], 1);
+						else TransferTohand(chest_item_name_list[chestkey], 1);
 					}
 					if (ImGui::ImageButton((ImTextureID)Add10Button.textureID,
 						ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
@@ -925,36 +1000,41 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						//cout << "Loading PlayGameState" << endl;
 						if (selectinventory == true)
 						{
-							TransferToChest(inventory_item_name_list[chestkey - 1], 10);
+							TransferToChest(inventory_item_name_list[chestkey], 10);
 						}
-						else TransferTohand(inventory_item_name_list[chestkey - 1], 10);
+						else TransferTohand(chest_item_name_list[chestkey], 10);
 					}
 					if (ImGui::ImageButton((ImTextureID)AddAllButton.textureID,
 						ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
 					{
 						if (selectinventory == true)
 						{
-							TransferToChest(inventory_item_name_list[chestkey - 1], 100);
+							TransferToChest(inventory_item_name_list[chestkey], 100);
 						}
-						else TransferTohand(inventory_item_name_list[chestkey - 1], 100);
+						else TransferTohand(chest_item_name_list[chestkey], 100);
 					}
 					ImGui::PopStyleColor(4);
 					std::string selecttext = "";
 					float hhspace = 0.65f;
 					float wwspace = 0.1f;
-					if (selectinventory == true) selecttext = "Selected item : " + inventory_item_name_list[chestkey - 1];
-					else if (selectinventory == false) selecttext = "Selected item : " + chest_item_name_list[chestkey - 1];
+					if (inventory_item_name_list[chestkey].find("empty") == string::npos)
+					{
+						if (selectinventory == true) selecttext = "Selected item : " + inventory_item_name_list[chestkey];
+					}
+					else if (chest_item_name_list[chestkey].find("empty") == string::npos)
+					{
+						if (selectinventory == false) selecttext = "Selected item : " + chest_item_name_list[chestkey];
+					}
 					level = 0;
 					ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 6.55));
 					ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
 					ImGui::SetWindowFontScale(2.5f * relativeScale_y);
 					ImGui::TextColored(ImVec4(1, 1, 0, 1), "CHEST INVENTORY", cFPSCounter->GetFrameRate());
 					ImGui::SetWindowFontScale(1.0f * relativeScale_y);
-					ImGui::TextColored(ImVec4(1, 1, 0, 1), "press C to change between chest and inventory selection", cFPSCounter->GetFrameRate());
-					ImGui::TextColored(ImVec4(1, 1, 0, 1), "press 1 - 9 to select item in chest / inventory", cFPSCounter->GetFrameRate());
+					ImGui::TextColored(ImVec4(1, 1, 0, 1), "Click on the inventory or chest boxes to select them!", cFPSCounter->GetFrameRate());
 					if (selectinventory == true) ImGui::TextColored(ImVec4(1, 1, 0, 1), "Currently selected: Inventory", cFPSCounter->GetFrameRate());
 					else ImGui::TextColored(ImVec4(1, 1, 0, 1), "Currently selected: Chest", cFPSCounter->GetFrameRate());
-					if (chestkey != 0) ImGui::TextColored(ImVec4(1, 1, 0, 1), selecttext.c_str(), cFPSCounter->GetFrameRate());
+					ImGui::TextColored(ImVec4(1, 1, 0, 1), selecttext.c_str(), cFPSCounter->GetFrameRate());
 					ImGuiWindowFlags inventoryWindowFlags =
 						ImGuiWindowFlags_AlwaysAutoResize |
 						ImGuiWindowFlags_NoTitleBar |
@@ -975,7 +1055,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 
 						recName = chest_item_name_list[i];
 						ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.f, 0.f, 1.0f));  // Set a background color
-						std::string ctxt = (chest_item_name_list[i] + "6");
+						std::string ctxt = (chest_item_name_list[i] + "45");
 						const char* c = ctxt.c_str();
 						{
 							ImGui::Begin(c, NULL, inventoryWindowFlags);
@@ -993,6 +1073,44 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 							ImGui::End();
 						}
 						ImGui::PopStyleColor();
+						///
+						ImGuiWindowFlags chestWindowFlagsButton =
+						ImGuiWindowFlags_AlwaysAutoResize |
+						ImGuiWindowFlags_NoTitleBar |
+						ImGuiWindowFlags_NoResize |
+						ImGuiWindowFlags_NoCollapse |
+						ImGuiWindowFlags_NoBackground |
+						ImGuiWindowFlags_NoScrollbar;
+
+						std::string istr = std::to_string(i + 36);
+						ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 0.f));
+						ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.f, 0.f, 0.f, 0.1f));
+						ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.2f, 0.2f, 0.3f));
+						{
+							if (inventoryloaded == false)
+							{
+								PreloadInventoryTextures();
+								inventoryloaded = true;
+							}
+							ctxt = (inventory_item_name_list[i] + istr);
+							c = ctxt.c_str();
+							ImGui::Begin(c, NULL, chestWindowFlagsButton);
+							{
+								ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wwspace, cSettings->iWindowHeight * hhspace));
+								ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
+								if (ImGui::ImageButton((ImTextureID)newChestbutton.textureID,
+									ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(0.0, 0.0)))
+								{
+									CKeyboardController::GetInstance()->Reset();
+									chestkey = i;
+									cout << chestkey << endl;
+									selectinventory = false;
+
+								}
+							}
+							ImGui::End();
+						}
+						ImGui::PopStyleColor(3);
 					}
 
 					if (cKeyboardController->IsKeyPressed('C'))
@@ -1044,7 +1162,9 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 			ImGui::End();
 		}
 		ImGui::EndFrame();
+		checkforzero();
 	}
+	
 
 
 /**

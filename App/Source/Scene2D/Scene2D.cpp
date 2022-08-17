@@ -125,7 +125,7 @@ bool CScene2D::Init(void)
 	}
 
 	LoadObjects();
-	LoadEnemies();
+	//LoadEnemies();
 	//Create and initialse 2D GUI
 	cGUI_Scene2D = CGUI_Scene2D::GetInstance();
 	//Initialise the instance
@@ -169,7 +169,7 @@ bool CScene2D::Update(const double dElapsedTime)
 	{
 		cEnemyList[i]->Update(dElapsedTime);
 	}
-	LoadEnemies();
+	//LoadEnemies();
 	vector<CEnemyBase*>::iterator it = cEnemyList.begin();
 	while (it != cEnemyList.end())
 	{

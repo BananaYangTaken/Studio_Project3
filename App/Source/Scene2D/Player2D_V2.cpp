@@ -202,8 +202,9 @@ bool CPlayer2D_V2::Init(void)
 
 	cInventoryItem = cInventoryManager->Add("Blueprint", "Image/Blueprint.tga", 1, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
-
-	cInventoryItem = cInventoryManager->Add("empty", "Image/BlankBox.tga", 1, 0);
+	cInventoryItem = cInventoryManager->Add("empty0", "Image/BlankBox.tga", 1, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+	cInventoryItem = cInventoryManager->Add("empty1", "Image/BlankBox.tga", 1, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 	cInventoryItem = cInventoryManager->Add("empty2", "Image/BlankBox.tga", 1, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);

@@ -8,6 +8,7 @@
 
 // Include SingletonTemplate
 #include "DesignPatterns/SingletonTemplate.h"
+#include "Map2D.h"
 #include "System\ImageLoader.h"
 // Include CEntity2D
 #include "Primitives/Entity2D.h"
@@ -51,8 +52,8 @@ public:
 	bool Init(void);
 	bool selectinventory = true;
 	const int inventory_size = 9;
-	std::string inventory_item_name_list[9] = {"Scrap Metal", "Stone Ore", "Stone Ore", "Pistol Bullets", "Rifle Bullets", "Rifle", "Pistol", "Medkit", "Bandage"};
-	int inventory_item_quantity[9] = {155,150,50,45,0,0,0,0,0};
+	std::string inventory_item_name_list[9] = {"Scrap Metal", "Hard wood", "Stone Ore", "Pistol Bullets", "Rifle Bullets", "Rifle", "Pistol", "Medkit", "Bandage"};
+	int inventory_item_quantity[9] = {155,150,50,100,50,1,1,90,200};
 	int inventory_item_max_quantity[9] = {200,200,200,200,200,200,200,200,200};
 
 	int Crafting_list_size = 5;
@@ -84,6 +85,8 @@ public:
 	bool CheckCrafting(int recipeIngredientCount, std::string Ingredients[4], int IngredientRequiredCount[4], std::string ResultantCraft, int CraftedQuantity);
 	void InventoryItemSetZero(std::string arrayindex);
 	void ChestItemSetZero(std::string arrayindex);
+	void checkforzero(void);
+	void dropitem(int key);
 	// PreRender
 	void PreRender(void);
 	void SwapItems(int itemindex, int swapindex);
@@ -122,6 +125,7 @@ protected:
 	float m_fProgressBar;
 	CKeyboardController* cKeyboardController;
 	CImageLoader* il;
+	CMap2D* cMap2D;
 	// The handler containing the instance of CInventoryManager
 	CInventoryManager* cInventoryManager;
 	// The handler containing the instance of CInventoryItem
@@ -130,6 +134,8 @@ protected:
 	ButtonData Add10Button;
 	ButtonData AddAllButton;
 	ButtonData newInventorybutton;
+	ButtonData newDropbutton;
+	ButtonData newChestbutton;
 	ButtonData newDescriptionButton;
 	ButtonData newTransferButton;
 	// These variables are for IMGUI demo only
