@@ -127,7 +127,8 @@ protected:
 	// Player's colour
 	glm::vec4 runtimeColour;
 
-	unsigned int Health;
+	float Health;
+	float MaxHealth;
 	float InvulnerabilityFrame;
 
 	// Player's Current Direction

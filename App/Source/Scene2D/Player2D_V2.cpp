@@ -31,6 +31,7 @@ CPlayer2D_V2::CPlayer2D_V2(void)
 	, Direction(DOWN)
 	, cObjectList(NULL)
 	, Health(NULL)
+	, MaxHealth(NULL)
 	, InvulnerabilityFrame(NULL)
 {
 	transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
@@ -109,7 +110,7 @@ bool CPlayer2D_V2::Init(void)
 	
 	LoadObject = false;
 
-	Health = 5;
+	Health = MaxHealth = 100;
 	InvulnerabilityFrame = 0;
 
 	// Find the indices for the player in arrMapInfo, and assign it to cPlayer2D
@@ -283,15 +284,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 	}
 	if (Health <= 0 && InvulnerabilityFrame <= 0)
 	{
-		if (CInventoryManager::GetInstance()->GetItem("Lives")->GetCount() > 1)
-		{
-			CInventoryManager::GetInstance()->GetItem("Lives")->Remove(1);
-			CGameManager::GetInstance()->bLevelToReplay = true;
-		}
-		else
-		{
-			CGameManager::GetInstance()->bPlayerLost = true;
-		}
+		CGameManager::GetInstance()->bPlayerLost = true;
 	}
 	// Get keyboard updates
 	if (cKeyboardController->IsKeyDown(GLFW_KEY_A))
@@ -642,124 +635,7 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 
 	switch (cMap2D->GetMapInfo(vec2Index.y + ydisplacement,vec2Index.x + xdisplacement))
 	{
-	//Exit
-	case 18:  
-		cInventoryItem = cInventoryManager->GetItem("Rune");
-		if (cInventoryItem->iItemCount == cInventoryItem->iItemMaxCount && (xdisplacement == 0 && ydisplacement == 0))
-		{
-			cInventoryItem = cInventoryManager->GetItem("Lives");
-			cInventoryItem->iItemCount = cInventoryItem->GetMaxCount();
-		}
-		break;
-	//Holy Water
-	case 19:
-		if (Player == 1 && (xdisplacement == 0 && ydisplacement == 0) && InvulnerabilityFrame <= 0)
-		{
-			Health -= 1;
-			InvulnerabilityFrame += 0.5;
-		}
-		break;
-	//Spikes
-	case 20:
-		if (Player == 2 && (xdisplacement == 0 && ydisplacement == 0) && InvulnerabilityFrame <= 0)
-		{ 
-			Health -= 1;
-			InvulnerabilityFrame += 0.5;
-		}
-		break;
-	//Chest
-	case 24:
-		cInventoryItem = cInventoryManager->GetItem("Key");
-		if (cInventoryItem->GetCount() > 0 && (xdisplacement == 0 && ydisplacement == 0))
-		{
-			cInventoryItem->iItemCount--;
-			for (int i = 0; i < cObjectList->size(); i++)
-			{
-				if (cObjectList->at(i)->vec2Index.x == vec2Index.x && cObjectList->at(i)->vec2Index.y == vec2Index.y)
-				{
-					cObjectList->at(i)->SetIdle(true);
-					cObjectList->at(i)->SetTransition(true);
-					cMap2D->SetMapInfo(vec2Index.y+1, vec2Index.x, 27);
-					LoadObject = true;
-					break;
-				}
-			}
-		}
-		break;
-	//Key
-	case 26:
-		cInventoryItem = cInventoryManager->GetItem("Key");
-		if (cInventoryItem->GetCount() == 0 && (xdisplacement == 0 && ydisplacement == 0))
-		{
-			//Erase Key from this position
-			cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
-			//Erase Key from ObjectList
-			for (int i = 0; i < cObjectList->size(); i++)
-			{
-				if (cObjectList->at(i)->vec2Index.x == vec2Index.x && cObjectList->at(i)->vec2Index.y == vec2Index.y)
-				{
-					cObjectList->erase(cObjectList->begin() + i);
-					cInventoryItem->Add(1);
-					break;
-				}
-			}
-		}
-		break;
-	//Rune
-	case 27:
-		cInventoryItem = cInventoryManager->GetItem("Rune");
-		if (cInventoryItem->GetCount() == 0 && (xdisplacement == 0 && ydisplacement == 0))
-		{
-			//Erase Rune from this position
-			cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
-			//Erase Rune from ObjectList
-			for (int i = 0; i < cObjectList->size(); i++)
-			{
-				if (cObjectList->at(i)->vec2Index.x == vec2Index.x && cObjectList->at(i)->vec2Index.y == vec2Index.y)
-				{
-					cObjectList->erase(cObjectList->begin() + i);
-					cInventoryItem->Add(1);
-					break;
-				}
-			}
-			cSoundController->PlaySoundByID(1);
-		}
-		break;
-	//Door
-	case 28:
-		cInventoryItem = cInventoryManager->GetItem("Key"); 
-		CObject2D* DoorPosition;
-		for (int i = 0; i < cObjectList->size(); i++)
-		{
-			if (cObjectList->at(i)->vec2Index.x == vec2Index.x + xdisplacement && cObjectList->at(i)->vec2Index.y == vec2Index.y + ydisplacement)
-			{
-				DoorPosition = cObjectList->at(i);
-			}
-		}
-		//Unlock door and remove key
-		if (cInventoryItem->GetCount() > 0 && ((xdisplacement == 1 && ydisplacement == 0) || (xdisplacement == 0 && ydisplacement == 0)))
-		{
-			cInventoryItem->iItemCount--;
-			DoorPosition->SetIdle(true);
-			DoorPosition->SetTransition(true);
-			LoadObject = true;
-			break;
-			
-		}
-		
-		
-		if (Direction == RIGHT && (xdisplacement == 1 && ydisplacement == 0) && DoorPosition->GetIdle() == false)
-		{
-			this->vec2Index = vec2OldIndex;
-			this->vec2NumMicroSteps.x = 0;
-		}
-		else if (Direction == LEFT && (xdisplacement == 0 && ydisplacement == 0) && DoorPosition->GetIdle() == false)
-		{
-			this->vec2NumMicroSteps.x = cSettings->NUM_STEPS_PER_TILE_XAXIS; 
-		}
-		break;
-
-
+	
 	default:
 		break;
 	}
