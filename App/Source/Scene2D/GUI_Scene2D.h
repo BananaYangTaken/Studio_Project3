@@ -51,7 +51,7 @@ public:
 	bool Init(void);
 	bool selectinventory = true;
 	const int inventory_size = 9;
-	std::string inventory_item_name_list[9] = {"Scrap Metal", "empty2", "Stone Ore", "Pistol Bullets", "Rifle Bullets", "Rifle", "Pistol", "Medkit", "Bandage"};
+	std::string inventory_item_name_list[9] = {"Scrap Metal", "Stone Ore", "Stone Ore", "Pistol Bullets", "Rifle Bullets", "Rifle", "Pistol", "Medkit", "Bandage"};
 	int inventory_item_quantity[9] = {155,150,50,45,0,0,0,0,0};
 	int inventory_item_max_quantity[9] = {200,200,200,200,200,200,200,200,200};
 
@@ -69,8 +69,8 @@ public:
 	int chestkey = 1;
 	float buttonWidth = 64;
 	float buttonHeight = 64;
-
-
+	int hotbarlevel = 0, OGclicked;
+	bool inventoryloaded = false;
 	bool checkinginventory = false;
 	bool crafting = false;
 	bool recipeactive = false;
@@ -85,11 +85,14 @@ public:
 	void ChestItemSetZero(std::string arrayindex);
 	// PreRender
 	void PreRender(void);
+	void SwapItems(int itemindex, int swapindex);
+	bool swapactive = false;
 	int TransferToChest(std::string itemName, int quantity);
 	int TransferTohand(std::string itemName, int quantity);
 	void decreaseChestQuantity(std::string itemname, int quantity);
 	// Render
 	void Render(void);
+	void PreloadInventoryTextures(void);
 
 	// PostRender
 	void PostRender(void);
@@ -125,6 +128,9 @@ protected:
 	ButtonData Add1Button;
 	ButtonData Add10Button;
 	ButtonData AddAllButton;
+	ButtonData newInventorybutton;
+	ButtonData newDescriptionButton;
+	ButtonData newTransferButton;
 	// These variables are for IMGUI demo only
 	bool show_demo_window;
 	bool show_another_window;

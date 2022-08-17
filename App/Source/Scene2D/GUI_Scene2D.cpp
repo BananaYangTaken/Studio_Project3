@@ -402,8 +402,36 @@ bool CGUI_Scene2D::CheckCrafting(int recipeIngredientCount, std::string Ingredie
 /**
  @brief Update this instance
  */
+
+void CGUI_Scene2D::PreloadInventoryTextures()
+{
+	for (int i = 0; i < inventory_size; i++)
+	{
+		std::string filenamestring = "Image\\BlankBoxButton.tga";
+		newInventorybutton.fileName = filenamestring;
+		newInventorybutton.textureID = il->LoadTextureGetID(newInventorybutton.fileName.c_str(), false);
+		newDescriptionButton.fileName = "Image\\GUI\\Dropbutton.png";
+		newDescriptionButton.textureID = il->LoadTextureGetID(newDescriptionButton.fileName.c_str(), false);
+	}
+}
+
+void CGUI_Scene2D::SwapItems(int itemindex, int swapindex)
+{
+	std::string temp = inventory_item_name_list[itemindex];
+	inventory_item_name_list[itemindex] = inventory_item_name_list[swapindex];
+	inventory_item_name_list[swapindex] = temp;
+
+	int tempp = inventory_item_quantity[itemindex];
+	inventory_item_quantity[itemindex] = inventory_item_quantity[swapindex];
+	inventory_item_quantity[swapindex] = tempp;
+
+	swapactive = false;
+	OGclicked = 0;
+}
+
 void CGUI_Scene2D::Update(const double dElapsedTime)
 {
+	hotbarlevel = 0;
 	float level = -1;
 	// Calculate the relative scale to our default windows width
 	const float relativeScale_x = cSettings->iWindowWidth / 800.0f;
@@ -455,10 +483,14 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					}
 					wspace = wspace + 0.15f;
 					recName = inventory_item_name_list[i];
-					ButtonData newInventorybutton;
-					std::string ctxt = (inventory_item_name_list[i] + "2");
+					std::string istr = std::to_string(i + 9);
+					std::string ctxt = (inventory_item_name_list[i] + istr);
 					const char* c = ctxt.c_str();
-					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.f, 0.f, 1.0f));  // Set a background color
+					hotbarlevel++;
+					if(hotbarlevel <= 3)
+						ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.3f, 0.f, 0.3f, 1.0f));  // Set a background color
+					else
+						ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.f, 0.0f, 1.0f));  // Set a background color
 					{
 						ImGui::Begin(c, NULL, inventoryWindowFlags);
 						{
@@ -484,36 +516,49 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						ImGuiWindowFlags_NoTitleBar |
 						ImGuiWindowFlags_NoResize |
 						ImGuiWindowFlags_NoCollapse |
+						ImGuiWindowFlags_NoBackground |
 						ImGuiWindowFlags_NoScrollbar;
 					if (inventory_item_name_list[i].find("empty") == string::npos)
 					{
-						ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.f, 0.f, 1.0f));  // Set a background color
-
-						std::string filenamestring = "Image\\" + inventory_item_name_list[i] + ".tga";
-						newInventorybutton.fileName = filenamestring;
-						newInventorybutton.textureID = il->LoadTextureGetID(newInventorybutton.fileName.c_str(), false);
+						std::string istr = std::to_string(i + 18);
+						ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 0.f));
+						ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.f, 0.f, 0.f, 0.1f));
+						ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.2f, 0.2f, 0.3f));
 						{
-							ctxt = (inventory_item_name_list[i] + "3");
+							if (inventoryloaded == false)
+							{
+								PreloadInventoryTextures();
+								inventoryloaded = true;
+							}
+							ctxt = (inventory_item_name_list[i] + istr);
 							c = ctxt.c_str();
 							ImGui::Begin(c, NULL, inventoryWindowFlagsButton);
 							{
 								ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wspace, cSettings->iWindowHeight * hspace));
 								ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
 								if (ImGui::ImageButton((ImTextureID)newInventorybutton.textureID,
-									ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
+									ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(0.0, 0.0)))
 								{
-									cout << "PRESED";
-									if (deskey == i && descactive == true) descactive = false;
-									else {
-										cout << deskey;
-										descactive = true;
-										deskey = i;
+									CKeyboardController::GetInstance()->Reset();
+									if (swapactive == true)
+									{
+										SwapItems(OGclicked, i);
+									}
+									else
+									{
+										cout << "PRESED";
+										if (deskey == i && descactive == true) descactive = false;
+										else {
+											cout << deskey;
+											descactive = true;
+											deskey = i;
+										}
 									}
 								}
 							}
 							ImGui::End();
 						}
-						ImGui::PopStyleColor();
+						ImGui::PopStyleColor(3);
 					}
 					else continue;
 				}
@@ -579,7 +624,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 
 					recName = Crafting_item_name_list[i];
 					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.2f,0.0f,0.2f, 1.0f));  // Set a background color
-					std::string ctxt = (Crafting_item_name_list[i] + "3");
+					std::string ctxt = (Crafting_item_name_list[i] + "5");
 					const char* c = ctxt.c_str();
 					std::string cText = "Press (" + std::to_string(i) + ") to view recipe";
 					{
@@ -767,7 +812,27 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						}
 						ImGui::End();
 					}
-					ImGui::PopStyleColor();
+					
+					ImGuiWindowFlags inventoryDescButtons =
+						ImGuiWindowFlags_AlwaysAutoResize |
+						ImGuiWindowFlags_NoTitleBar |
+						ImGuiWindowFlags_NoResize |
+						ImGuiWindowFlags_NoCollapse |
+						ImGuiWindowFlags_NoScrollbar;
+					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 1.f, 1.f, 0.0f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.f, 1.f, 1.f, 0.2f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 1.2f, 1.2f, 0.5f));
+					{
+						ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.67f, cSettings->iWindowHeight * 0.4));
+						ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
+						if (ImGui::ImageButton((ImTextureID)newDescriptionButton.textureID,
+							ImVec2(128, buttonHeight), ImVec2(1.0, 1.0), ImVec2(0.0, 0.0)))
+						{
+							swapactive = true;
+							OGclicked = deskey;
+						}
+					}
+					ImGui::PopStyleColor(4);
 				}
 			}
 			else if (chestactive == true)
@@ -859,7 +924,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 
 					recName = chest_item_name_list[i];
 					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.f, 0.f, 1.0f));  // Set a background color
-					std::string ctxt = (chest_item_name_list[i] + "2");
+					std::string ctxt = (chest_item_name_list[i] + "6");
 					const char* c = ctxt.c_str();
 					{
 						ImGui::Begin(c, NULL, inventoryWindowFlags);
