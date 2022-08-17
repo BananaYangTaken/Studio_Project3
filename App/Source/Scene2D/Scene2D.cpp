@@ -405,7 +405,7 @@ void CScene2D::LoadEnemies(void)
 		for (unsigned int uiCol = 0; uiCol < cSettings->NUM_TILES_XAXIS; ++uiCol)
 		{
 			int Value = arrMapInfo[uiCurlLevel][uiRow][uiCol].value;
-			if (Value >= 300)
+			if (Value >= 300 && Value < 400)
 			{
 				bool Enemynew = true;
 				for (int i = 0; i < cEnemyList.size(); i++)
