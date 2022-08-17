@@ -53,6 +53,8 @@ void CGUI_Scene2D::setInventoryItem(int arrayVal, std::string item, int quantity
 	inventory_item_max_quantity[arrayVal] = maxQuantity;
 }
 
+
+
 int CGUI_Scene2D::IncreaseInventoryItemCount(std::string arrayindex, int incrementValue)
 {
 	std::cout << "CHECKING INVENTORY";
@@ -364,6 +366,7 @@ bool CGUI_Scene2D::Init(void)
 {
 	// Get the handler to the CSettings instance
 	cSettings = CSettings::GetInstance();
+	cSoundController = CSoundController::GetInstance();
 	cMap2D = CMap2D::GetInstance();
 	cKeyboardController = CKeyboardController::GetInstance();
 	// Store the CFPSCounter singleton instance here
@@ -472,8 +475,13 @@ void CGUI_Scene2D::PreloadInventoryTextures()
 		newInventorybutton.fileName = "Image\\BlankBoxButton.tga";
 		newInventorybutton.textureID = il->LoadTextureGetID(newInventorybutton.fileName.c_str(), false);
 		
+		newDropbutton.fileName = "Image\\GUI\\Discard.png";
+		newDropbutton.textureID = il->LoadTextureGetID(newDropbutton.fileName.c_str(), false);
 		newChestbutton.fileName = "Image\\BlankBoxButton.tga";
 		newChestbutton.textureID = il->LoadTextureGetID(newChestbutton.fileName.c_str(), false);
+
+		newLootButton.fileName = "Image\\BlankBoxButton.tga";
+		newChestbutton.textureID = il->LoadTextureGetID(newLootButton.fileName.c_str(), false);
 
 		newDescriptionButton.fileName = "Image\\GUI\\Dropbutton.png";
 		newDescriptionButton.textureID = il->LoadTextureGetID(newDescriptionButton.fileName.c_str(), false);
@@ -990,14 +998,17 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						{
 							ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.67f, cSettings->iWindowHeight * 0.4));
 							ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
-							if (ImGui::ImageButton((ImTextureID)newDescriptionButton.textureID,
-								ImVec2(128, buttonHeight), ImVec2(1.0, 1.0), ImVec2(0.0, 0.0)))
+							if (looting == false)
 							{
-								swapactive = true;
-								OGclicked = deskey;
+								if (ImGui::ImageButton((ImTextureID)newDescriptionButton.textureID,
+									ImVec2(128, buttonHeight), ImVec2(1.0, 1.0), ImVec2(0.0, 0.0)))
+								{
+									swapactive = true;
+									OGclicked = deskey;
+								}
 							}
 							if (ImGui::ImageButton((ImTextureID)newDropbutton.textureID,
-								ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(0.0, 0.0)))
+								ImVec2(128, buttonHeight), ImVec2(0.0, 0.0), ImVec2(0.0, 0.0)))
 							{
 								CKeyboardController::GetInstance()->Reset();
 								if (inventory_item_name_list[deskey].find("empty") == string::npos)
@@ -1240,6 +1251,42 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 							ImGui::End();
 						}
 						ImGui::PopStyleColor();
+						if (crate_item_name_list[i].find("empty") == string::npos)
+						{
+							ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 0.f));
+							ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.f, 0.f, 0.f, 0.1f));
+							ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.2f, 0.2f, 0.3f));
+							{
+								if (inventoryloaded == false)
+								{
+									PreloadInventoryTextures();
+									inventoryloaded = true;
+								}
+								istr = std::to_string(i + 54);
+								ctxt = (crate_item_name_list[i] + istr);
+								c = ctxt.c_str();
+								ImGui::Begin(c, NULL, LootCrateFlags);
+								{
+									ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wwspace, cSettings->iWindowHeight * hhspace));
+									ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
+									if (ImGui::ImageButton((ImTextureID)newLootButton.textureID,
+										ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(0.0, 0.0)))
+									{
+										if(IncreaseInventoryItemCount(crate_item_name_list[i], crate_item_quantity[i]) == 0)
+										{ 
+											std::string str = "empty" + std::to_string(i);
+											crate_item_name_list[i] = str;
+											crate_item_quantity[i] = 0;
+										
+											cout << "added item: " << crate_item_name_list[i] << endl;
+										}
+
+									}
+								}
+								ImGui::End();
+							}
+							ImGui::PopStyleColor(3);
+						}
 					}
 				}
 				ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.2f, 0.0f, 0.2f, 1.0f));  // Set a background color

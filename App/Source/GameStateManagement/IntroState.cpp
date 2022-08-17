@@ -64,7 +64,11 @@ CIntroState::CIntroState(void)
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SwordSwing.ogg"), 15, true, false, CSoundInfo::SOUNDGROUP::Player);
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\Explosion.ogg"), 16, true, false, CSoundInfo::SOUNDGROUP::Creatures);
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\Hiss.ogg"), 17, true, false, CSoundInfo::SOUNDGROUP::Creatures);
+		
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SearchingBag.ogg"), 18, true, false, CSoundInfo::SOUNDGROUP::Player);
 		cSoundController->LoadSoundSystem();
+		
+		
 		//Add BG
 		//cSoundController->LoadSound(FileSystem::getPath("Sounds\\Sound_Jump.ogg"), 3, true, true);
 	}

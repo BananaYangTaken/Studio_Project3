@@ -18,6 +18,7 @@
 
 // Include CInventoryManager
 #include "InventoryManager.h"
+#include "..\SoundController\SoundController.h"
 
 // Include GLEW
 #ifndef GLEW_STATIC
@@ -139,12 +140,14 @@ protected:
 	CInventoryManager* cInventoryManager;
 	// The handler containing the instance of CInventoryItem
 	CInventoryItem* cInventoryItem;
+	CSoundController* cSoundController;
 	ButtonData Add1Button;
 	ButtonData Add10Button;
 	ButtonData AddAllButton;
 	ButtonData newInventorybutton;
 	ButtonData newDropbutton;
 	ButtonData newChestbutton;
+	ButtonData newLootButton;
 	ButtonData newDescriptionButton;
 	ButtonData newTransferButton;
 	// These variables are for IMGUI demo only
