@@ -230,7 +230,7 @@ bool CScene2D::Update(const double dElapsedTime)
 		if (cGUI_Scene2D->crafting == false)
 		{
 			cGUI_Scene2D->crafting = true;
-			cGUI_Scene2D->checkinginventory = true;
+			cGUI_Scene2D->checkinginventory = false;
 		}
 		else
 		{

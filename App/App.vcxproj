@@ -47,6 +47,7 @@
     <ClInclude Include="Source\GameStateManagement\PauseState.h" />
     <ClInclude Include="Source\GameStateManagement\PlayGameState.h" />
     <ClInclude Include="Source\GameStateManagement\WinState.h" />
+    <ClInclude Include="Source\MyMath.h" />
     <ClInclude Include="Source\Scene2D\BackgroundEntity.h" />
     <ClInclude Include="Source\Scene2D\Enemy2D_Human.h" />
     <ClInclude Include="Source\Scene2D\Enemy2D_Zombie.h" />

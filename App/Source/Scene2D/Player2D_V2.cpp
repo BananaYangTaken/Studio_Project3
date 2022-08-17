@@ -18,6 +18,7 @@ using namespace std;
 // Include the Map2D as we will use it to check the player's movements and actions
 #include "Map2D.h"
 #include "Primitives/MeshBuilder.h"
+#include "..\Application.h"
 
 /**
  @brief Constructor This constructor has protected access modifier as this class will be a Singleton
@@ -113,6 +114,8 @@ bool CPlayer2D_V2::Init(void)
 	Health = MaxHealth = 100;
 	InvulnerabilityFrame = 0;
 
+	Rotation = 0;
+
 	// Find the indices for the player in arrMapInfo, and assign it to cPlayer2D
 	unsigned int uiRow;
 	unsigned int uiCol;
@@ -134,10 +137,10 @@ bool CPlayer2D_V2::Init(void)
 	glBindVertexArray(VAO);
 
 	
-	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/SkeletonArcher_SpriteSheet.png", true);
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Player_Sprites.png", true);
 	if (iTextureID == 0)
 	{
-		cout << "Unable to load Image/SkeletonArcher_SpriteSheet.png" << endl;
+		cout << "Unable to load Image/Player_Sprites.png" << endl;
 		return false;
 	}
 
@@ -145,18 +148,9 @@ bool CPlayer2D_V2::Init(void)
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
-	animatedSprites = CMeshBuilder::GenerateSpriteAnimation(6, 13, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
-	animatedSprites->AddAnimation("up", 1, 8);
-	animatedSprites->AddAnimation("left", 14, 21);
-	animatedSprites->AddAnimation("down", 27, 34);
-	animatedSprites->AddAnimation("right", 40, 47);
-	animatedSprites->AddAnimation("idleup", 0, 0);
-	animatedSprites->AddAnimation("idleleft", 52, 52);
-	animatedSprites->AddAnimation("idledown", 26, 26);
-	animatedSprites->AddAnimation("idleright", 65, 65);
-
-	animatedSprites->AddAnimation("AttackLeft", 52, 61);
-	animatedSprites->AddAnimation("AttackRight", 65, 74);
+	animatedSprites = CMeshBuilder::GenerateSpriteAnimation(13, 20, (cSettings->TILE_WIDTH+cSettings->TILE_HEIGHT)*0.5, (cSettings->TILE_WIDTH + cSettings->TILE_HEIGHT) * 0.5);
+	animatedSprites->AddAnimation("idle", 0, 19);
+	animatedSprites->AddAnimation("move", 40, 59);
 
 	attackAnim = 0;
 
@@ -286,6 +280,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 	{
 		CGameManager::GetInstance()->bPlayerLost = true;
 	}
+
 	// Get keyboard updates
 	if (cKeyboardController->IsKeyDown(GLFW_KEY_A))
 	{
@@ -315,8 +310,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		//Set Direction
 		Direction = 0;
 
-		//CS: Play the "left" animation
-		animatedSprites->PlayAnimation("left", -1, 1.0f);
+		animatedSprites->PlayAnimation("move", -1, 1.0f);
 
 		//CS: Change Color
 		runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
@@ -349,8 +343,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		Direction = 1;
 
 
-		//CS: Play the "right" animation
-		animatedSprites->PlayAnimation("right", -1, 1.0f);
+		animatedSprites->PlayAnimation("move", -1, 1.0f);
 
 		//CS: Init the color to white
 		runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
@@ -383,8 +376,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		Direction = 2;
 
 
-		//CS: Play the "up" animation
-		animatedSprites->PlayAnimation("up", -1, 1.0f);
+		animatedSprites->PlayAnimation("move", -1, 1.0f);
 
 	}
 	else if (cKeyboardController->IsKeyDown(GLFW_KEY_S))
@@ -415,8 +407,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		Direction = 3;
 
 
-		//CS: Play the "down" animation
-		animatedSprites->PlayAnimation("down", -1, 1.0f);
+		animatedSprites->PlayAnimation("move", -1, 1.0f);
 	}
 
 	
@@ -424,22 +415,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 
 	if (idle == true)
 	{
-		if (Direction == 0)
-		{
-			animatedSprites->PlayAnimation("idleleft", -1, 1.0f);
-		}
-		else if (Direction == 1)
-		{
-			animatedSprites->PlayAnimation("idleright", -1, 1.0f);
-		}
-		else if (Direction == 2)
-		{
-			animatedSprites->PlayAnimation("idleup", -1, 1.0f);
-		}
-		else if (Direction == 3)
-		{
-			animatedSprites->PlayAnimation("idledown", -1, 1.0f);
-		}
+		animatedSprites->PlayAnimation("idle", -1, 10.0f);
 	}
 
 	
@@ -459,10 +435,10 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 	//CS: Update the animated sprite
 	animatedSprites->Update(dElapsedTime);
 
+	//Calculate Position of Entity on Screen
+	glm::vec2 ScreenPos = glm::vec2(0, 0);
 	// Update the UV Coordinates
 	{
-		//Calculate Position of Entity on Screen
-		glm::vec2 ScreenPos = glm::vec2(0, 0);
 
 		//Check if Map View/Camera at Borders
 		if (vec2Index.x < cSettings->VIEW_TILES_XAXIS * 0.5) // Left Side Border
@@ -498,8 +474,15 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		vec2UVCoordinate.x = cSettings->ConvertIndexToUVSpace(cSettings->x, ScreenPos.x - 1, false, vec2NumMicroSteps.x * cSettings->MICRO_STEP_XAXIS);
 		vec2UVCoordinate.y = cSettings->ConvertIndexToUVSpace(cSettings->y, ScreenPos.y - 1, false, vec2NumMicroSteps.y * cSettings->MICRO_STEP_YAXIS);
 	}
-	//std::cout << "x:" << vec2Index.x << " y:" << vec2Index.y << " Disx: " << cMap2D->GetDisplacement().x << " Disy: " << cMap2D->GetDisplacement().y  << " xUV:" << vec2UVCoordinate.x << " yUV:" << vec2UVCoordinate.y << std::endl;	
-	//std::cout << "x:" << vec2Index.x << " y:" << vec2Index.y << " Microx: " << vec2NumMicroSteps.x << " Microy: " << vec2NumMicroSteps.y << std::endl;
+
+	//Update Rotation
+	//Mouse Position
+	double x, y;
+	Application::GetCursorPos(&x, &y);
+	float mousexpos = ((x / cSettings->iWindowWidth) * cSettings->VIEW_TILES_XAXIS) - cSettings->VIEW_TILES_XAXIS*0.5-0.5;
+	float mouseypos = (abs((y - cSettings->iWindowHeight) / cSettings->iWindowHeight) * cSettings->VIEW_TILES_YAXIS) - cSettings->VIEW_TILES_YAXIS * 0.5-0.5;
+	//Calculate Rotation
+	Rotation = cPhysics2D.CalculateRotation(glm::vec2(0,0), glm::vec2(1, 0), glm::vec2(mousexpos, mouseypos));
 }
 
 /**
@@ -530,6 +513,7 @@ void CPlayer2D_V2::Render(void)
 	transform = glm::translate(transform, glm::vec3(vec2UVCoordinate.x,
 													vec2UVCoordinate.y,
 													0.0f));
+	transform = glm::rotate(transform, Rotation, glm::vec3(0,0,1) );
 	// Update the shaders with the latest transform
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
 	glUniform4fv(colorLoc, 1, glm::value_ptr(runtimeColour));

@@ -184,5 +184,8 @@
     <ClInclude Include="Source\Scene2D\TurretBase.h">
       <Filter>Scene2D\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\MyMath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

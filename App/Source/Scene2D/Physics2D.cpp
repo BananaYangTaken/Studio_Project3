@@ -5,6 +5,7 @@
  Date: Mar 2020
  */
 #include "Physics2D.h"
+#include "../MyMath.h"
 
 #include <iostream>
 using namespace std;
@@ -181,6 +182,39 @@ float CPhysics2D::CalculateDistance(glm::vec2 source, glm::vec2 destination, cha
 	{
 		return abs(destination.y - source.y);
 	}
+}
+
+void CPhysics2D::Normalize(glm::vec2 vec2)
+{
+	float d = sqrt(vec2.x* vec2.x + vec2.y* vec2.y);
+	if (d <= Math::EPSILON && -d <= Math::EPSILON)
+		throw DivideByZero();
+	vec2.x /= d;
+	vec2.y /= d;
+}
+
+float CPhysics2D::CalculateRotation(glm::vec2 Origin, glm::vec2 DefaultPos, glm::vec2 NewPos)
+{
+	glm::vec2 OriginalPoint = DefaultPos - Origin;
+	glm::vec2 TransformedPoint = NewPos - Origin;
+	Normalize(OriginalPoint);
+	Normalize(TransformedPoint);
+	float Result = atan2(TransformedPoint.y * OriginalPoint.x - TransformedPoint.x * OriginalPoint.y,TransformedPoint.x*OriginalPoint.x + TransformedPoint.y + OriginalPoint.y );
+	float angle;
+	if (Result < 0)
+	{
+		angle = -Result;
+	}
+	else if (Result > 0)
+	{
+		angle = Math::TWO_PI - Result;
+	}
+	else
+	{
+		angle = 0;
+	}
+	angle = Math::TWO_PI - angle;
+	return angle;
 }
 
 // PrintSelf

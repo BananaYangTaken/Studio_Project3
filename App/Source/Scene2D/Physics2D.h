@@ -55,6 +55,8 @@ public:
 
 	// Calculate the distance between two vec2 varables
 	float CalculateDistance(glm::vec2 source, glm::vec2 destination, char axis = 'n');
+	float CalculateRotation(glm::vec2 Origin, glm::vec2 DefaultPos, glm::vec2 NewPos);
+	void Normalize(glm::vec2 vec2);
 
 	// PrintSelf
 	void PrintSelf(void);
