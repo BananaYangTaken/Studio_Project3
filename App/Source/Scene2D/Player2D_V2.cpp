@@ -620,7 +620,17 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 
 	switch (cMap2D->GetMapInfo(vec2Index.y + ydisplacement,vec2Index.x + xdisplacement))
 	{
-	
+	case 110:
+		if (cKeyboardController->IsKeyPressed('F'))
+		{
+			if (cGUI_Scene2D->looting == false)
+			{
+				cGUI_Scene2D->checkinginventory = true;
+				cGUI_Scene2D->OpenCrate("Large");
+				cGUI_Scene2D->looting = true;
+			}
+			else cGUI_Scene2D->looting = false;
+		}
 	default:
 		break;
 	}

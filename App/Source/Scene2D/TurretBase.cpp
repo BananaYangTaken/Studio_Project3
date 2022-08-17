@@ -84,6 +84,7 @@ bool CTurretBase::Init(int x, int y)
 	cSettings = CSettings::GetInstance();
 	// Get the handler to the CMap2D instance
 	cMap2D = CMap2D::GetInstance();
+	cGUIScene2D = CGUI_Scene2D::GetInstance();
 	unsigned int uiRow = -1;
 	unsigned int uiCol = -1;
 	if (cMap2D->FindValue(401, uiRow, uiCol) == false)

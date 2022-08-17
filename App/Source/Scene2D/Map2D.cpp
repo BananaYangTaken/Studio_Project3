@@ -473,7 +473,19 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 		}
 	}
 
-
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/lootcrateSmall.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Envi/lootcrateLarge.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(110, iTextureID));
+		}
+	}
 
 
 

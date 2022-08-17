@@ -2,7 +2,7 @@
 
 // Include shader
 #include "RenderControl\shader.h"
-
+#include "GUI_Scene2D.h"
 // Include GLM
 #include <includes/glm.hpp>
 #include <includes/gtc/matrix_transform.hpp>
@@ -99,7 +99,7 @@ protected:
 
 	// Keyboard Controller 
 	CKeyboardController* cKeyboardController;
-
+	CGUI_Scene2D* cGUIScene2D;
 	// Physics
 	CPhysics2D cPhysics2D;
 

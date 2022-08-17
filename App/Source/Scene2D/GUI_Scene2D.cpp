@@ -128,6 +128,55 @@ void CGUI_Scene2D::checkforzero()
 		}
 	}
 }
+void CGUI_Scene2D::OpenCrate(std::string size)
+{
+
+	if (size == "Large")
+	{
+
+		for (int i = 0; i < Chest_size; i++)
+		{
+			int randitem = rand() % 50 + 1;
+			if (randitem == 1)
+			{
+				crate_item_name_list[i] = "Bandage";
+				int rval = rand() % 3 + 1;
+				crate_item_quantity[i] = rval;
+			}
+			else if (randitem == 2)
+			{
+				crate_item_name_list[i] = "Scrap Metal";
+				int rval = rand() % 4 + 1;
+				crate_item_quantity[i] = rval;
+			}
+			else if (randitem == 3)
+			{
+				crate_item_name_list[i] = "Hard wood";
+				int rval = rand() % 4 + 2;
+				crate_item_quantity[i] = rval;
+			}
+			else if (randitem == 4)
+			{
+				crate_item_name_list[i] = "Stone Ore";
+				int rval = rand() % 4 + 2;
+				crate_item_quantity[i] = rval;
+			}
+			else if (randitem == 5)
+			{
+				crate_item_name_list[i] = "Medkit";
+				int rval = 1;
+				crate_item_quantity[i] = rval;
+			}
+			else if (randitem == 6)
+			{
+				crate_item_name_list[i] = "Fabric";
+				int rval = rand() % 3 + 1;
+				crate_item_quantity[i] = rval;
+			}
+			else crate_item_name_list[i] = "empty" + std::to_string(i);
+		}
+	}
+}
 void CGUI_Scene2D::InventoryItemSetZero(std::string arrayindex)
 {
 	int ind = 0;
@@ -1135,6 +1184,63 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					else if (cKeyboardController->IsKeyPressed('9')) chestkey = 9;
 
 
+				}
+				if (looting == true)
+				{
+					int level = 0;
+					float hhspace = 0.65f;
+					float wwspace = 0.1f;
+					cout << "LOOTING LARGE CRATE";
+					if(descactive == false)
+						ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 2.55));
+					else ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 3.55));
+					ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
+					ImGui::SetWindowFontScale(2.5f * relativeScale_y);
+					ImGui::TextColored(ImVec4(1, 1, 0, 1), "CRATE INVENTORY", cFPSCounter->GetFrameRate());
+					ImGui::SetWindowFontScale(1.0f * relativeScale_y);
+					ImGui::TextColored(ImVec4(1, 1, 0, 1), "Click on the items in the crate to loot them!", cFPSCounter->GetFrameRate());
+					ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 10));
+					ImGui::TextColored(ImVec4(1, 1, 0, 1), " ", cFPSCounter->GetFrameRate());
+					ImGuiWindowFlags LootCrateFlags =
+						ImGuiWindowFlags_AlwaysAutoResize |
+						ImGuiWindowFlags_NoTitleBar |
+						ImGuiWindowFlags_NoResize |
+						ImGuiWindowFlags_NoCollapse |
+						ImGuiWindowFlags_NoScrollbar;
+
+					for (int i = 0; i < Chest_size; i++)
+					{
+						level++;
+						if (level >= 5)
+						{
+							level = 0;
+							hhspace += 0.1f;
+							wwspace = 0.1f;
+						}
+						wwspace = wwspace + 0.15f;
+
+						recName = crate_item_name_list[i];
+						ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.f, 0.f, 1.0f));  // Set a background color
+						std::string istr = std::to_string(i + 45);
+						std::string ctxt = (crate_item_name_list[i] + istr);
+						const char* c = ctxt.c_str();
+						{
+							ImGui::Begin(c, NULL, LootCrateFlags);
+							{
+								ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wwspace, cSettings->iWindowHeight * hhspace));
+								ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
+								cInventoryItem = cInventoryManager->GetItem(crate_item_name_list[i]);
+								ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(75, 75), ImVec2(0, 1), ImVec2(1, 0));
+								ImGui::SameLine();
+								ImGui::SetWindowFontScale(1.0f * relativeScale_y);
+								if (crate_item_name_list[i].find("empty") == string::npos)
+									ImGui::TextColored(ImVec4(1, 1, 1, 1), "%d", crate_item_quantity[i]);
+								else ImGui::TextColored(ImVec4(1, 1, 1, 1), " ");
+							}
+							ImGui::End();
+						}
+						ImGui::PopStyleColor();
+					}
 				}
 				ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.2f, 0.0f, 0.2f, 1.0f));  // Set a background color
 				ImGuiWindowFlags topRightWindowFlags = ImGuiWindowFlags_AlwaysAutoResize |

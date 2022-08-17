@@ -53,7 +53,7 @@ public:
 	bool selectinventory = true;
 	const int inventory_size = 9;
 	std::string inventory_item_name_list[9] = {"Scrap Metal", "Hard wood", "Stone Ore", "Pistol Bullets", "Rifle Bullets", "Rifle", "Pistol", "Medkit", "Bandage"};
-	int inventory_item_quantity[9] = {155,150,50,100,50,1,1,90,200};
+	int inventory_item_quantity[9] = {155,150,150,100,50,1,1,90,200};
 	int inventory_item_max_quantity[9] = {200,200,200,200,200,200,200,200,200};
 
 	int Crafting_list_size = 5;
@@ -66,6 +66,13 @@ public:
 	std::string chest_item_name_list[8] = { "empty2", "empty3", "empty4", "empty5", "empty6", "empty7", "empty8", "empty9"};
 	int chest_item_quantity[8] = { 0,0,0,0,0,0,0,0};
 	int chest_item_max_quantity[8] = { 999,999,999,999,999,999,999,999};
+	
+	int lootcrateSize = 8;
+	std::string crate_item_name_list[8] = { "empty2", "empty3", "empty4", "empty5", "empty6", "empty7", "empty8", "empty9" };
+	int crate_item_quantity[8] = { 0,0,0,0,0,0,0,0 };
+	int crate_item_max_quantity[8] = { 15,15,15,15,15,15,15,15};
+
+
 	int chestactive = false;
 	int chestkey = 1;
 	float buttonWidth = 64;
@@ -87,6 +94,8 @@ public:
 	void ChestItemSetZero(std::string arrayindex);
 	void checkforzero(void);
 	void dropitem(int key);
+	void OpenCrate(std::string size);
+	bool looting = false;
 	// PreRender
 	void PreRender(void);
 	void SwapItems(int itemindex, int swapindex);
