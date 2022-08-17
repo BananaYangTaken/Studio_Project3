@@ -222,6 +222,7 @@ bool CScene2D::Update(const double dElapsedTime)
 		{
 			cGUI_Scene2D->checkinginventory = false;
 			cGUI_Scene2D->crafting = false;
+			cGUI_Scene2D->descactive = false;
 		}
 	}
 	if (cKeyboardController->IsKeyPressed('U'))

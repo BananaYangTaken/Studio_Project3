@@ -74,6 +74,7 @@ public:
 	bool checkinginventory = false;
 	bool crafting = false;
 	bool recipeactive = false;
+	int hotbarselection = 1;
 	bool descactive = false;
 	// Update
 	void Update(const double dElapsedTime);
