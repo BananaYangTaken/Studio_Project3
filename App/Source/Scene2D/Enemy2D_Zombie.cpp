@@ -80,13 +80,117 @@ CEnemy2D_Zombie::~CEnemy2D_Zombie(void)
 /**
   @brief Initialise this instance
   */
+bool  CEnemy2D_Zombie::checkforLOS()
+{
+	// Store the old player position
+	Playervec2OldIndex = cPlayer->vec2Index;
+	int distfromplayer = cPhysics2D.CalculateDistance(Playervec2OldIndex, vec2Index);
+	float Xdiff = Playervec2OldIndex.x - vec2Index.x;
+	float Ydiff = Playervec2OldIndex.y - vec2Index.y;
+	float diffratio = Xdiff / Ydiff;
+	int blockscounted = 0, Xcount = 0, Ycount = 0;
+	//cout << "Distance from player: " + std::to_string(distfromplayer) << endl;
+	//if the player is to the left or right of the enemy2D
+	// check LOS
+
+	//TOP RIGHT VIEW
+	if (vec2Direction.x < 0 && vec2Direction.y < 0)
+	{
+		cout << "enemy is TOP RIGHT OF PLAYER!" << endl;
+		for (int i = 0; i < distfromplayer; i++)
+		{
+			blockscounted++;
+			Xcount++;
+			if (blockscounted >= diffratio)
+			{
+				Ycount++;
+			}
+			if (cMap2D->GetMapInfo(Playervec2OldIndex.y + Ycount, Playervec2OldIndex.x + Xcount) >= 100)
+			{
+				cout << "LOS LOST, VIEW BLOCKED!" << endl;
+				return false;
+			}
+		}
+		cout << "CAN SEE PLAYER!";
+		return true;
+	}
+
+
+	// TOP LEFT VIEW
+	if (vec2Direction.x > 0 && vec2Direction.y < 0)
+	{
+		cout << "enemy is TOP LEFT OF PLAYER!" << endl;
+		for (int i = 0; i < distfromplayer; i++)
+		{
+			blockscounted++;
+			Xcount--;
+			if (blockscounted >= diffratio)
+			{
+				Ycount++;
+			}
+			if (cMap2D->GetMapInfo(Playervec2OldIndex.y + Ycount, Playervec2OldIndex.x + Xcount) >= 100)
+			{
+				cout << "LOS LOST, VIEW BLOCKED!" << endl;
+				return false;
+			}
+		}
+		cout << "CAN SEE PLAYER!";
+		return true;
+	}
+
+
+	// BOTTOM LEFT VIEW
+	if (vec2Direction.x > 0 && vec2Direction.y > 0)
+	{
+		cout << "enemy is BOTTOM LEFT  OF PLAYER!" << endl;
+		for (int i = 0; i < distfromplayer; i++)
+		{
+			blockscounted++;
+			Xcount--;
+			if (blockscounted >= diffratio)
+			{
+				Ycount--;
+			}
+			if (cMap2D->GetMapInfo(Playervec2OldIndex.y + Ycount, Playervec2OldIndex.x + Xcount) >= 100)
+			{
+				cout << "LOS LOST, VIEW BLOCKED!" << endl;
+				return false;
+			}
+		}
+		cout << "CAN SEE PLAYER!";
+		return true;
+	}
+
+	// BOTTOM RIGHT VIEW
+	if (vec2Direction.x < 0 && vec2Direction.y > 0)
+	{
+		cout << "enemy is BOTTOM RIGHT OF PLAYER!" << endl;
+		for (int i = 0; i < distfromplayer; i++)
+		{
+			blockscounted++;
+			Xcount++;
+			if (blockscounted >= diffratio)
+			{
+				Ycount--;
+			}
+			if (cMap2D->GetMapInfo(Playervec2OldIndex.y + Ycount, Playervec2OldIndex.x + Xcount) >= 100)
+			{
+				cout << "LOS LOST, VIEW BLOCKED!" << endl;
+				return false;
+			}
+		}
+		cout << "CAN SEE PLAYER!";
+		return true;
+	}
+}
+
 bool CEnemy2D_Zombie::Init(int x, int y)
 {
 	// Get the handler to the CSettings instance
 	cSettings = CSettings::GetInstance();
 	// Get the handler to the CMap2D instance
 	cMap2D = CMap2D::GetInstance();
-
+	cPlayer = CPlayer2D_V2::GetInstance();
 
 	unsigned int uiRow = -1;
 	unsigned int uiCol = -1;
@@ -137,9 +241,33 @@ bool CEnemy2D_Zombie::Init(int x, int y)
 
 	return true;
 }
+void CEnemy2D_Zombie::UpdateToLastLOS()
+{
+	// Set the destination to the player
+	vec2Destination = OldPositu;
+
+	// Calculate the direction between enemy2D and player2D
+	vec2Direction = vec2Destination - vec2Index;
+
+	// Calculate the distance between enemy2D and player2D
+	float fDistance = cPhysics2D.CalculateDistance(vec2Index, vec2Destination);
+	if (fDistance >= 0.01f)
+	{
+		// Calculate direction vector.
+		// We need to round the numbers as it is easier to work with whole numbers for movements
+		vec2Direction.x = (int)round(vec2Direction.x / fDistance);
+		vec2Direction.y = (int)round(vec2Direction.y / fDistance);
+	}
+	else
+	{
+		// Since we are not going anywhere, set this to 0.
+		vec2Direction = glm::vec2(0);
+	}
+}
 
 void CEnemy2D_Zombie::Update(const double dElapsedTime)
 {
+	cout << "CURRENT FSM: " << sCurrentFSM << endl;
 	if (!bIsActive)
 		return;
 	if (Health <= 0)
@@ -171,45 +299,32 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		break;
 	case PATROL:
 		//FSM Transition
-		if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 5.0f)
+		if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 1.0f)
 		{
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(ATTACK);
 			iFSMCounter = 0;
-			auto path = cMap2D->PathFind(vec2Index, Player->vec2Index, heuristic::euclidean, 10);
-			//Calculate New Destination
 			bool bFirstPosition = true;
-			for (const auto& coord : path)
-			{
-				//std::cout << coord.x << "," << coord.y << "\n";
-				if (bFirstPosition == true)
-				{
-					//Set a destination
-					vec2Destination = coord;
-					//Calculate the direction between enemy2D and this destination
-					vec2Direction = vec2Destination - vec2Index;
-					bFirstPosition = false;
-				}
-				else
-				{
-					if ((coord - vec2Destination) == vec2Direction)
-					{
-						//Set a destination
-						vec2Destination = coord;
-					}
-					else
-						break;
-				}
-			}
 		}
-		else if (iFSMCounter > iMaxFSMCounter)
+		else if(checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < DetectionRadius)
+		{
+			hasseenplayeronce = true;
+			if (idlecount >= 20)
+			{
+				OldPositu = cPlayer->vec2Index;
+				cout << "Changed viewpos to " << std::to_string(OldPositu.x) << ", " << std::to_string(OldPositu.y);
+				idlecount = 0;
+			}
+			UpdateDirection();
+			UpdatePosition();
+		}
+		else if(checkforLOS() == false && hasseenplayeronce == true)
+		{
+			UpdateToLastLOS();
+			UpdatePosition();
+		}
+		else if (hasseenplayeronce == false)
 		{
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(IDLE);
-			iFSMCounter = 0;
-		}
-		else
-		{
-			// Update the Enemy2D's position for patrol
-			UpdatePosition();
 		}
 		iFSMCounter++;
 		//Animation
@@ -217,40 +332,10 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		break;
 	case ATTACK:
 		//FSM Transition
-		if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 100.0f)
+		if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 3.0f)
 		{
-			if (Player->PlayerChangedPos())
+			if (Attack == false)
 			{
-				auto path = cMap2D->PathFind(vec2Index, Player->vec2Index, heuristic::euclidean, 10);
-				//Calculate New Destination
-				bool bFirstPosition = true;
-				for (const auto& coord : path)
-				{
-					//std::cout << coord.x << "," << coord.y << "\n";
-					if (bFirstPosition == true)
-					{
-						//Set a destination
-						vec2Destination = coord;
-						//Calculate the direction between enemy2D and this destination
-						vec2Direction = vec2Destination - vec2Index;
-						bFirstPosition = false;
-					}
-					else
-					{
-						if ((coord - vec2Destination) == vec2Direction)
-						{
-							//Set a destination
-							vec2Destination = coord;
-						}
-						else
-							break;
-					}
-				}
-			}
-   			if (Attack == false)
-			{
-				UpdatePosition();
-				UpdateDirection();
 				// Attack
 				if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 0.5f && Attack == false)
 				{
@@ -275,10 +360,6 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 						CSoundController::GetInstance()->PlaySoundByID(5);
 					}
 				}
-			}
-			else
-			{
-				AttackAnim -= dElapsedTime;
 			}
 		}
 		else
