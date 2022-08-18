@@ -383,7 +383,7 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,const unsigned int uiNumRows,c
 		else
 		{
 			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(103, iTextureID));
+			MapOfTextureIDs.insert(pair<int, int>(50, iTextureID));
 		}
 	}
 	//load Vertical Window texture
@@ -397,7 +397,7 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,const unsigned int uiNumRows,c
 		else
 		{
 			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(104, iTextureID));
+			MapOfTextureIDs.insert(pair<int, int>(54, iTextureID));
 		}
 	}
 	//load Wall texture
@@ -509,7 +509,7 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,const unsigned int uiNumRows,c
 		else
 		{
 			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(111, iTextureID));
+			MapOfTextureIDs.insert(pair<int, int>(51, iTextureID));
 		}
 	}
 	//Load lvl3 window
@@ -523,7 +523,7 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,const unsigned int uiNumRows,c
 		else
 		{
 			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(112, iTextureID));
+			MapOfTextureIDs.insert(pair<int, int>(53, iTextureID));
 		}
 	}
 

@@ -81,6 +81,8 @@ bool CUpgradeState::Init(void)
 	WindowUpgrade[2].fileName = "Image\\GUI\\WindowUp3.png";
 	WindowUpgrade[2].textureID = il->LoadTextureGetID(WindowUpgrade[2].fileName.c_str(), false);
 
+
+
 	TurretUpgrade[0].fileName = "Image\\GUI\\TurretUp1.png";
 	TurretUpgrade[0].textureID = il->LoadTextureGetID(TurretUpgrade[0].fileName.c_str(), false);
 
@@ -106,6 +108,7 @@ bool CUpgradeState::Init(void)
 	if (CSettings::GetInstance()->bDisableMousePointer == true)
 		glfwSetInputMode(CSettings::GetInstance()->pWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	cMap2D = CMap2D::GetInstance();
+
 
 	return true;
 }
@@ -283,10 +286,10 @@ bool CUpgradeState::Update(const double dElapsedTime)
 								// Reset the CKeyboardController
 								CKeyboardController::GetInstance()->Reset();
 							}
-							cMap2D->SetMapInfo(50, 9, 111);
-							cMap2D->SetMapInfo(50, 17, 111);
-							cMap2D->SetMapInfo(36, 9, 111);
-							cMap2D->SetMapInfo(36, 17, 111);
+							cMap2D->SetMapInfo(50, 9, 51);
+							cMap2D->SetMapInfo(50, 17, 51);
+							cMap2D->SetMapInfo(36, 9, 51);
+							cMap2D->SetMapInfo(36, 17, 51);
 
 						}
 						if (CurrentWindowLv == 2)
@@ -297,10 +300,10 @@ bool CUpgradeState::Update(const double dElapsedTime)
 								// Reset the CKeyboardController
 								CKeyboardController::GetInstance()->Reset();
 							}
-							cMap2D->SetMapInfo(50, 9, 112);
-							cMap2D->SetMapInfo(50, 17, 112);
-							cMap2D->SetMapInfo(36, 9, 112);
-							cMap2D->SetMapInfo(36, 17, 112);
+							cMap2D->SetMapInfo(50, 9, 52);
+							cMap2D->SetMapInfo(50, 17, 52);
+							cMap2D->SetMapInfo(36, 9, 52);
+							cMap2D->SetMapInfo(36, 17, 52);
 						}
 					}
 				}
@@ -384,9 +387,11 @@ bool CUpgradeState::Update(const double dElapsedTime)
 							ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
 						{
 							if (SearchForRequirements(Turretitemlist, Turretitemlistcount) == true)
+							{
 								CurrentTurretLv += 1;
-							// Reset the CKeyboardController
-							CKeyboardController::GetInstance()->Reset();
+								// Reset the CKeyboardController
+								CKeyboardController::GetInstance()->Reset();
+							}	
 						}
 					}
 					if (CurrentTurretLv == 1)
@@ -394,9 +399,12 @@ bool CUpgradeState::Update(const double dElapsedTime)
 						if (ImGui::ImageButton((ImTextureID)TurretUpgrade[1].textureID,
 							ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
 						{
-							CurrentTurretLv += 1;
-							// Reset the CKeyboardController
-							CKeyboardController::GetInstance()->Reset();
+							if (SearchForRequirements(Turretitemlist, Turretitemlistcount) == true)
+							{
+								CurrentTurretLv += 1;
+								// Reset the CKeyboardController
+								CKeyboardController::GetInstance()->Reset();
+							}	
 						}
 					}
 					if (CurrentTurretLv == 2)
