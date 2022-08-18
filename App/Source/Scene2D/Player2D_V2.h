@@ -80,6 +80,7 @@ public:
 	void SetHealth(unsigned int);
 	void SetInvulnerabilityFrame(float);
 	unsigned int GetHealth(void);
+	unsigned int GetMaxHealth(void);
 	float GetInvulnerabilityFrame(void);
 
 	unsigned int GetDirection(void);

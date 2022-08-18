@@ -29,7 +29,6 @@ class CEntity2D
 public:
 	// Constructor
 	CEntity2D(void);
-	int health = 5;
 	// Destructor
 	virtual ~CEntity2D(void);
 

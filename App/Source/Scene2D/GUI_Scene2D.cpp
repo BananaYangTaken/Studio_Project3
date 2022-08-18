@@ -9,6 +9,7 @@
 #include <iostream>
  // Include ImageLoader
 #include "System\ImageLoader.h"
+#include "Player2D_V2.h"
 using namespace std;
 
 /**
@@ -537,6 +538,14 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 	ImGui::NewFrame();
 	{
 		// Create an invisible window which covers the entire OpenGL window
+		ImGuiWindowFlags window_flags =
+			ImGuiWindowFlags_AlwaysAutoResize |
+			ImGuiWindowFlags_NoTitleBar |
+			ImGuiWindowFlags_NoMove |
+			ImGuiWindowFlags_NoResize |
+			ImGuiWindowFlags_NoCollapse |
+			ImGuiWindowFlags_NoBackground |
+			ImGuiWindowFlags_NoScrollbar;
 		ImGui::Begin("Invisible window", NULL, window_flags);
 		{
 
@@ -651,7 +660,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 										}
 									}
 								}
-				
+
 							}
 							ImGui::End();
 						}
@@ -720,7 +729,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					std::string istr = std::to_string(i + 27);
 					std::string ctxt = (inventory_item_name_list[i] + istr);
 					const char* c = ctxt.c_str();
-					if(i + 1 == hotbarselection)
+					if (i + 1 == hotbarselection)
 						ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.4f, 0.f, 0.4f, 1.0f));  // Set a background color
 					else
 						ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.1f, 0.f, 0.1f, 1.0f));  // Set a background color
@@ -756,33 +765,33 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					}
 				}
 			}
-				if (crafting == true && recipeactive == false)
+			if (crafting == true && recipeactive == false)
+			{
+				if (cKeyboardController->IsKeyPressed('0'))
 				{
-					if (cKeyboardController->IsKeyPressed('0'))
-					{
-						reckey = 0;
-						recipeactive = true;
-					}
-					else if (cKeyboardController->IsKeyPressed('1'))
-					{
-						reckey = 1;
-						recipeactive = true;
-					}
-					else if (cKeyboardController->IsKeyPressed('2'))
-					{
-						reckey = 2;
-						recipeactive = true;
-					}
-					else if (cKeyboardController->IsKeyPressed('3'))
-					{
-						reckey = 3;
-						recipeactive = true;
-					}
-					else if (cKeyboardController->IsKeyPressed('4'))
-					{
-						reckey = 4;
-						recipeactive = true;
-					}
+					reckey = 0;
+					recipeactive = true;
+				}
+				else if (cKeyboardController->IsKeyPressed('1'))
+				{
+					reckey = 1;
+					recipeactive = true;
+				}
+				else if (cKeyboardController->IsKeyPressed('2'))
+				{
+					reckey = 2;
+					recipeactive = true;
+				}
+				else if (cKeyboardController->IsKeyPressed('3'))
+				{
+					reckey = 3;
+					recipeactive = true;
+				}
+				else if (cKeyboardController->IsKeyPressed('4'))
+				{
+					reckey = 4;
+					recipeactive = true;
+				}
 
 				}
 				if (crafting == true && recipeactive == false)
@@ -816,34 +825,34 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						}
 						wspace = wspace + 0.20f;
 
-						recName = Crafting_item_name_list[i];
-						ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.2f, 0.0f, 0.2f, 1.0f));  // Set a background color
-						std::string ctxt = (Crafting_item_name_list[i] + "5");
-						const char* c = ctxt.c_str();
-						std::string cText = "Press (" + std::to_string(i) + ") to view recipe";
+					recName = Crafting_item_name_list[i];
+					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.2f, 0.0f, 0.2f, 1.0f));  // Set a background color
+					std::string ctxt = (Crafting_item_name_list[i] + "5");
+					const char* c = ctxt.c_str();
+					std::string cText = "Press (" + std::to_string(i) + ") to view recipe";
+					{
+						ImGui::Begin(c, NULL, inventoryWindowFlags);
 						{
-							ImGui::Begin(c, NULL, inventoryWindowFlags);
-							{
-								ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wspace, cSettings->iWindowHeight * hspace));
-								ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
-								cInventoryItem = cInventoryManager->GetItem(Crafting_item_name_list[i]);
-								ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(50, 50), ImVec2(0, 1), ImVec2(1, 0));
-								ImGui::SameLine();
-								ImGui::SetWindowFontScale(1.0f * relativeScale_y);
-								ImGui::TextColored(ImVec4(1, 1, 0, 1), cText.c_str(), cFPSCounter->GetFrameRate());
-							}
-							ImGui::End();
+							ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wspace, cSettings->iWindowHeight * hspace));
+							ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
+							cInventoryItem = cInventoryManager->GetItem(Crafting_item_name_list[i]);
+							ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(50, 50), ImVec2(0, 1), ImVec2(1, 0));
+							ImGui::SameLine();
+							ImGui::SetWindowFontScale(1.0f * relativeScale_y);
+							ImGui::TextColored(ImVec4(1, 1, 0, 1), cText.c_str(), cFPSCounter->GetFrameRate());
 						}
-						ImGui::PopStyleColor();
+						ImGui::End();
 					}
+					ImGui::PopStyleColor();
 				}
-				else if (crafting == true && recipeactive == true)
-				{
-					std::string seltext = "RECIPE SELECTED: " + Crafting_item_name_list[reckey];
-					ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 3));
-					ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
-					ImGui::SetWindowFontScale(2.5f * relativeScale_y);
-					ImGui::TextColored(ImVec4(1, 1, 0, 1), seltext.c_str());
+			}
+			else if (crafting == true && recipeactive == true)
+			{
+				std::string seltext = "RECIPE SELECTED: " + Crafting_item_name_list[reckey];
+				ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 3));
+				ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
+				ImGui::SetWindowFontScale(2.5f * relativeScale_y);
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), seltext.c_str());
 
 					ImGuiWindowFlags inventoryWindowFlags =
 						ImGuiWindowFlags_AlwaysAutoResize |
@@ -855,135 +864,135 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						ImGuiWindowFlags_NoScrollbar;
 					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.2f, 0.0f, 0.2f, 1.0f));  // Set a background color
 
-					std::string ctxt = (Crafting_item_name_list[reckey] + "4");
-					const char* c = ctxt.c_str();
+				std::string ctxt = (Crafting_item_name_list[reckey] + "4");
+				const char* c = ctxt.c_str();
+				{
+					ImGui::Begin(c, NULL, inventoryWindowFlags);
 					{
-						ImGui::Begin(c, NULL, inventoryWindowFlags);
-						{
-							ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.3f, cSettings->iWindowHeight * 0.6f));
-							ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
-							cInventoryItem = cInventoryManager->GetItem(Crafting_item_name_list[reckey]);
-							ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(100, 100), ImVec2(0, 1), ImVec2(1, 0));
-							ImGui::SameLine();
-							ImGui::SetWindowFontScale(1.5f * relativeScale_y);
-							ImGui::TextColored(ImVec4(1, 1, 0, 1), description.c_str());
-						}
-						ImGui::End();
+						ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.3f, cSettings->iWindowHeight * 0.6f));
+						ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
+						cInventoryItem = cInventoryManager->GetItem(Crafting_item_name_list[reckey]);
+						ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(100, 100), ImVec2(0, 1), ImVec2(1, 0));
+						ImGui::SameLine();
+						ImGui::SetWindowFontScale(1.5f * relativeScale_y);
+						ImGui::TextColored(ImVec4(1, 1, 0, 1), description.c_str());
 					}
-					ImGui::PopStyleColor();
-					if (reckey == 0)
-					{
+					ImGui::End();
+				}
+				ImGui::PopStyleColor();
+				if (reckey == 0)
+				{
 
-						description = "REQUIREMENTS\n25 Scrap Metal\n25 Wood\nMakes: 25\nPress C to craft!\nPress R to return!";
-						ctxt = (Crafting_item_name_list[reckey] + "4");
+					description = "REQUIREMENTS\n25 Scrap Metal\n25 Wood\nMakes: 25\nPress C to craft!\nPress R to return!";
+					ctxt = (Crafting_item_name_list[reckey] + "4");
 
-						if (cKeyboardController->IsKeyPressed('C'))
-						{
-							std::string requirementsarray[2] = { "Scrap Metal", "Hard wood" };
-							int requirementsCount[2] = { 25, 25 };
-							CheckCrafting(2, requirementsarray, requirementsCount, Crafting_item_name_list[reckey], 25);
-						}
-					}
-					if (reckey == 1)
+					if (cKeyboardController->IsKeyPressed('C'))
 					{
-						description = "REQUIREMENTS\n15 Scrap Metal\n10 Wood\nMakes: 25\nPress C to craft!\nPress R to return!";
-						ctxt = (Crafting_item_name_list[reckey] + "4");
-						if (cKeyboardController->IsKeyPressed('C'))
-						{
-							std::string requirementsarray[2] = { "Scrap Metal", "Hard wood" };
-							int requirementsCount[2] = { 15, 10 };
-							CheckCrafting(2, requirementsarray, requirementsCount, Crafting_item_name_list[reckey], 25);
-						}
-					}
-					if (reckey == 2)
-					{
-						description = "REQUIREMENTS\n15 Stone\n10 Wood\nMakes: 15\nPress C to craft!\nPress R to return!";
-						ctxt = (Crafting_item_name_list[reckey] + "4");
-
-						if (cKeyboardController->IsKeyPressed('C'))
-						{
-							std::string requirementsarray[2] = { "Stone Ore", "Hard wood" };
-							int requirementsCount[2] = { 15, 10 };
-							CheckCrafting(2, requirementsarray, requirementsCount, Crafting_item_name_list[reckey], 15);
-						}
-					}
-					if (reckey == 3)
-					{
-						description = "REQUIREMENTS\n5 Wood\n15 Fabric\nMakes: 10\nPress C to craft!\nPress R to return!";
-						ctxt = (Crafting_item_name_list[reckey] + "4");
-
-
-						if (cKeyboardController->IsKeyPressed('C'))
-						{
-							std::string requirementsarray[2] = { "Fabric", "Hard wood" };
-							int requirementsCount[2] = { 15, 5 };
-							CheckCrafting(2, requirementsarray, requirementsCount, Crafting_item_name_list[reckey], 10);
-						}
-					}
-					if (reckey == 4)
-					{
-						description = "REQUIREMENTS\n5 Wood\n5 bandages\nMakes: 1\nPress C to craft!\nPress R to return!";
-						ctxt = (Crafting_item_name_list[reckey] + "4");
-
-						if (cKeyboardController->IsKeyPressed('C'))
-						{
-							std::string requirementsarray[2] = { "Hard wood", "Bandage" };
-							int requirementsCount[2] = { 5, 5 };
-							CheckCrafting(2, requirementsarray, requirementsCount, Crafting_item_name_list[reckey], 1);
-						}
-					}
-					if (cKeyboardController->IsKeyPressed('R'))
-					{
-						recipeactive = false;
-						crafting = true;
+						std::string requirementsarray[2] = { "Scrap Metal", "Hard wood" };
+						int requirementsCount[2] = { 25, 25 };
+						CheckCrafting(2, requirementsarray, requirementsCount, Crafting_item_name_list[reckey], 25);
 					}
 				}
-				else if (descactive == true && checkinginventory == true)
+				if (reckey == 1)
 				{
-					std::string description = "--Empty--";
-					std::string itemname = inventory_item_name_list[deskey];
-					const char* c = inventory_item_name_list[deskey].c_str();
+					description = "REQUIREMENTS\n15 Scrap Metal\n10 Wood\nMakes: 25\nPress C to craft!\nPress R to return!";
+					ctxt = (Crafting_item_name_list[reckey] + "4");
+					if (cKeyboardController->IsKeyPressed('C'))
+					{
+						std::string requirementsarray[2] = { "Scrap Metal", "Hard wood" };
+						int requirementsCount[2] = { 15, 10 };
+						CheckCrafting(2, requirementsarray, requirementsCount, Crafting_item_name_list[reckey], 25);
+					}
+				}
+				if (reckey == 2)
+				{
+					description = "REQUIREMENTS\n15 Stone\n10 Wood\nMakes: 15\nPress C to craft!\nPress R to return!";
+					ctxt = (Crafting_item_name_list[reckey] + "4");
 
-					if (itemname == "Hard wood")
+					if (cKeyboardController->IsKeyPressed('C'))
 					{
-						description = "A piece of lumber, cut\ndown from a tree. You \ncan use this to build and \ncraft stuff.";
+						std::string requirementsarray[2] = { "Stone Ore", "Hard wood" };
+						int requirementsCount[2] = { 15, 10 };
+						CheckCrafting(2, requirementsarray, requirementsCount, Crafting_item_name_list[reckey], 15);
 					}
-					else if (itemname == "Stone Ore")
+				}
+				if (reckey == 3)
+				{
+					description = "REQUIREMENTS\n5 Wood\n15 Fabric\nMakes: 10\nPress C to craft!\nPress R to return!";
+					ctxt = (Crafting_item_name_list[reckey] + "4");
+
+
+					if (cKeyboardController->IsKeyPressed('C'))
 					{
-						description = "A hard rock you picked up\nYou can use this to build \nand craft stuff.";
+						std::string requirementsarray[2] = { "Fabric", "Hard wood" };
+						int requirementsCount[2] = { 15, 5 };
+						CheckCrafting(2, requirementsarray, requirementsCount, Crafting_item_name_list[reckey], 10);
 					}
-					else if (itemname == "Scrap Metal")
+				}
+				if (reckey == 4)
+				{
+					description = "REQUIREMENTS\n5 Wood\n5 bandages\nMakes: 1\nPress C to craft!\nPress R to return!";
+					ctxt = (Crafting_item_name_list[reckey] + "4");
+
+					if (cKeyboardController->IsKeyPressed('C'))
 					{
-						description = "Some pieces of metal junk\nIt contains spare parts, \nbolts, nuts, screws, nails\nall sorts of metal that you\ncan use to craft stuff with";
+						std::string requirementsarray[2] = { "Hard wood", "Bandage" };
+						int requirementsCount[2] = { 5, 5 };
+						CheckCrafting(2, requirementsarray, requirementsCount, Crafting_item_name_list[reckey], 1);
 					}
-					else if (itemname == "Pistol Bullets")
-					{
-						description = "Ammo used by light guns\nlike pistols and sub machine \nguns. little damage but\neasy to find and craft";
-					}
-					else if (itemname == "Rifle Bullets")
-					{
-						description = "The stronger caliber\nAmmo used by bigger guns\nlike rifles and snipers\nhigh damage but\nsignificantly harder to\nfind and craft";
-					}
-					else if (itemname == "Rifle")
-					{
-						description = "High damage fully\nautomatic 5.56x45 rifle\nused in military purposes\nuses rifle ammo";
-					}
-					else if (itemname == "Pistol")
-					{
-						description = "Low damage semi\nautomatic 9x19 pistol\nused in the police force\nand for civilized use\nuses pistol ammo";
-					}
-					else if (itemname == "Medkit")
-					{
-						description = "A fully kitted medkit\ncontaining various medical\nsupplies, including disposable\nsyringes, anti inflamation\ntablets, and surgical tools\nHeals your player\nto max health.";
-					}
-					else if (itemname == "Bandage")
-					{
-						description = "An antiseptic bandage used\nfor medical purposes\nHeals a small amount\nof health";
-					}
-					else if (itemname == "Fabric")
-					{
-						description = "A cloth like material crafted\nfrom fiber and hemp.\nused to craft all sorts\nof items";
-					}
+				}
+				if (cKeyboardController->IsKeyPressed('R'))
+				{
+					recipeactive = false;
+					crafting = true;
+				}
+			}
+			else if (descactive == true && checkinginventory == true)
+			{
+				std::string description = "--Empty--";
+				std::string itemname = inventory_item_name_list[deskey];
+				const char* c = inventory_item_name_list[deskey].c_str();
+
+				if (itemname == "Hard wood")
+				{
+					description = "A piece of lumber, cut\ndown from a tree. You \ncan use this to build and \ncraft stuff.";
+				}
+				else if (itemname == "Stone Ore")
+				{
+					description = "A hard rock you picked up\nYou can use this to build \nand craft stuff.";
+				}
+				else if (itemname == "Scrap Metal")
+				{
+					description = "Some pieces of metal junk\nIt contains spare parts, \nbolts, nuts, screws, nails\nall sorts of metal that you\ncan use to craft stuff with";
+				}
+				else if (itemname == "Pistol Bullets")
+				{
+					description = "Ammo used by light guns\nlike pistols and sub machine \nguns. little damage but\neasy to find and craft";
+				}
+				else if (itemname == "Rifle Bullets")
+				{
+					description = "The stronger caliber\nAmmo used by bigger guns\nlike rifles and snipers\nhigh damage but\nsignificantly harder to\nfind and craft";
+				}
+				else if (itemname == "Rifle")
+				{
+					description = "High damage fully\nautomatic 5.56x45 rifle\nused in military purposes\nuses rifle ammo";
+				}
+				else if (itemname == "Pistol")
+				{
+					description = "Low damage semi\nautomatic 9x19 pistol\nused in the police force\nand for civilized use\nuses pistol ammo";
+				}
+				else if (itemname == "Medkit")
+				{
+					description = "A fully kitted medkit\ncontaining various medical\nsupplies, including disposable\nsyringes, anti inflamation\ntablets, and surgical tools\nHeals your player\nto max health.";
+				}
+				else if (itemname == "Bandage")
+				{
+					description = "An antiseptic bandage used\nfor medical purposes\nHeals a small amount\nof health";
+				}
+				else if (itemname == "Fabric")
+				{
+					description = "A cloth like material crafted\nfrom fiber and hemp.\nused to craft all sorts\nof items";
+				}
 
 					if (itemname.find("empty") == string::npos)
 					{
@@ -1069,19 +1078,19 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						// Reset the CKeyboardController
 						CKeyboardController::GetInstance()->Reset();
 
-						// Load the menu state
-						//cout << "Loading PlayGameState" << endl;
-						if (selectinventory == true)
-						{
-							TransferToChest(inventory_item_name_list[chestkey], 1);
-						}
-						else TransferTohand(chest_item_name_list[chestkey], 1);
-					}
-					if (ImGui::ImageButton((ImTextureID)Add10Button.textureID,
-						ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
+					// Load the menu state
+					//cout << "Loading PlayGameState" << endl;
+					if (selectinventory == true)
 					{
-						// Reset the CKeyboardController
-						CKeyboardController::GetInstance()->Reset();
+						TransferToChest(inventory_item_name_list[chestkey], 1);
+					}
+					else TransferTohand(chest_item_name_list[chestkey], 1);
+				}
+				if (ImGui::ImageButton((ImTextureID)Add10Button.textureID,
+					ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
+				{
+					// Reset the CKeyboardController
+					CKeyboardController::GetInstance()->Reset();
 
 						// Load the menu state
 						//cout << "Loading PlayGameState" << endl;
@@ -1130,39 +1139,39 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						ImGuiWindowFlags_NoCollapse |
 						ImGuiWindowFlags_NoScrollbar;
 
-					for (int i = 0; i < Chest_size; i++)
+				for (int i = 0; i < Chest_size; i++)
+				{
+					level++;
+					if (level >= 5)
 					{
-						level++;
-						if (level >= 5)
-						{
-							level = 0;
-							hhspace += 0.1f;
-							wwspace = 0.1f;
-						}
-						wwspace = wwspace + 0.15f;
+						level = 0;
+						hhspace += 0.1f;
+						wwspace = 0.1f;
+					}
+					wwspace = wwspace + 0.15f;
 
-						recName = chest_item_name_list[i];
-						ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.f, 0.f, 1.0f));  // Set a background color
-						std::string ctxt = (chest_item_name_list[i] + "45");
-						const char* c = ctxt.c_str();
+					recName = chest_item_name_list[i];
+					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.f, 0.f, 1.0f));  // Set a background color
+					std::string ctxt = (chest_item_name_list[i] + "45");
+					const char* c = ctxt.c_str();
+					{
+						ImGui::Begin(c, NULL, inventoryWindowFlags);
 						{
-							ImGui::Begin(c, NULL, inventoryWindowFlags);
-							{
-								ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wwspace, cSettings->iWindowHeight * hhspace));
-								ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
-								cInventoryItem = cInventoryManager->GetItem(chest_item_name_list[i]);
-								ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(75, 75), ImVec2(0, 1), ImVec2(1, 0));
-								ImGui::SameLine();
-								ImGui::SetWindowFontScale(1.0f * relativeScale_y);
-								if (chest_item_name_list[i].find("empty") == string::npos)
-									ImGui::TextColored(ImVec4(1, 1, 1, 1), "%d", chest_item_quantity[i], chest_item_max_quantity[i]);
-								else ImGui::TextColored(ImVec4(1, 1, 1, 1), " ", chest_item_quantity[i], chest_item_max_quantity[i]);
-							}
-							ImGui::End();
+							ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wwspace, cSettings->iWindowHeight * hhspace));
+							ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
+							cInventoryItem = cInventoryManager->GetItem(chest_item_name_list[i]);
+							ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(75, 75), ImVec2(0, 1), ImVec2(1, 0));
+							ImGui::SameLine();
+							ImGui::SetWindowFontScale(1.0f * relativeScale_y);
+							if (chest_item_name_list[i].find("empty") == string::npos)
+								ImGui::TextColored(ImVec4(1, 1, 1, 1), "%d", chest_item_quantity[i], chest_item_max_quantity[i]);
+							else ImGui::TextColored(ImVec4(1, 1, 1, 1), " ", chest_item_quantity[i], chest_item_max_quantity[i]);
 						}
-						ImGui::PopStyleColor();
-						///
-						ImGuiWindowFlags chestWindowFlagsButton =
+						ImGui::End();
+					}
+					ImGui::PopStyleColor();
+					///
+					ImGuiWindowFlags chestWindowFlagsButton =
 						ImGuiWindowFlags_AlwaysAutoResize |
 						ImGuiWindowFlags_NoTitleBar |
 						ImGuiWindowFlags_NoResize |
@@ -1171,57 +1180,57 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						ImGuiWindowFlags_NoBackground |
 						ImGuiWindowFlags_NoScrollbar;
 
-						std::string istr = std::to_string(i + 36);
-						ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 0.f));
-						ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.f, 0.f, 0.f, 0.1f));
-						ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.2f, 0.2f, 0.3f));
-						{
-							if (inventoryloaded == false)
-							{
-								PreloadInventoryTextures();
-								inventoryloaded = true;
-							}
-							ctxt = (inventory_item_name_list[i] + istr);
-							c = ctxt.c_str();
-							ImGui::Begin(c, NULL, chestWindowFlagsButton);
-							{
-								ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wwspace, cSettings->iWindowHeight * hhspace));
-								ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
-								if (ImGui::ImageButton((ImTextureID)newChestbutton.textureID,
-									ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(0.0, 0.0)))
-								{
-									CKeyboardController::GetInstance()->Reset();
-									chestkey = i;
-									cout << chestkey << endl;
-									selectinventory = false;
-
-								}
-							}
-							ImGui::End();
-						}
-						ImGui::PopStyleColor(3);
-					}
-
-					if (cKeyboardController->IsKeyPressed('C'))
+					std::string istr = std::to_string(i + 36);
+					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 0.f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.f, 0.f, 0.f, 0.1f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.2f, 0.2f, 0.3f));
 					{
-						if (selectinventory == true)
+						if (inventoryloaded == false)
 						{
-							selectinventory = false;
+							PreloadInventoryTextures();
+							inventoryloaded = true;
 						}
-						else if (selectinventory == false)
+						ctxt = (inventory_item_name_list[i] + istr);
+						c = ctxt.c_str();
+						ImGui::Begin(c, NULL, chestWindowFlagsButton);
 						{
-							selectinventory = true;
+							ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wwspace, cSettings->iWindowHeight * hhspace));
+							ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
+							if (ImGui::ImageButton((ImTextureID)newChestbutton.textureID,
+								ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(0.0, 0.0)))
+							{
+								CKeyboardController::GetInstance()->Reset();
+								chestkey = i;
+								cout << chestkey << endl;
+								selectinventory = false;
+
+							}
 						}
+						ImGui::End();
 					}
-					if (cKeyboardController->IsKeyPressed('1')) chestkey = 1;
-					else if (cKeyboardController->IsKeyPressed('2')) chestkey = 2;
-					else if (cKeyboardController->IsKeyPressed('3')) chestkey = 3;
-					else if (cKeyboardController->IsKeyPressed('4')) chestkey = 4;
-					else if (cKeyboardController->IsKeyPressed('5')) chestkey = 5;
-					else if (cKeyboardController->IsKeyPressed('6')) chestkey = 6;
-					else if (cKeyboardController->IsKeyPressed('7')) chestkey = 7;
-					else if (cKeyboardController->IsKeyPressed('8')) chestkey = 8;
-					else if (cKeyboardController->IsKeyPressed('9')) chestkey = 9;
+					ImGui::PopStyleColor(3);
+				}
+
+				if (cKeyboardController->IsKeyPressed('C'))
+				{
+					if (selectinventory == true)
+					{
+						selectinventory = false;
+					}
+					else if (selectinventory == false)
+					{
+						selectinventory = true;
+					}
+				}
+				if (cKeyboardController->IsKeyPressed('1')) chestkey = 1;
+				else if (cKeyboardController->IsKeyPressed('2')) chestkey = 2;
+				else if (cKeyboardController->IsKeyPressed('3')) chestkey = 3;
+				else if (cKeyboardController->IsKeyPressed('4')) chestkey = 4;
+				else if (cKeyboardController->IsKeyPressed('5')) chestkey = 5;
+				else if (cKeyboardController->IsKeyPressed('6')) chestkey = 6;
+				else if (cKeyboardController->IsKeyPressed('7')) chestkey = 7;
+				else if (cKeyboardController->IsKeyPressed('8')) chestkey = 8;
+				else if (cKeyboardController->IsKeyPressed('9')) chestkey = 9;
 
 
 				}
@@ -1256,16 +1265,16 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						ImGuiWindowFlags_NoCollapse |
 						ImGuiWindowFlags_NoScrollbar;
 
-					for (int i = 0; i < Chest_size; i++)
+				for (int i = 0; i < Chest_size; i++)
+				{
+					level++;
+					if (level >= 5)
 					{
-						level++;
-						if (level >= 5)
-						{
-							level = 0;
-							hhspace += 0.1f;
-							wwspace = 0.1f;
-						}
-						wwspace = wwspace + 0.15f;
+						level = 0;
+						hhspace += 0.1f;
+						wwspace = 0.1f;
+					}
+					wwspace = wwspace + 0.15f;
 
 						recName = crate_item_name_list[i];
 						ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.f, 0.f, 1.0f));  // Set a background color
@@ -1318,44 +1327,65 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 											cout << "added item: " << crate_item_name_list[i] << endl;
 										}
 
-									}
 								}
-								ImGui::End();
 							}
-							ImGui::PopStyleColor(3);
+							ImGui::End();
 						}
+						ImGui::PopStyleColor(3);
 					}
 				}
-				ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.2f, 0.0f, 0.2f, 1.0f));  // Set a background color
-				ImGuiWindowFlags topRightWindowFlags = ImGuiWindowFlags_AlwaysAutoResize |
-					ImGuiWindowFlags_NoTitleBar |
-					ImGuiWindowFlags_NoMove |
-					ImGuiWindowFlags_NoResize |
-					ImGuiWindowFlags_NoNavFocus |
-					ImGuiWindowFlags_NoCollapse |
-					ImGuiWindowFlags_NoScrollbar;
-				{
-					// Render the Lives
-					ImGui::Begin("Lives", NULL, topRightWindowFlags);
-					{
-						ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.85f, cSettings->iWindowHeight * 0.03f));
-						ImGui::SetWindowSize(ImVec2(100.0f * relativeScale_x, 25.0f * relativeScale_y));
-						cInventoryItem = cInventoryManager->GetItem("Lives");
-						ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(cInventoryItem->vec2Size.x * relativeScale_x, cInventoryItem->vec2Size.y * relativeScale_y), ImVec2(0, 1), ImVec2(1, 0));
-						ImGui::SameLine();
-						ImGui::SetWindowFontScale(1.5f * relativeScale_y);
-						ImGui::TextColored(ImVec4(1, 1, 0, 1), "%d / %d", cInventoryItem->GetCount(), cInventoryItem->GetMaxCount());
-					}
-					ImGui::End();
-				}
+			}
+
+
+			// Render Progress Bar
+			ImGui::Begin("ProgressBar", NULL, window_flags);
+			{
+				ImGui::SetWindowPos(ImVec2((float)cSettings->iWindowWidth - 320.0f, 20.0f));
+				ImGui::SetWindowSize(ImVec2(300.0f, 40.0f));
+				ImVec4 col = ImVec4(0.f, 1.f, 0.f, 1.f);
+				ImGui::PushStyleColor(ImGuiCol_PlotHistogram, col);
+					col = ImVec4(1.f, 0.f, 0.f, 1.f);
+					ImGui::PushStyleColor(ImGuiCol_FrameBg, col);
+					m_fProgressBar = CPlayer2D_V2::GetInstance()->GetHealth() / CPlayer2D_V2::GetInstance()->GetMaxHealth();
+					const char* empty = " ";
+						ImGui::ProgressBar(m_fProgressBar, ImVec2(300.0f, 60.0f), empty);
+						// Render the Health
+						ImGuiWindowFlags topRightWindowFlags = ImGuiWindowFlags_AlwaysAutoResize |
+							ImGuiWindowFlags_NoTitleBar |
+							ImGuiWindowFlags_NoMove |
+							ImGuiWindowFlags_NoResize |
+							ImGuiWindowFlags_NoCollapse |
+							ImGuiWindowFlags_NoBackground |
+							ImGuiWindowFlags_NoScrollbar;
+
+						ImGui::Begin("HealthIcon", NULL, topRightWindowFlags);
+						{
+							ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.8f, cSettings->iWindowHeight * 0.03f));
+							ImGui::SetWindowSize(ImVec2(100.0f * relativeScale_x, 25.0f * relativeScale_y)); 
+							cInventoryItem = cInventoryManager->GetItem("Health");
+							ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(cInventoryItem->vec2Size.x* relativeScale_x, cInventoryItem->vec2Size.y* relativeScale_y), ImVec2(0, 1), ImVec2(1, 0));
+
+						}
+						ImGui::End();
+						ImGui::Begin("HealthText", NULL, topRightWindowFlags);
+						{
+							ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.875f, cSettings->iWindowHeight * 0.03f));
+							ImGui::SetWindowSize(ImVec2(100.0f * relativeScale_x, 25.0f * relativeScale_y));
+							ImGui::SetWindowFontScale(1.5f * relativeScale_y);
+							ImGui::TextColored(ImVec4(1, 1, 1, 1), "%d / %d", CPlayer2D_V2::GetInstance()->GetHealth(), CPlayer2D_V2::GetInstance()->GetMaxHealth());
+						}
+						ImGui::End();
+					ImGui::PopStyleColor();
 				ImGui::PopStyleColor();
 			}
 			ImGui::End();
+			
 		}
+		ImGui::End();
 		ImGui::EndFrame();
 		checkforzero();
 	}
-	
+}
 
 
 /**

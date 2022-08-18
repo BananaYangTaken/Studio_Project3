@@ -161,13 +161,7 @@ bool CPlayer2D_V2::Init(void)
 	cPhysics2D.Init();
 
 	// Add a Lives as one of the inventory items
-	cInventoryItem = cInventoryManager->Add("Lives", "Image/Scene2D_Lives.tga", 3, 3);
-	cInventoryItem->vec2Size = glm::vec2(25, 25);
-	// Add a Rune as one of the inventory items
-	cInventoryItem = cInventoryManager->Add("Rune", "Image/Rune.tga", 1, 0);
-	cInventoryItem->vec2Size = glm::vec2(25, 25);
-	// Add a Key as one of the inventory items
-	cInventoryItem = cInventoryManager->Add("Key", "Image/Key.tga", 1, 0);
+	cInventoryItem = cInventoryManager->Add("Health", "Image/Health.tga", 1, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
 	cInventoryItem = cInventoryManager->Add("Hard wood", "Image/Hard wood.tga", 1, 0);
@@ -551,6 +545,10 @@ void CPlayer2D_V2::SetInvulnerabilityFrame(float InvulnerabilityFrame)
 unsigned int CPlayer2D_V2::GetHealth(void)
 {
 	return this->Health;
+}
+unsigned int CPlayer2D_V2::GetMaxHealth(void)
+{
+	return this->MaxHealth;
 }
 
 float CPlayer2D_V2::GetInvulnerabilityFrame(void)
