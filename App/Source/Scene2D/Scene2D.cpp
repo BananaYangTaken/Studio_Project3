@@ -148,7 +148,6 @@ bool CScene2D::Init(void)
 	//Initialise the instance
 	cGameManager->Init(); 
 	cSoundController = CSoundController::GetInstance();
-	cSettings->bDisableMousePointer = true;
 
 	return true;
 }
