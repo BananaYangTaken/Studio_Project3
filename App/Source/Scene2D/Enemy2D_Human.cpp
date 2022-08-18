@@ -93,7 +93,7 @@ bool CEnemy2D_Human::Init(int x, int y)
 
 	unsigned int uiRow = -1;
 	unsigned int uiCol = -1;
-	if (cMap2D->FindValue(302, uiRow, uiCol) == false)
+	if (cMap2D->FindValue(303, uiRow, uiCol) == false)
 	{
 		return false;	// Unable to find the start position of the enemy, so quit this game
 	}
@@ -578,7 +578,7 @@ void CEnemy2D_Human::Update(const double dElapsedTime)
 	// Update the UV Coordinates
 	{
 		//if within viewing distance
-		if( ( abs(Player->vec2Index.x - vec2Index.x) <= cSettings->VIEW_TILES_XAXIS* 0.5 + 1 ) && (abs(Player->vec2Index.y - vec2Index.y) <= cSettings->VIEW_TILES_YAXIS * 0.5 + 1))
+		if ((abs(Player->vec2Index.x - vec2Index.x) <= cSettings->VIEW_TILES_XAXIS * 0.5 + 1) && (abs(Player->vec2Index.y - vec2Index.y) <= cSettings->VIEW_TILES_YAXIS * 0.5 + 1))
 		{
 			//Calculate Position of Entity on Screen
 			glm::vec2 ScreenPos = glm::vec2(0, 0);
@@ -618,7 +618,7 @@ void CEnemy2D_Human::Update(const double dElapsedTime)
 			vec2UVCoordinate.y = cSettings->ConvertIndexToUVSpace(cSettings->y, ScreenPos.y - 1, false, vec2NumMicroSteps.y * cSettings->MICRO_STEP_YAXIS);
 		}
 		else
-		{ 
+		{
 			vec2UVCoordinate = glm::vec2(2, 2);
 		}
 	}

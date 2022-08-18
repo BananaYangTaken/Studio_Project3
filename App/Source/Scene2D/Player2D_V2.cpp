@@ -155,7 +155,7 @@ bool CPlayer2D_V2::Init(void)
 
 	animatedSprites = CMeshBuilder::GenerateSpriteAnimation(13, 20, (cSettings->TILE_WIDTH + cSettings->TILE_HEIGHT) * 0.5, (cSettings->TILE_WIDTH + cSettings->TILE_HEIGHT) * 0.5);
 	animatedSprites->AddAnimation("idle", 0, 19);
-	animatedSprites->AddAnimation("meleeAttack", 20, 23);
+	animatedSprites->AddAnimation("meleeAttack", 20, 34);
 	animatedSprites->AddAnimation("move", 40, 59);
 
 	AnimationTimer = 0;

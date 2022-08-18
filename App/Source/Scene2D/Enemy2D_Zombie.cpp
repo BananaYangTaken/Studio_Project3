@@ -254,7 +254,7 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 				{
 					if (Player->GetInvulnerabilityFrame() <= 0)
 					{
-						Player->SetHealth(Player->GetHealth() - 1);
+						Player->SetHealth(Player->GetHealth() - 10);
 						Player->SetInvulnerabilityFrame(0.5);
 						CSoundController::GetInstance()->PlaySoundByID(5);
 					}

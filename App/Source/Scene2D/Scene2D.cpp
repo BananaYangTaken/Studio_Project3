@@ -18,6 +18,7 @@ using namespace std;
 
 //Enemies
 #include "Enemy2D_Zombie.h"
+#include "Enemy2D_Human.h"
 
 /**
  @brief Constructor This constructor has protected access modifier as this class will be a Singleton
@@ -176,7 +177,7 @@ bool CScene2D::Update(const double dElapsedTime)
 	{
 		cEnemyList[i]->Update(dElapsedTime);
 	}
-	//LoadEnemies();
+	LoadEnemies();
 	vector<CEnemyBase*>::iterator it = cEnemyList.begin();
 	while (it != cEnemyList.end())
 	{
@@ -446,8 +447,8 @@ void CScene2D::LoadEnemies(void)
 					CEnemyBase* cEnemy2D;
 					if (Value == 302)
 						cEnemy2D = new CEnemy2D_Zombie();
-					//else if (Value == 303)
-					//	cEnemy2D = new CEnemy2D_Creeper();
+					else if (Value == 303)
+						cEnemy2D = new CEnemy2D_Human();
 					// Pass the shader to instance
 					cEnemy2D->SetShader("Shader2D_Colour");
 					if (cEnemy2D->Init(uiCol, cSettings->NUM_TILES_YAXIS - uiRow - 1))
