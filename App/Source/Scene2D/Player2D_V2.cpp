@@ -411,16 +411,10 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		animatedSprites->PlayAnimation("move", -1, 1.0f);
 	}
 
-	
-	
-
 	if (idle == true)
 	{
 		animatedSprites->PlayAnimation("idle", -1, 10.0f);
 	}
-
-	
-
 
 	//Interact with Map
 	InteractWithMap();
@@ -475,15 +469,16 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		vec2UVCoordinate.x = cSettings->ConvertIndexToUVSpace(cSettings->x, ScreenPos.x - 1, false, vec2NumMicroSteps.x * cSettings->MICRO_STEP_XAXIS);
 		vec2UVCoordinate.y = cSettings->ConvertIndexToUVSpace(cSettings->y, ScreenPos.y - 1, false, vec2NumMicroSteps.y * cSettings->MICRO_STEP_YAXIS);
 	}
-
 	//Update Rotation
 	//Mouse Position
 	double x, y;
 	Application::GetCursorPos(&x, &y);
 	float mousexpos = ((x / cSettings->iWindowWidth) * cSettings->VIEW_TILES_XAXIS) - cSettings->VIEW_TILES_XAXIS*0.5-0.5;
 	float mouseypos = (abs((y - cSettings->iWindowHeight) / cSettings->iWindowHeight) * cSettings->VIEW_TILES_YAXIS) - cSettings->VIEW_TILES_YAXIS * 0.5-0.5;
+	//Calculate Origin
+	glm::vec2 Origin = ScreenPos - glm::vec2(cSettings->VIEW_TILES_XAXIS * 0.5 + 1, cSettings->VIEW_TILES_YAXIS * 0.5 + 1);
 	//Calculate Rotation
-	Rotation = cPhysics2D.CalculateRotation(glm::vec2(0,0), glm::vec2(1, 0), glm::vec2(mousexpos, mouseypos));
+	Rotation = cPhysics2D.CalculateRotation(Origin, glm::vec2(1, 0), glm::vec2(mousexpos, mouseypos));
 }
 
 /**

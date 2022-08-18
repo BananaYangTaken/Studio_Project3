@@ -6,6 +6,7 @@
  */
 #include "Physics2D.h"
 #include "../MyMath.h"
+#include "GameControl/Settings.h"
 
 #include <iostream>
 using namespace std;
@@ -197,6 +198,9 @@ float CPhysics2D::CalculateRotation(glm::vec2 Origin, glm::vec2 DefaultPos, glm:
 {
 	glm::vec2 OriginalPoint = DefaultPos - Origin;
 	glm::vec2 TransformedPoint = NewPos - Origin;
+	float XtoYRatio = CSettings::GetInstance()->VIEW_TILES_XAXIS / CSettings::GetInstance()->VIEW_TILES_YAXIS;
+	OriginalPoint.x *= XtoYRatio;
+	TransformedPoint.x *= XtoYRatio;
 	Normalize(OriginalPoint);
 	Normalize(TransformedPoint);
 	float Result = atan2(TransformedPoint.y * OriginalPoint.x - TransformedPoint.x * OriginalPoint.y,TransformedPoint.x*OriginalPoint.x + TransformedPoint.y + OriginalPoint.y );
@@ -216,6 +220,7 @@ float CPhysics2D::CalculateRotation(glm::vec2 Origin, glm::vec2 DefaultPos, glm:
 	angle = Math::TWO_PI - angle;
 	return angle;
 }
+
 
 // PrintSelf
 void CPhysics2D::PrintSelf(void)
