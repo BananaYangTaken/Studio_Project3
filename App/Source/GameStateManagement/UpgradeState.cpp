@@ -285,6 +285,11 @@ bool CUpgradeState::Update(const double dElapsedTime)
 								CKeyboardController::GetInstance()->Reset();
 								CSoundController::GetInstance()->MasterVolumeIncrease(10);
 							}
+							cMap2D->SetMapInfo(50, 9, 111);
+							cMap2D->SetMapInfo(50, 17, 111);
+							cMap2D->SetMapInfo(36, 9, 111);
+							cMap2D->SetMapInfo(36, 17, 111);
+
 						}
 						if (CurrentWindowLv == 2)
 						{
@@ -295,6 +300,10 @@ bool CUpgradeState::Update(const double dElapsedTime)
 								CKeyboardController::GetInstance()->Reset();
 								CSoundController::GetInstance()->MasterVolumeIncrease(10);
 							}
+							cMap2D->SetMapInfo(50, 9, 112);
+							cMap2D->SetMapInfo(50, 17, 112);
+							cMap2D->SetMapInfo(36, 9, 112);
+							cMap2D->SetMapInfo(36, 17, 112);
 						}
 					}
 				}
@@ -318,9 +327,9 @@ bool CUpgradeState::Update(const double dElapsedTime)
 					itemlist[0] = "Hard wood";
 					itemlist[1] = "Scrap Metal";
 					itemlist[2] = "Stone Ore";
-					itemlistcount[0] = 50;
-					itemlistcount[1] = 225;
-					itemlistcount[2] = 100;
+					itemlistcount[0] = 0;
+					itemlistcount[1] = 0;
+					itemlistcount[2] = 0;
 				}
 				if (CurrentWindowLv == 2)
 				{
