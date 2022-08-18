@@ -143,7 +143,7 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 {
 	if (!bIsActive)
 		return;
-
+	cout << Health << endl;
 	if (Health <= 0)
 	{
 		if (deathTimer > 2)
