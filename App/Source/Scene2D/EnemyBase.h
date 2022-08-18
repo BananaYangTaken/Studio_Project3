@@ -89,9 +89,10 @@ protected:
 
 	glm::vec2 vec2OldIndex;
 
-	unsigned int Health;
+	int Health;
 	unsigned int Death;
 	float InvulnerabilityFrame;
+	float speedMultiplier;
 	bool Stunned;
 	float StunDuration;
 	bool Attack;

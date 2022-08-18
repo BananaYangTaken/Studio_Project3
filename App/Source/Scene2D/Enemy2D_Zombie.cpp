@@ -35,6 +35,7 @@ CEnemy2D_Zombie::CEnemy2D_Zombie(void)
 	Death = 0;
 	InvulnerabilityFrame = 0;
 	Direction = 2;
+	speedMultiplier = 0.5;
 
 	transform = glm::mat4(1.0f);	// make sure to initialize matrix to identity matrix first
 
@@ -106,21 +107,21 @@ bool CEnemy2D_Zombie::Init(int x, int y)
 	glBindVertexArray(VAO);
 
 
-	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/ZombieSprites.png", true);
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/regularZombie.png", true);
 	if (iTextureID == 0)
 	{
-		cout << "Unable to load Image/ZombieSprites.png" << endl;
+		cout << "Unable to load Image/regularZombie.png" << endl;
 		return false;
 	}
 
 	//CS:Create Animated Sprites and setup animation
 
 
-	animatedSprites = CMeshBuilder::GenerateSpriteAnimation(9, 9, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
-	animatedSprites->AddAnimation("idle", 7, 9);
-	animatedSprites->AddAnimation("move", 0, 29);
-	animatedSprites->AddAnimation("attack", 30, 69);
-	animatedSprites->AddAnimation("death", 72, 77);
+	animatedSprites = CMeshBuilder::GenerateSpriteAnimation(4, 17, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
+	animatedSprites->AddAnimation("idle", 0, 16);
+	animatedSprites->AddAnimation("move", 17, 33);
+	animatedSprites->AddAnimation("attack", 34, 42);
+	animatedSprites->AddAnimation("death", 51, 56);
 
 	deathTimer = 0;
 
@@ -142,18 +143,18 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 {
 	if (!bIsActive)
 		return;
-	if (InvulnerabilityFrame > 0)
+
+	if (Health <= 0)
 	{
-		InvulnerabilityFrame -= dElapsedTime;
-	}
-	if (deathTimer > 2)
-	{
-		bIsActive = false;
-	}
-	if (Health == 0)
-	{
-		deathTimer = 1;
-		sCurrentFSM = static_cast<CEnemyBase::FSM>(DEATH);
+		if (deathTimer > 2)
+		{
+			bIsActive = false;
+		}
+		if (deathTimer == 0)
+		{
+			deathTimer = 1;
+			sCurrentFSM = static_cast<CEnemyBase::FSM>(DEATH);
+		}
 	}
 	
 	switch (sCurrentFSM)
@@ -233,18 +234,18 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 			if (Attack == false)
 			{
 				UpdatePosition();
-			}
-			// Attack
-			if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index, 'x') < 0.5f && Attack == false)
-			{
-				Attack = true;
-				AttackAnim = 1;
-				UpdateDirection();
+				// Attack
+				if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index, 'x') < 0.5f && Attack == false)
+				{
+					Attack = true;
+					AttackAnim = 1;
+					UpdateDirection();
 
-				animatedSprites->PlayAnimation("attack", 1, 1.0f);
-				CSoundController::GetInstance()->PlaySoundByID(15);
+					animatedSprites->PlayAnimation("attack", 1, 1.0f);
+					CSoundController::GetInstance()->PlaySoundByID(15);
+				}
 			}
-			if (Attack && AttackAnim <= 0)
+			else if (Attack && AttackAnim <= 0)
 			{
 				Attack = false;
 				sCurrentFSM = static_cast<CEnemyBase::FSM>(RELOAD);
@@ -273,11 +274,6 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 				//cout << "ATTACK : Reset counter: " << iFSMCounter << endl;
 			}
 			iFSMCounter++;
-		}
-		//Animation
-		if (!Attack)
-		{
-			animatedSprites->PlayAnimation("move", -1, 1.0f);
 		}
 		break;
 	case RELOAD:
