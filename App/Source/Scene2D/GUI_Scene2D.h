@@ -12,7 +12,6 @@
 #include "System\ImageLoader.h"
 // Include CEntity2D
 #include "Primitives/Entity2D.h"
-
 // FPS Counter
 #include "TimeControl\FPSCounter.h"
 
@@ -109,7 +108,9 @@ public:
 	// Render
 	void Render(void);
 	void PreloadInventoryTextures(void);
-
+	bool hoveroveritem = false;
+	float flooritemquantity = 0;
+	std::string flooritemname;
 	// PostRender
 	void PostRender(void);
 	void Destroy(void);

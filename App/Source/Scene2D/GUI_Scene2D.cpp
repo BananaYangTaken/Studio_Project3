@@ -500,8 +500,30 @@ void CGUI_Scene2D::PreloadInventoryTextures()
 }
 void CGUI_Scene2D::dropitem(int key)
 {
+	cout << "ITEMNAME: " + inventory_item_name_list[key];
+	if (inventory_item_name_list[key] == "Bandage")
+		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.x, CPlayer2D_V2::GetInstance()->vec2Index.y, 30);
+	if (inventory_item_name_list[key] == "Blueprint")
+		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.y, CPlayer2D_V2::GetInstance()->vec2Index.x, 32);
+	if (inventory_item_name_list[key] == "Medkit")
+		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.x, CPlayer2D_V2::GetInstance()->vec2Index.y, 35);
+	if (inventory_item_name_list[key] == "Pistol Bullets")
+		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.x, CPlayer2D_V2::GetInstance()->vec2Index.y, 36);
+	if (inventory_item_name_list[key] == "Pistol")
+		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 37);
+	if (inventory_item_name_list[key] == "Rifle Bullets")
+		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 38);
+	if (inventory_item_name_list[key] == "Rifle")
+		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 39);
+	if (inventory_item_name_list[key] == "Scrap Metal")
+		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 40);
+	if (inventory_item_name_list[key] == "Stone Ore")
+		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 41);
+	if (inventory_item_name_list[key] == "Fabric")
+		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 33);
+	if (inventory_item_name_list[key] == "Hard wood")
+		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 34);
 	inventory_item_quantity[key] = 0;
-	//cMap2D->SetMapInfo()
 
 }
 void CGUI_Scene2D::SwapItems(int itemindex, int swapindex)
@@ -702,6 +724,15 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						else continue;
 					}
 				}
+			}
+
+			else if (hoveroveritem == true)
+			{
+				std::string floortxt = "Pesss F to pick up " + std::to_string(flooritemquantity) + " " + flooritemname;
+				ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, 1));
+				ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
+				ImGui::SetWindowFontScale(2.5f * relativeScale_y);
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), floortxt.c_str(), cFPSCounter->GetFrameRate());
 			}
 			else if (checkinginventory == false && crafting == false && descactive == false && chestactive == false)
 			{

@@ -721,33 +721,53 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 		}
 		break;
 	case 30:
-		cMap2D->FindValue(30, IRow, ICol);
-		cMap2D->SetMapInfo(IRow, ICol, 0);
-
+		if (cKeyboardController->IsKeyPressed('F'))
+		{
+			cMap2D->FindValue(30, IRow, ICol);
+			cMap2D->SetMapInfo(IRow, ICol, 0);
+		}
 		break;
 	case 32:
-		cMap2D->FindValue(32, IRow, ICol);
-		cMap2D->SetMapInfo(IRow, ICol, 0);
-		break;
+		if (cKeyboardController->IsKeyPressed('F'))
+		{
+			cMap2D->FindValue(32, IRow, ICol);
+			cMap2D->SetMapInfo(IRow, ICol, 0);
+			break;
+		}
 	case 35:
-		cMap2D->FindValue(35, IRow, ICol);
-		cMap2D->SetMapInfo(IRow, ICol, 0);
+		if (cKeyboardController->IsKeyPressed('F'))
+		{
+			cMap2D->FindValue(35, IRow, ICol);
+			cMap2D->SetMapInfo(IRow, ICol, 0);
+		}
 		break;
 	case 36:
-		cMap2D->FindValue(36, IRow, ICol);
-		cMap2D->SetMapInfo(IRow, ICol, 0);
+		if (cKeyboardController->IsKeyPressed('F'))
+		{
+			cMap2D->FindValue(36, IRow, ICol);
+			cMap2D->SetMapInfo(IRow, ICol, 0);
+		}
 		break;
 	case 37:
-		cMap2D->FindValue(37, IRow, ICol);
-		cMap2D->SetMapInfo(IRow, ICol, 0);
+		if (cKeyboardController->IsKeyPressed('F'))
+		{
+			cMap2D->FindValue(37, IRow, ICol);
+			cMap2D->SetMapInfo(IRow, ICol, 0);
+		}
 		break;
 	case 38:
-		cMap2D->FindValue(38, IRow, ICol);
-		cMap2D->SetMapInfo(IRow, ICol, 0);
+		if (cKeyboardController->IsKeyPressed('F'))
+		{
+			cMap2D->FindValue(38, IRow, ICol);
+			cMap2D->SetMapInfo(IRow, ICol, 0);
+		}
 		break;
 	case 39:
-		cMap2D->FindValue(39, IRow, ICol);
-		cMap2D->SetMapInfo(IRow, ICol, 0);
+		if (cKeyboardController->IsKeyPressed('F'))
+		{
+			cMap2D->FindValue(39, IRow, ICol);
+			cMap2D->SetMapInfo(IRow, ICol, 0);
+		}
 		break;
 	default:
 		break;

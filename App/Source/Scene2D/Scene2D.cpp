@@ -99,7 +99,7 @@ bool CScene2D::Init(void)
 	cMap2D->SetShader("Shader2D");
 
 	WindowUpgradeLvl = 0;
-	TurretUpgradeLvl = 2;
+	TurretUpgradeLvl = 0;
 	BarbwireUpgrade = 0;
 
 	//Initialse this instance
