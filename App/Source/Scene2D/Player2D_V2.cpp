@@ -27,6 +27,7 @@ CPlayer2D_V2::CPlayer2D_V2(void)
 	: cMap2D(NULL)
 	, Player(NULL)
 	, cKeyboardController(NULL)
+	, cMouseController(NULL)
 	, animatedSprites(NULL)
 	, runtimeColour(glm::vec4(1.0f))
 	, Direction(DOWN)
@@ -34,6 +35,7 @@ CPlayer2D_V2::CPlayer2D_V2(void)
 	, Health(NULL)
 	, MaxHealth(NULL)
 	, InvulnerabilityFrame(NULL)
+	, LButtonState(NULL)
 {
 	transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 
@@ -91,6 +93,9 @@ bool CPlayer2D_V2::Init(void)
 	// Reset all keys since we are starting a new game
 	cKeyboardController->Reset();
 
+	// Store the mouse controller singleton instance here
+	cMouseController = CMouseController::GetInstance();
+
 	// Load the sounds into CSoundController
 	cSoundController = CSoundController::GetInstance();
 
@@ -108,7 +113,7 @@ bool CPlayer2D_V2::Init(void)
 
 	//Get the handler to the Game Manager Instance
 	cGameManager = CGameManager::GetInstance();
-	
+
 	LoadObject = false;
 
 	Health = MaxHealth = 100;
@@ -131,12 +136,12 @@ bool CPlayer2D_V2::Init(void)
 	vec2Index = glm::vec2(uiCol, uiRow);
 	// By default, microsteps should be zero
 	vec2NumMicroSteps = glm::vec2(0, 0);
-	
+
 
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
-	
+
 	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Player_Sprites.png", true);
 	if (iTextureID == 0)
 	{
@@ -148,74 +153,80 @@ bool CPlayer2D_V2::Init(void)
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
-	animatedSprites = CMeshBuilder::GenerateSpriteAnimation(13, 20, (cSettings->TILE_WIDTH+cSettings->TILE_HEIGHT)*0.5, (cSettings->TILE_WIDTH + cSettings->TILE_HEIGHT) * 0.5);
+	animatedSprites = CMeshBuilder::GenerateSpriteAnimation(13, 20, (cSettings->TILE_WIDTH + cSettings->TILE_HEIGHT) * 0.5, (cSettings->TILE_WIDTH + cSettings->TILE_HEIGHT) * 0.5);
 	animatedSprites->AddAnimation("idle", 0, 19);
+	animatedSprites->AddAnimation("meleeAttack", 20, 23);
 	animatedSprites->AddAnimation("move", 40, 59);
 
-	attackAnim = 0;
+	AnimationTimer = 0;
 
 
 	//CS: Init the color to white
 	runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
 
 	cPhysics2D.Init();
+	
+	//Load Inventory Item
+	{
+		// Add a Health as one of the inventory items
+		cInventoryItem = cInventoryManager->Add("Health", "Image/Health.tga", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	// Add a Lives as one of the inventory items
-	cInventoryItem = cInventoryManager->Add("Health", "Image/Health.tga", 1, 0);
-	cInventoryItem->vec2Size = glm::vec2(25, 25);
+		cInventoryItem = cInventoryManager->Add("Hard wood", "Image/Hard wood.tga", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("Hard wood", "Image/Hard wood.tga", 1, 0);
-	cInventoryItem->vec2Size = glm::vec2(25, 25);
+		cInventoryItem = cInventoryManager->Add("Stone Ore", "Image/Stone Ore.tga", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("Stone Ore", "Image/Stone Ore.tga", 1, 0);
-	cInventoryItem->vec2Size = glm::vec2(25, 25);
+		cInventoryItem = cInventoryManager->Add("Scrap Metal", "Image/Scrap Metal.tga", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("Scrap Metal", "Image/Scrap Metal.tga", 1, 0);
-	cInventoryItem->vec2Size = glm::vec2(25, 25);
+		cInventoryItem = cInventoryManager->Add("Pistol Bullets", "Image/Pistol Bullets.tga", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("Pistol Bullets", "Image/Pistol Bullets.tga", 1, 0);
-	cInventoryItem->vec2Size = glm::vec2(25, 25);
+		cInventoryItem = cInventoryManager->Add("Rifle Bullets", "Image/Rifle Bullets.tga", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("Rifle Bullets", "Image/Rifle Bullets.tga", 1, 0);
-	cInventoryItem->vec2Size = glm::vec2(25, 25);
+		cInventoryItem = cInventoryManager->Add("Rifle", "Image/Rifle.tga", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("Rifle", "Image/Rifle.tga", 1, 0);
-	cInventoryItem->vec2Size = glm::vec2(25, 25);
+		cInventoryItem = cInventoryManager->Add("Pistol", "Image/Pistol.tga", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("Pistol", "Image/Pistol.tga", 1, 0);
-	cInventoryItem->vec2Size = glm::vec2(25, 25);
+		cInventoryItem = cInventoryManager->Add("Medkit", "Image/Medkit.tga", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("Medkit", "Image/Medkit.tga", 1, 0);
-	cInventoryItem->vec2Size = glm::vec2(25, 25);
+		cInventoryItem = cInventoryManager->Add("Bandage", "Image/Bandage.tga", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("Bandage", "Image/Bandage.tga", 1, 0);
-	cInventoryItem->vec2Size = glm::vec2(25, 25);
+		cInventoryItem = cInventoryManager->Add("Fabric", "Image/Fabric.tga", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("Fabric", "Image/Fabric.tga", 1, 0);
-	cInventoryItem->vec2Size = glm::vec2(25, 25);
+		cInventoryItem = cInventoryManager->Add("Blueprint", "Image/Blueprint.tga", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
+		cInventoryItem = cInventoryManager->Add("empty0", "Image/BlankBox.tga", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
+		cInventoryItem = cInventoryManager->Add("empty1", "Image/BlankBox.tga", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
+		cInventoryItem = cInventoryManager->Add("empty2", "Image/BlankBox.tga", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
+		cInventoryItem = cInventoryManager->Add("empty3", "Image/BlankBox.tga", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
+		cInventoryItem = cInventoryManager->Add("empty4", "Image/BlankBox.tga", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
+		cInventoryItem = cInventoryManager->Add("empty5", "Image/BlankBox.tga", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
+		cInventoryItem = cInventoryManager->Add("empty6", "Image/BlankBox.tga", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
+		cInventoryItem = cInventoryManager->Add("empty7", "Image/BlankBox.tga", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
+		cInventoryItem = cInventoryManager->Add("empty8", "Image/BlankBox.tga", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
+		cInventoryItem = cInventoryManager->Add("empty9", "Image/BlankBox.tga", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
+	}
+	LButtonState = false;
 
-	cInventoryItem = cInventoryManager->Add("Blueprint", "Image/Blueprint.tga", 1, 0);
-	cInventoryItem->vec2Size = glm::vec2(25, 25);
-	cInventoryItem = cInventoryManager->Add("empty0", "Image/BlankBox.tga", 1, 0);
-	cInventoryItem->vec2Size = glm::vec2(25, 25);
-	cInventoryItem = cInventoryManager->Add("empty1", "Image/BlankBox.tga", 1, 0);
-	cInventoryItem->vec2Size = glm::vec2(25, 25);
-	cInventoryItem = cInventoryManager->Add("empty2", "Image/BlankBox.tga", 1, 0);
-	cInventoryItem->vec2Size = glm::vec2(25, 25);
-	cInventoryItem = cInventoryManager->Add("empty3", "Image/BlankBox.tga", 1, 0);
-	cInventoryItem->vec2Size = glm::vec2(25, 25);
-	cInventoryItem = cInventoryManager->Add("empty4", "Image/BlankBox.tga", 1, 0);
-	cInventoryItem->vec2Size = glm::vec2(25, 25);
-	cInventoryItem = cInventoryManager->Add("empty5", "Image/BlankBox.tga", 1, 0);
-	cInventoryItem->vec2Size = glm::vec2(25, 25);
-	cInventoryItem = cInventoryManager->Add("empty6", "Image/BlankBox.tga", 1, 0);
-	cInventoryItem->vec2Size = glm::vec2(25, 25);
-	cInventoryItem = cInventoryManager->Add("empty7", "Image/BlankBox.tga", 1, 0);
-	cInventoryItem->vec2Size = glm::vec2(25, 25);
-	cInventoryItem = cInventoryManager->Add("empty8", "Image/BlankBox.tga", 1, 0);
-	cInventoryItem->vec2Size = glm::vec2(25, 25);
-	cInventoryItem = cInventoryManager->Add("empty9", "Image/BlankBox.tga", 1, 0);
-	cInventoryItem->vec2Size = glm::vec2(25, 25);
 	return true;
 }
 
@@ -262,7 +273,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 {
 	// Store the old position
 	vec2OldIndex = vec2Index;
-	idle = true;
+	motion = false;
 	if (InvulnerabilityFrame > 0)
 	{
 		InvulnerabilityFrame -= dElapsedTime;
@@ -270,6 +281,14 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 	else
 	{
 		InvulnerabilityFrame = 0;
+	}
+	if (AnimationTimer > 0)
+	{
+		AnimationTimer -= dElapsedTime;
+	}
+	else
+	{
+		AnimationTimer = 0;
 	}
 	if (Health <= 0 && InvulnerabilityFrame <= 0)
 	{
@@ -297,18 +316,9 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 			vec2Index.x = vec2OldIndex.x;
 			vec2NumMicroSteps.x = 0;
 		}
-
-
-		//Player is not idle
-		idle = false;
-
+		motion = true;
 		//Set Direction
 		Direction = 0;
-
-		animatedSprites->PlayAnimation("move", -1, 1.0f);
-
-		//CS: Change Color
-		runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
 	}
 	else if (cKeyboardController->IsKeyDown(GLFW_KEY_D))
 	{
@@ -331,17 +341,9 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 			//vec2Index.x = vec2OldIndex.x;
 			vec2NumMicroSteps.x = 0;
 		}
-		//Player is not idle
-		idle = false;
-
+		motion = true;
 		//Set Direction
 		Direction = 1;
-
-
-		animatedSprites->PlayAnimation("move", -1, 1.0f);
-
-		//CS: Init the color to white
-		runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
 	}
 	if (cKeyboardController->IsKeyDown(GLFW_KEY_W))
 	{
@@ -364,15 +366,9 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 			//vec2Index.y = vec2OldIndex.y;
 			vec2NumMicroSteps.y = 0;
 		}
-		//Player is not idle
-		idle = false;
-
+		motion = true;
 		//Set Direction
 		Direction = 2;
-
-
-		animatedSprites->PlayAnimation("move", -1, 1.0f);
-
 	}
 	else if (cKeyboardController->IsKeyDown(GLFW_KEY_S))
 	{
@@ -395,19 +391,40 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 			vec2NumMicroSteps.y = 0;
 		}
 
-		//Player is not idle
-		idle = false;
-
+		motion = true;
 		//Set Direction
 		Direction = 3;
-
-
-		animatedSprites->PlayAnimation("move", -1, 1.0f);
 	}
 
-	if (idle == true)
+
+	//Player Use Item
+	if (cMouseController->IsButtonDown(0) && !LButtonState)
+	{
+		LButtonState = true;
+		CInventoryItem HeldItem = *(cInventoryManager->GetItem(cGUI_Scene2D->GetCurrentHotbarItem()));
+		if (HeldItem.itemtype == ITEM_TYPE::RESOURCES || HeldItem.itemtype == ITEM_TYPE::MELEE)
+		{
+			//Attack with Knife
+			AnimationTimer = 0.3f;
+			animatedSprites->PlayAnimation("meleeAttack", -1, AnimationTimer);
+		}
+	}
+	else if (cMouseController->IsButtonUp(0) && LButtonState)
+	{
+		LButtonState = false;
+	}
+	if (LButtonState)
+	{
+	}
+
+	//Animation
+	if (motion == false && AnimationTimer == 0)
 	{
 		animatedSprites->PlayAnimation("idle", -1, 10.0f);
+	}
+	else if (motion == true && AnimationTimer == 0)
+	{
+		animatedSprites->PlayAnimation("move", -1, 1.0f);
 	}
 
 	//Interact with Map
@@ -464,15 +481,17 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		vec2UVCoordinate.y = cSettings->ConvertIndexToUVSpace(cSettings->y, ScreenPos.y - 1, false, vec2NumMicroSteps.y * cSettings->MICRO_STEP_YAXIS);
 	}
 	//Update Rotation
-	//Mouse Position
-	double x, y;
-	Application::GetCursorPos(&x, &y);
-	float mousexpos = ((x / cSettings->iWindowWidth) * cSettings->VIEW_TILES_XAXIS) - cSettings->VIEW_TILES_XAXIS*0.5-0.5;
-	float mouseypos = (abs((y - cSettings->iWindowHeight) / cSettings->iWindowHeight) * cSettings->VIEW_TILES_YAXIS) - cSettings->VIEW_TILES_YAXIS * 0.5-0.5;
-	//Calculate Origin
-	glm::vec2 Origin = ScreenPos - glm::vec2(cSettings->VIEW_TILES_XAXIS * 0.5 + 1, cSettings->VIEW_TILES_YAXIS * 0.5 + 1);
-	//Calculate Rotation
-	Rotation = cPhysics2D.CalculateRotation(Origin, glm::vec2(1, 0), glm::vec2(mousexpos, mouseypos));
+	{
+		//Mouse Position
+		double x, y;
+		Application::GetCursorPos(&x, &y);
+		float mousexpos = ((x / cSettings->iWindowWidth) * cSettings->VIEW_TILES_XAXIS) - cSettings->VIEW_TILES_XAXIS * 0.5 - 0.5;
+		float mouseypos = (abs((y - cSettings->iWindowHeight) / cSettings->iWindowHeight) * cSettings->VIEW_TILES_YAXIS) - cSettings->VIEW_TILES_YAXIS * 0.5 - 0.5;
+		//Calculate Origin
+		glm::vec2 Origin = ScreenPos - glm::vec2(cSettings->VIEW_TILES_XAXIS * 0.5 + 1, cSettings->VIEW_TILES_YAXIS * 0.5 + 1);
+		//Calculate Rotation
+		Rotation = cPhysics2D.CalculateRotation(Origin, glm::vec2(1, 0), glm::vec2(mousexpos, mouseypos));
+	}
 }
 
 /**

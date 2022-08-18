@@ -189,7 +189,7 @@ void CPhysics2D::Normalize(glm::vec2 vec2)
 {
 	float d = sqrt(vec2.x* vec2.x + vec2.y* vec2.y);
 	if (d <= Math::EPSILON && -d <= Math::EPSILON)
-		throw DivideByZero();
+		vec2 = glm::vec2(0, 0);
 	vec2.x /= d;
 	vec2.y /= d;
 }
