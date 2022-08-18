@@ -527,6 +527,34 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,const unsigned int uiNumRows,c
 		}
 	}
 
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/CTable.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Envi/CTable.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(113, iTextureID));
+		}
+	}
+
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Box.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Envi/Box.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(114, iTextureID));
+		}
+	}
+
 
 	
 

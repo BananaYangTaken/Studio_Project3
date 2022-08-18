@@ -646,10 +646,42 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 				cGUI_Scene2D->checkinginventory = true;
 				cGUI_Scene2D->OpenCrate("Large");
 				cGUI_Scene2D->looting = true;
+				cGUI_Scene2D->crafting = false;
 			}
 			else
 			{
 				cGUI_Scene2D->looting = false;
+				cGUI_Scene2D->checkinginventory = false;
+				cGUI_Scene2D->crafting = false;
+			}
+		}
+	case 114:
+		if (cKeyboardController->IsKeyPressed('F'))
+		{
+			if (cGUI_Scene2D->checkinginventory == false)
+			{
+				cGUI_Scene2D->checkinginventory = true;
+				cGUI_Scene2D->chestactive = true;
+				cGUI_Scene2D->crafting = false;
+			}
+			else
+			{
+				cGUI_Scene2D->checkinginventory = false;
+				cGUI_Scene2D->chestactive = false;
+				cGUI_Scene2D->crafting = false;
+			}
+		}
+	case 113:
+		if (cKeyboardController->IsKeyPressed('F'))
+		{
+			if (cGUI_Scene2D->crafting == false)
+			{
+				cGUI_Scene2D->crafting = true;
+				cGUI_Scene2D->checkinginventory = true;
+			}
+			else
+			{
+				cGUI_Scene2D->crafting = false;
 				cGUI_Scene2D->checkinginventory = false;
 			}
 		}
