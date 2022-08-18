@@ -13,6 +13,7 @@
 #include "../App/Source/Scene2D/InventoryManager.h"
 #include "Primitives/Mesh.h"
 #include "../Scene2D/BackgroundEntity.h"
+#include "../Scene2D/Map2D.h"
 
  // Include ImageLoader
 #include "System\ImageLoader.h"
@@ -63,7 +64,7 @@ protected:
 		unsigned textureID;
 	};
 
-	ButtonData WindowUpgrade[3], TurretUpgrade[2], Barbwire[2];
+	ButtonData WindowUpgrade[3], TurretUpgrade[3], Barbwire[2];
 	
 	
 	CGUI_Scene2D* cGUIScene2D;
@@ -74,6 +75,7 @@ protected:
 	CSoundController* cSoundController;
 
 	CScene2D* cScene2D;
+	CMap2D* cMap2D;
 
 	int CurrentWindowLv = 0;
 	int CurrentTurretLv = 0;

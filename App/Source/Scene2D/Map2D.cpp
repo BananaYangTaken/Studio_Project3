@@ -67,9 +67,7 @@ CMap2D::~CMap2D(void)
 /**
 @brief Init Initialise this instance
 */ 
-bool CMap2D::Init(	const unsigned int uiNumLevels,
-					const unsigned int uiNumRows,
-					const unsigned int uiNumCols)
+bool CMap2D::Init(	const unsigned int uiNumLevels,const unsigned int uiNumRows,const unsigned int uiNumCols)
 {
 	// Get the handler to the CSettings instance
 	cSettings = CSettings::GetInstance();
@@ -472,7 +470,7 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 			MapOfTextureIDs.insert(pair<int, int>(106, iTextureID));
 		}
 	}
-
+	//Load Small crate
 	{
 		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/lootcrateSmall.tga", true);
 		if (iTextureID == 0)
@@ -486,7 +484,20 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 			MapOfTextureIDs.insert(pair<int, int>(110, iTextureID));
 		}
 	}
-
+	//Load Barbwire for player house
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Barbwire.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Envi/Barbwire.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(24, iTextureID));
+		}
+	}
 
 
 
@@ -824,7 +835,7 @@ unsigned int CMap2D::GetCurrentLevel(void) const
  */
 void CMap2D::RenderTile(const unsigned int uiRow, const unsigned int uiCol)
 {
-	if ((arrMapInfo[uiCurLevel][uiRow][uiCol].value > 0)&& (arrMapInfo[uiCurLevel][uiRow][uiCol].value <200) && (arrMapInfo[uiCurLevel][uiRow][uiCol].value < 24 || arrMapInfo[uiCurLevel][uiRow][uiCol].value > 28))
+	if ((arrMapInfo[uiCurLevel][uiRow][uiCol].value > 0)&& (arrMapInfo[uiCurLevel][uiRow][uiCol].value <200) && (arrMapInfo[uiCurLevel][uiRow][uiCol].value < 25 || arrMapInfo[uiCurLevel][uiRow][uiCol].value > 28))
 	{
 		//if (arrMapInfo[uiCurLevel][uiRow][uiCol].value < 3)
 			//std::cout << (arrMapInfo[uiCurLevel][uiRow][uiCol].value) << std::endl;

@@ -33,12 +33,13 @@
 
 // Include AnimatedSprites
 #include "Primitives/SpriteAnimation.h"
-
 #include <vector>
 
 // Include files for AStar
 #include <queue>
 #include <functional>
+
+
 
 // A structure storing information about Map Sizes
 struct MapSize {
@@ -199,5 +200,7 @@ protected:
 	//std::vector<int> m_grid;
 	std::vector<glm::vec2> m_directions;
 	HeuristicFunction m_heuristic;
+
+
 };
 

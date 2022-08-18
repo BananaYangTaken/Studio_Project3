@@ -81,14 +81,14 @@ bool CUpgradeState::Init(void)
 	WindowUpgrade[2].fileName = "Image\\GUI\\WindowUp3.png";
 	WindowUpgrade[2].textureID = il->LoadTextureGetID(WindowUpgrade[2].fileName.c_str(), false);
 
-
-
 	TurretUpgrade[0].fileName = "Image\\GUI\\TurretUp1.png";
 	TurretUpgrade[0].textureID = il->LoadTextureGetID(TurretUpgrade[0].fileName.c_str(), false);
 
 	TurretUpgrade[1].fileName = "Image\\GUI\\TurretUp2.png";
 	TurretUpgrade[1].textureID = il->LoadTextureGetID(TurretUpgrade[1].fileName.c_str(), false);
 
+	TurretUpgrade[2].fileName = "Image\\GUI\\TurretUp3.png";
+	TurretUpgrade[2].textureID = il->LoadTextureGetID(TurretUpgrade[2].fileName.c_str(), false);
 
 
 	Barbwire[0].fileName = "Image\\GUI\\Barbwire.png";
@@ -105,7 +105,7 @@ bool CUpgradeState::Init(void)
 	// Enable the cursor
 	if (CSettings::GetInstance()->bDisableMousePointer == true)
 		glfwSetInputMode(CSettings::GetInstance()->pWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-
+	cMap2D = CMap2D::GetInstance();
 
 	return true;
 }
@@ -247,290 +247,330 @@ bool CUpgradeState::Update(const double dElapsedTime)
 		CurrentBarbWireLv = cScene2D->GetBarbwireUpgradeLvl();
 
 		//Window for Window Upgrade Button
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.3f, 0.f, 0.3f, 1.0f));  // Set a background color
 		{
-			ImGui::Begin("Window Upgrade", NULL, window_flags);
+			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.3f, 0.f, 0.3f, 1.0f));  // Set a background color
 			{
-				ImGui::SetWindowPos(ImVec2(CSettings::GetInstance()->iWindowWidth / 3, CSettings::GetInstance()->iWindowHeight / 3.2));
+				ImGui::Begin("Window Upgrade", NULL, window_flags);
+				{
+					ImGui::SetWindowPos(ImVec2(CSettings::GetInstance()->iWindowWidth / 3, CSettings::GetInstance()->iWindowHeight / 3.2));
+					ImGui::SetWindowSize(ImVec2(640.0, 150.0));
+
+					//window upgrade
+					{
+						ImGui::SetWindowFontScale(1.5f * relativeScale_y);
+						ImGui::TextColored(ImVec4(1, 1, 0, 1), "  Material cost:     ");
+						ImGui::SameLine();
+						if (CurrentWindowLv == 0)
+						{
+							if (ImGui::ImageButton((ImTextureID)WindowUpgrade[0].textureID,
+								ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
+							{
+								if (SearchForRequirements(itemlist, itemlistcount) == true)
+									CurrentWindowLv += 1;
+								// Reset the CKeyboardController
+								CKeyboardController::GetInstance()->Reset();
+								CSoundController::GetInstance()->MasterVolumeIncrease(10);
+							}
+
+						}
+
+						if (CurrentWindowLv == 1)
+						{
+							if (ImGui::ImageButton((ImTextureID)WindowUpgrade[1].textureID,
+								ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
+							{
+								if (SearchForRequirements(itemlist, itemlistcount) == true)
+									CurrentWindowLv += 1;
+								// Reset the CKeyboardController
+								CKeyboardController::GetInstance()->Reset();
+								CSoundController::GetInstance()->MasterVolumeIncrease(10);
+							}
+						}
+						if (CurrentWindowLv == 2)
+						{
+							if (ImGui::ImageButton((ImTextureID)WindowUpgrade[2].textureID,
+								ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
+							{
+								// Reset the CKeyboardController
+								CKeyboardController::GetInstance()->Reset();
+								CSoundController::GetInstance()->MasterVolumeIncrease(10);
+							}
+						}
+					}
+				}
+				ImGui::End();
+			}
+			ImGui::PopStyleColor();
+
+
+			//Materials
+			{
+				if (CurrentWindowLv == 0)
+				{
+					itemlist[0] = "Hard wood";
+					itemlist[1] = "Scrap Metal";
+					itemlistcount[0] = 100;
+					itemlistcount[1] = 100;
+
+				}
+				if (CurrentWindowLv == 1)
+				{
+					itemlist[0] = "Hard wood";
+					itemlist[1] = "Scrap Metal";
+					itemlist[2] = "Stone Ore";
+					itemlistcount[0] = 50;
+					itemlistcount[1] = 225;
+					itemlistcount[2] = 100;
+				}
+				if (CurrentWindowLv == 2)
+				{
+					itemlist[0] = "empty1";
+					itemlist[1] = "empty2";
+					itemlist[2] = "empty3";
+					itemlistcount[0] = 50;
+					itemlistcount[1] = 225;
+					itemlistcount[2] = 100;
+				}
+				for (int i = 0; i < 3; i++)
+				{
+					if (itemlist[i].find("empty") == string::npos)
+					{
+						ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.3f, 0.f, 0.3f, 1.0f));  // Set a background color
+						ImGui::Begin("Window Upgrade 2", NULL, window_flags_images);
+						ImGui::SetWindowPos(ImVec2(CSettings::GetInstance()->iWindowWidth / 3, CSettings::GetInstance()->iWindowHeight / 2.8));
+						ImGui::SetWindowSize(ImVec2(400.0, 100.0));
+
+						std::string itemlistcountstr = std::to_string(itemlistcount[i]);
+						cInventoryItem = cInventoryManager->GetItem(itemlist[i]);
+						ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(70, 70), ImVec2(0, 1), ImVec2(1, 0));
+						ImGui::SetWindowFontScale(1.0f * relativeScale_y);
+						ImGui::SameLine();
+						ImGui::TextColored(ImVec4(1, 1, 0, 1), itemlistcountstr.c_str());
+						ImGui::SameLine();
+
+						ImGui::End();
+						ImGui::PopStyleColor();
+					}
+				}
+
+			}
+		}
+		
+		
+	
+
+		//Window for Turret Upgrade Button
+		{
+			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.3f, 0.f, 0.3f, 1.0f));  // Set a background color
+			ImGui::Begin("Turret Upgrade", NULL, window_flags);
+			{
+				ImGui::SetWindowPos(ImVec2(CSettings::GetInstance()->iWindowWidth / 3, CSettings::GetInstance()->iWindowHeight / 2.2));
 				ImGui::SetWindowSize(ImVec2(640.0, 150.0));
 
-				//window upgrade
+				//Turret upgrade
 				{
 					ImGui::SetWindowFontScale(1.5f * relativeScale_y);
 					ImGui::TextColored(ImVec4(1, 1, 0, 1), "  Material cost:     ");
 					ImGui::SameLine();
-					if (CurrentWindowLv == 0)
+					if (CurrentTurretLv == 0)
 					{
-						if (ImGui::ImageButton((ImTextureID)WindowUpgrade[0].textureID,
+						if (ImGui::ImageButton((ImTextureID)TurretUpgrade[0].textureID,
 							ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
 						{
-							if(SearchForRequirements(itemlist, itemlistcount) == true)
-								CurrentWindowLv += 1;
+							if (SearchForRequirements(Turretitemlist, Turretitemlistcount) == true)
+								CurrentTurretLv += 1;
+							// Reset the CKeyboardController
+							CKeyboardController::GetInstance()->Reset();
+
+							CSoundController::GetInstance()->MasterVolumeIncrease(10);
+						}
+					}
+					if (CurrentTurretLv == 1)
+					{
+						if (ImGui::ImageButton((ImTextureID)TurretUpgrade[1].textureID,
+							ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
+						{
+							CurrentTurretLv += 1;
+							// Reset the CKeyboardController
+							CKeyboardController::GetInstance()->Reset();
+
+							CSoundController::GetInstance()->MasterVolumeIncrease(10);
+						}
+					}
+					if (CurrentTurretLv == 2)
+					{
+						if (ImGui::ImageButton((ImTextureID)TurretUpgrade[2].textureID,
+							ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
+						{
+							// Reset the CKeyboardController
+							CKeyboardController::GetInstance()->Reset();
+
+							CSoundController::GetInstance()->MasterVolumeIncrease(10);
+						}
+					}
+
+				}
+			}
+			ImGui::End();
+			ImGui::PopStyleColor();
+
+
+			//Materials
+			{
+				if (CurrentTurretLv == 0)
+				{
+					Turretitemlist[0] = "Stone Ore";
+					Turretitemlist[1] = "Scrap Metal";
+					Turretitemlistcount[0] = 150;
+					Turretitemlistcount[1] = 100;
+
+				}
+				if (CurrentTurretLv == 1)
+				{
+					Turretitemlist[0] = "Blueprint";
+					Turretitemlist[1] = "Scrap Metal";
+					Turretitemlist[2] = "Stone Ore";
+					Turretitemlistcount[0] = 1;
+					Turretitemlistcount[1] = 500;
+					Turretitemlistcount[2] = 200;
+				}
+				if (CurrentTurretLv == 2)
+				{
+					Turretitemlist[0] = "empty1";
+					Turretitemlist[1] = "empty2";
+					Turretitemlist[2] = "empty3";
+					Turretitemlistcount[0] = 50;
+					Turretitemlistcount[1] = 225;
+					Turretitemlistcount[2] = 100;
+				}
+				for (int i = 0; i < 3; i++)
+				{
+					if (Turretitemlist[i].find("empty") == string::npos)
+					{
+						ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.3f, 0.f, 0.3f, 1.0f));  // Set a background color
+						ImGui::Begin("Turret Upgrade 2", NULL, window_flags_images);
+						ImGui::SetWindowPos(ImVec2(CSettings::GetInstance()->iWindowWidth / 3, CSettings::GetInstance()->iWindowHeight / 2.0));
+						ImGui::SetWindowSize(ImVec2(400.0, 100.0));
+
+						std::string itemlistcountstr = std::to_string(Turretitemlistcount[i]);
+						cInventoryItem = cInventoryManager->GetItem(Turretitemlist[i]);
+						ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(70, 70), ImVec2(0, 1), ImVec2(1, 0));
+						ImGui::SetWindowFontScale(1.0f * relativeScale_y);
+						ImGui::SameLine();
+						ImGui::TextColored(ImVec4(1, 1, 0, 1), itemlistcountstr.c_str());
+						ImGui::SameLine();
+
+						ImGui::End();
+						ImGui::PopStyleColor();
+					}
+				}
+
+			}
+		}
+
+		//Window for Barbwire Upgrade Button
+		{
+			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.3f, 0.f, 0.3f, 1.0f));  // Set a background color
+			ImGui::Begin("Barbwire", NULL, window_flags);
+			{
+				ImGui::SetWindowPos(ImVec2(CSettings::GetInstance()->iWindowWidth / 3, CSettings::GetInstance()->iWindowHeight / 1.68));
+				ImGui::SetWindowSize(ImVec2(640.0, 150.0));
+
+				//Barbwire upgrade
+				{
+					ImGui::SetWindowFontScale(1.5f * relativeScale_y);
+					ImGui::TextColored(ImVec4(1, 1, 0, 1), "  Material cost:     ");
+					ImGui::SameLine();
+					if (CurrentBarbWireLv == 0)
+					{
+						if (ImGui::ImageButton((ImTextureID)Barbwire[0].textureID,
+							ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
+						{
+							if (SearchForRequirements(Wireitemlist, Wireitemlistcount) == true)
+								CurrentBarbWireLv += 1;
 							// Reset the CKeyboardController
 							CKeyboardController::GetInstance()->Reset();
 							CSoundController::GetInstance()->MasterVolumeIncrease(10);
 						}
-
 					}
-
-					if (CurrentWindowLv == 1)
+					if (CurrentBarbWireLv == 1)
 					{
-						if (ImGui::ImageButton((ImTextureID)WindowUpgrade[1].textureID,
+						if (ImGui::ImageButton((ImTextureID)Barbwire[1].textureID,
 							ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
 						{
-							if (SearchForRequirements(itemlist, itemlistcount) == true)
-								CurrentWindowLv += 1;
 							// Reset the CKeyboardController
 							CKeyboardController::GetInstance()->Reset();
 							CSoundController::GetInstance()->MasterVolumeIncrease(10);
 						}
-					}
-					if (CurrentWindowLv == 2)
-					{
-						if (ImGui::ImageButton((ImTextureID)WindowUpgrade[2].textureID,
-							ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
+						for (int x = 5; x < 22; x++)
 						{
-							// Reset the CKeyboardController
-							CKeyboardController::GetInstance()->Reset();
-							CSoundController::GetInstance()->MasterVolumeIncrease(10);
+							cMap2D->SetMapInfo(52, x, 24);
+						}
+
+						for (int y = 34; y < 53; y++)
+						{
+							cMap2D->SetMapInfo(y, 4, 24);
+						}
+
+						for (int x = 5; x < 22; x++)
+						{
+							cMap2D->SetMapInfo(34, x, 24);
+						}
+
+						for (int y = 34; y < 53; y++)
+						{
+							cMap2D->SetMapInfo(y, 22, 24);
 						}
 					}
 				}
 			}
 			ImGui::End();
-		}
-		ImGui::PopStyleColor();
+			ImGui::PopStyleColor();
 
-		
-		//window upgrade
-		{
-			if (CurrentWindowLv == 0)
+			//Materials
 			{
-				itemlist[0] = "Hard wood";
-				itemlist[1] = "Scrap Metal";
-				itemlistcount[0] = 100;
-				itemlistcount[1] = 100;
-
-			}
-			if (CurrentWindowLv == 1)
-			{
-				itemlist[0] = "Hard wood";
-				itemlist[1] = "Scrap Metal";
-				itemlist[2] = "Stone Ore";
-				itemlistcount[0] = 50;
-				itemlistcount[1] = 225;
-				itemlistcount[2] = 100;
-			}
-			if (CurrentWindowLv == 2)
-			{
-				itemlist[0] = "empty1";
-				itemlist[1] = "empty2";
-				itemlist[2] = "empty3";
-				itemlistcount[0] = 50;
-				itemlistcount[1] = 225;
-				itemlistcount[2] = 100;
-			}
-			for (int i = 0; i < 3; i++)
-			{
-				if (itemlist[i].find("empty") == string::npos)
-				{
-					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.3f, 0.f, 0.3f, 1.0f));  // Set a background color
-					ImGui::Begin("Window Upgrade 2", NULL, window_flags_images);
-					ImGui::SetWindowPos(ImVec2(CSettings::GetInstance()->iWindowWidth / 3, CSettings::GetInstance()->iWindowHeight / 2.8));
-					ImGui::SetWindowSize(ImVec2(400.0, 100.0));
-
-					std::string itemlistcountstr = std::to_string(itemlistcount[i]);
-					cInventoryItem = cInventoryManager->GetItem(itemlist[i]);
-					ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(70, 70), ImVec2(0, 1), ImVec2(1, 0));
-					ImGui::SetWindowFontScale(1.0f * relativeScale_y);
-					ImGui::SameLine();
-					ImGui::TextColored(ImVec4(1, 1, 0, 1), itemlistcountstr.c_str());
-					ImGui::SameLine();
-
-					ImGui::End();
-					ImGui::PopStyleColor();
-				}
-			}
-
-		}
-		
-	
-
-		//Window for Turret Upgrade Button
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.3f, 0.f, 0.3f, 1.0f));  // Set a background color
-		ImGui::Begin("Turret Upgrade", NULL, window_flags);
-		{
-			ImGui::SetWindowPos(ImVec2(CSettings::GetInstance()->iWindowWidth / 3, CSettings::GetInstance()->iWindowHeight / 2.2));				
-			ImGui::SetWindowSize(ImVec2(640.0, 150.0));
-
-			//Turret upgrade
-			{
-				ImGui::SetWindowFontScale(1.5f * relativeScale_y);
-				ImGui::TextColored(ImVec4(1, 1, 0, 1), "  Material cost:     ");
-				ImGui::SameLine();
-				if (CurrentTurretLv == 0)
-				{
-					if (ImGui::ImageButton((ImTextureID)TurretUpgrade[0].textureID,
-						ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
-					{
-						if (SearchForRequirements(Turretitemlist, Turretitemlistcount) == true)
-							CurrentTurretLv += 1;
-						// Reset the CKeyboardController
-						CKeyboardController::GetInstance()->Reset();
-
-						CSoundController::GetInstance()->MasterVolumeIncrease(10);
-					}
-				}
-				if (CurrentTurretLv == 1)
-				{
-					if (ImGui::ImageButton((ImTextureID)TurretUpgrade[1].textureID,
-						ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
-					{
-						// Reset the CKeyboardController
-						CKeyboardController::GetInstance()->Reset();
-
-						CSoundController::GetInstance()->MasterVolumeIncrease(10);
-					}
-				}
-
-			}
-		}
-		ImGui::End();
-		ImGui::PopStyleColor();
-
-
-		//window upgrade
-		{
-			if (CurrentTurretLv == 0)
-			{
-				Turretitemlist[0] = "Stone Ore";
-				Turretitemlist[1] = "Scrap Metal";
-				Turretitemlistcount[0] = 150;
-				Turretitemlistcount[1] = 100;
-
-			}
-			if (CurrentTurretLv == 1)
-			{
-				Turretitemlist[0] = "Blueprint";
-				Turretitemlist[1] = "Scrap Metal";
-				Turretitemlist[2] = "Stone Ore";
-				Turretitemlistcount[0] = 1;
-				Turretitemlistcount[1] = 500;
-				Turretitemlistcount[2] = 200;
-			}
-			if (CurrentTurretLv == 2)
-			{
-				Turretitemlist[0] = "empty1";
-				Turretitemlist[1] = "empty2";
-				Turretitemlist[2] = "empty3";
-				Turretitemlistcount[0] = 50;
-				Turretitemlistcount[1] = 225;
-				Turretitemlistcount[2] = 100;
-			}
-			for (int i = 0; i < 3; i++)
-			{
-				if (Turretitemlist[i].find("empty") == string::npos)
-				{
-					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.3f, 0.f, 0.3f, 1.0f));  // Set a background color
-					ImGui::Begin("Turret Upgrade 2", NULL, window_flags_images);
-					ImGui::SetWindowPos(ImVec2(CSettings::GetInstance()->iWindowWidth / 3, CSettings::GetInstance()->iWindowHeight / 2.0));
-					ImGui::SetWindowSize(ImVec2(400.0, 100.0));
-
-					std::string itemlistcountstr = std::to_string(Turretitemlistcount[i]);
-					cInventoryItem = cInventoryManager->GetItem(Turretitemlist[i]);
-					ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(70, 70), ImVec2(0, 1), ImVec2(1, 0));
-					ImGui::SetWindowFontScale(1.0f * relativeScale_y);
-					ImGui::SameLine();
-					ImGui::TextColored(ImVec4(1, 1, 0, 1), itemlistcountstr.c_str());
-					ImGui::SameLine();
-
-					ImGui::End();
-					ImGui::PopStyleColor();
-				}
-			}
-
-		}
-
-
-		//Window for Barbwire Upgrade Button
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.3f, 0.f, 0.3f, 1.0f));  // Set a background color
-		ImGui::Begin("Barbwire", NULL, window_flags);
-		{
-			ImGui::SetWindowPos(ImVec2(CSettings::GetInstance()->iWindowWidth / 3, CSettings::GetInstance()->iWindowHeight /1.68));
-			ImGui::SetWindowSize(ImVec2(640.0, 150.0));
-
-			//Barbwire upgrade
-			{
-				ImGui::SetWindowFontScale(1.5f * relativeScale_y);
-				ImGui::TextColored(ImVec4(1, 1, 0, 1), "  Material cost:     ");
-				ImGui::SameLine();
 				if (CurrentBarbWireLv == 0)
 				{
-					if (ImGui::ImageButton((ImTextureID)Barbwire[0].textureID,
-						ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
-					{
-						if(SearchForRequirements(Wireitemlist, Wireitemlistcount) == true)
-							CurrentBarbWireLv += 1;
-						// Reset the CKeyboardController
-						CKeyboardController::GetInstance()->Reset();
-						CSoundController::GetInstance()->MasterVolumeIncrease(10);
-					}
+					Wireitemlist[0] = "Scrap Metal";
+					Wireitemlist[1] = "empty1";
+					Wireitemlistcount[0] = 50;
+					Wireitemlistcount[1] = 25;
+
 				}
 				if (CurrentBarbWireLv == 1)
 				{
-					if (ImGui::ImageButton((ImTextureID)Barbwire[1].textureID,
-						ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
+					Wireitemlist[0] = "empty1";
+					Wireitemlist[1] = "empty2";
+					Wireitemlistcount[0] = 50;
+					Wireitemlistcount[1] = 225;
+				}
+				for (int i = 0; i < 2; i++)
+				{
+					if (Wireitemlist[i].find("empty") == string::npos)
 					{
-						// Reset the CKeyboardController
-						CKeyboardController::GetInstance()->Reset();
-						CSoundController::GetInstance()->MasterVolumeIncrease(10);
+						ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.3f, 0.f, 0.3f, 1.0f));  // Set a background color
+						ImGui::Begin("Wire Upgrade 2", NULL, window_flags_images);
+						ImGui::SetWindowPos(ImVec2(CSettings::GetInstance()->iWindowWidth / 3, CSettings::GetInstance()->iWindowHeight / 1.55));
+						ImGui::SetWindowSize(ImVec2(400.0, 100.0));
+
+						std::string itemlistcountstr = std::to_string(Wireitemlistcount[i]);
+						cInventoryItem = cInventoryManager->GetItem(Wireitemlist[i]);
+						ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(70, 70), ImVec2(0, 1), ImVec2(1, 0));
+						ImGui::SetWindowFontScale(1.0f * relativeScale_y);
+						ImGui::SameLine();
+						ImGui::TextColored(ImVec4(1, 1, 0, 1), itemlistcountstr.c_str());
+						ImGui::SameLine();
+
+						ImGui::End();
+						ImGui::PopStyleColor();
 					}
 				}
-			}
-		}
-		ImGui::End();
-		ImGui::PopStyleColor();
-	
-		//window upgrade
-		{
-			if (CurrentBarbWireLv == 0)
-			{
-				Wireitemlist[0] = "Scrap Metal";
-				Wireitemlist[1] = "empty1";
-				Wireitemlistcount[0] = 50;
-				Wireitemlistcount[1] = 25;
 
 			}
-			if (CurrentBarbWireLv == 1)
-			{
-				Wireitemlist[0] = "empty1";
-				Wireitemlist[1] = "empty2";
-				Wireitemlistcount[0] = 50;
-				Wireitemlistcount[1] = 225;
-			}
-			for (int i = 0; i < 2; i++)
-			{
-				if (Wireitemlist[i].find("empty") == string::npos)
-				{
-					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.3f, 0.f, 0.3f, 1.0f));  // Set a background color
-					ImGui::Begin("Wire Upgrade 2", NULL, window_flags_images);
-					ImGui::SetWindowPos(ImVec2(CSettings::GetInstance()->iWindowWidth / 3, CSettings::GetInstance()->iWindowHeight / 1.55));
-					ImGui::SetWindowSize(ImVec2(400.0, 100.0));
 
-					std::string itemlistcountstr = std::to_string(Wireitemlistcount[i]);
-					cInventoryItem = cInventoryManager->GetItem(Wireitemlist[i]);
-					ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(70, 70), ImVec2(0, 1), ImVec2(1, 0));
-					ImGui::SetWindowFontScale(1.0f * relativeScale_y);
-					ImGui::SameLine();
-					ImGui::TextColored(ImVec4(1, 1, 0, 1), itemlistcountstr.c_str());
-					ImGui::SameLine();
-
-					ImGui::End();
-					ImGui::PopStyleColor();
-				}
-			}
 
 		}
+		
 
 
 	ImGui::EndFrame();

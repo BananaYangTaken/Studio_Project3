@@ -207,7 +207,7 @@ bool CScene2D::Update(const double dElapsedTime)
 	cMap2D->vec2Index = Player->vec2Index;
 
 	// Get keyboard updates
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_F6))
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_F10))
 	{
 		//Save the current game to a save file
 		//Make sure the file is open
@@ -394,7 +394,7 @@ void CScene2D::LoadObjects(void)
 		for (unsigned int uiCol = 0; uiCol < cSettings->NUM_TILES_XAXIS; ++uiCol)
 		{
 			int Value = arrMapInfo[uiCurlLevel][uiRow][uiCol].value;
-			if (Value == 24 || Value == 25 || Value == 26 || Value == 27 || Value == 28)
+			if (Value == 25 || Value == 26 || Value == 27 || Value == 28)
 			{
 				bool Objectnew = true;
 				for (int i = 0; i < cObjectList.size(); i++)

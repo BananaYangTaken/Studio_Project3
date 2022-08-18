@@ -97,7 +97,7 @@ bool CPlayer2D_V2::Init(void)
 	// Get the handler to the CSettings instance
 	cSettings = CSettings::GetInstance();
 
-	// Get the handler to the CMap2D instance
+	// Get the handler to the C32D instance
 	cMap2D = CMap2D::GetInstance();
 
 	// Get the handler to the CGUI_Scene2D instance
