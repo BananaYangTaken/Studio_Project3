@@ -78,7 +78,17 @@ int CGUI_Scene2D::IncreaseInventoryItemCount(std::string arrayindex, int increme
 			cout << "RESOURCE FULL!";
 			float difference = inventory_item_quantity[ind] - inventory_item_max_quantity[ind];
 			inventory_item_quantity[ind] = inventory_item_max_quantity[ind];
-			return difference;
+			for (int u = 0; u < inventory_size; u++)
+			{
+				if (inventory_item_name_list[u].find("empty") != string::npos)
+				{
+					inventory_item_quantity[u] = incrementValue - difference;
+					inventory_item_name_list[u] = arrayindex;
+					return 0;
+				}
+
+			}
+
 		}
 		else return 0;
 	}
@@ -507,6 +517,11 @@ void CGUI_Scene2D::SwapItems(int itemindex, int swapindex)
 	OGclicked = 0;
 }
 
+std::string CGUI_Scene2D::GetCurrentHotbarItem()
+{
+	return inventory_item_name_list[hotbarlevel];
+}
+
 void CGUI_Scene2D::Update(const double dElapsedTime)
 {
 	hotbarlevel = 0;
@@ -547,6 +562,8 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					ImGuiWindowFlags_AlwaysAutoResize |
 					ImGuiWindowFlags_NoTitleBar |
 					ImGuiWindowFlags_NoInputs |
+					ImGuiWindowFlags_NoBringToFrontOnFocus |
+					ImGuiWindowFlags_NoNavFocus |
 					ImGuiWindowFlags_NoResize |
 					ImGuiWindowFlags_NoCollapse |
 					ImGuiWindowFlags_NoScrollbar;
@@ -595,6 +612,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						ImGuiWindowFlags_AlwaysAutoResize |
 						ImGuiWindowFlags_NoTitleBar |
 						ImGuiWindowFlags_NoResize |
+
 						ImGuiWindowFlags_NoCollapse |
 						ImGuiWindowFlags_NoBackground |
 						ImGuiWindowFlags_NoScrollbar;
