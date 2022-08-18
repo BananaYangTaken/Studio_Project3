@@ -90,6 +90,8 @@ public:
 	void SetMotionFlag(const bool bMotion);
 	bool GetMotionFlag(void);
 
+	bool PlayerChangedPos(void);
+
 protected:
 	enum DIRECTION
 	{

@@ -129,7 +129,6 @@ bool CEnemy2D_Zombie::Init(int x, int y)
 
 	// Set the Physics to fall status by default
 	cPhysics2D.Init();
-	cPhysics2D.SetStatus(CPhysics2D::STATUS::FALL);
 
 	// If this class is initialised properly, then set the bIsActive to true
 	bIsActive = true;
@@ -143,7 +142,6 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 {
 	if (!bIsActive)
 		return;
-	cout << Health << endl;
 	if (Health <= 0)
 	{
 		if (deathTimer > 2)
@@ -173,14 +171,39 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		break;
 	case PATROL:
 		//FSM Transition
-		if (iFSMCounter > iMaxFSMCounter)
-		{
-			sCurrentFSM = static_cast<CEnemyBase::FSM>(IDLE);
-			iFSMCounter = 0;
-		}
-		else if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 5.0f)
+		if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 5.0f)
 		{
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(ATTACK);
+			iFSMCounter = 0;
+			auto path = cMap2D->PathFind(vec2Index, Player->vec2Index, heuristic::euclidean, 10);
+			//Calculate New Destination
+			bool bFirstPosition = true;
+			for (const auto& coord : path)
+			{
+				//std::cout << coord.x << "," << coord.y << "\n";
+				if (bFirstPosition == true)
+				{
+					//Set a destination
+					vec2Destination = coord;
+					//Calculate the direction between enemy2D and this destination
+					vec2Direction = vec2Destination - vec2Index;
+					bFirstPosition = false;
+				}
+				else
+				{
+					if ((coord - vec2Destination) == vec2Direction)
+					{
+						//Set a destination
+						vec2Destination = coord;
+					}
+					else
+						break;
+				}
+			}
+		}
+		else if (iFSMCounter > iMaxFSMCounter)
+		{
+			sCurrentFSM = static_cast<CEnemyBase::FSM>(IDLE);
 			iFSMCounter = 0;
 		}
 		else
@@ -194,9 +217,9 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		break;
 	case ATTACK:
 		//FSM Transition
-		if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 7.0f)
+		if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 100.0f)
 		{
-			if (Player->GetMotionFlag() == true)
+			if (Player->PlayerChangedPos())
 			{
 				auto path = cMap2D->PathFind(vec2Index, Player->vec2Index, heuristic::euclidean, 10);
 				//Calculate New Destination
@@ -227,12 +250,12 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
    			if (Attack == false)
 			{
 				UpdatePosition();
+				UpdateDirection();
 				// Attack
 				if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 0.5f && Attack == false)
 				{
 					Attack = true;
 					AttackAnim = 1;
-					UpdateDirection();
 
 					animatedSprites->PlayAnimation("attack", 1, 1.0f);
 					CSoundController::GetInstance()->PlaySoundByID(15);

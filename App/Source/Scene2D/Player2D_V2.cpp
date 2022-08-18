@@ -596,6 +596,15 @@ bool CPlayer2D_V2::GetMotionFlag(void)
 	return motion;
 }
 
+bool CPlayer2D_V2::PlayerChangedPos(void)
+{
+	if (vec2Index != vec2OldIndex)
+	{
+		return true;
+	}
+	return false;
+}
+
 
 /**
  @brief Constraint the player's position within a boundary
