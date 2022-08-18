@@ -81,7 +81,7 @@ protected:
 
 	unsigned int Ammo;
 	unsigned int Level;
-	int damageTimer;
+	float damageTimer;
 
 	// Handler to the CMap2D instance
 	CMap2D* cMap2D;

@@ -498,7 +498,34 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,const unsigned int uiNumRows,c
 			MapOfTextureIDs.insert(pair<int, int>(24, iTextureID));
 		}
 	}
-
+	//Load lvl2 window
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Hor_WindowL2.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Envi/Hor_WindowL2.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(111, iTextureID));
+		}
+	}
+	//Load lvl3 window
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Hor_WindowL3.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Envi/Hor_WindowL3.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(112, iTextureID));
+		}
+	}
 
 
 	

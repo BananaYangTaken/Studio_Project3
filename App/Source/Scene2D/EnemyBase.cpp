@@ -449,7 +449,7 @@ void CEnemyBase::UpdatePosition(void)
 		const int iOldIndex = vec2Index.x;
 		if (vec2Index.x >= 0)
 		{
-			vec2NumMicroSteps.x--;
+			vec2NumMicroSteps.x -= (1 * 0.5);
 			if (vec2NumMicroSteps.x < 0)
 			{
 				vec2NumMicroSteps.x = ((int)cSettings->NUM_STEPS_PER_TILE_XAXIS) - 1;
@@ -476,7 +476,7 @@ void CEnemyBase::UpdatePosition(void)
 		const int iOldIndex = vec2Index.x;
 		if (vec2Index.x < (int)cSettings->NUM_TILES_XAXIS)
 		{
-			vec2NumMicroSteps.x++;
+			vec2NumMicroSteps.x += (1 * 0.5);
 
 			if (vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
 			{
@@ -506,7 +506,7 @@ void CEnemyBase::UpdatePosition(void)
 		const int iOldIndex = vec2Index.y;
 		if (vec2Index.y < (int)cSettings->NUM_TILES_YAXIS)
 		{
-			vec2NumMicroSteps.y--;
+			vec2NumMicroSteps.y -= (1 * 0.5);
 			if (vec2NumMicroSteps.y < 0)
 			{
 				vec2NumMicroSteps.y = ((int)cSettings->NUM_STEPS_PER_TILE_YAXIS) - 1;
@@ -532,7 +532,7 @@ void CEnemyBase::UpdatePosition(void)
 		const int iOldIndex = vec2Index.y;
 		if (vec2Index.y < (int)cSettings->NUM_TILES_YAXIS)
 		{
-			vec2NumMicroSteps.y++;
+			vec2NumMicroSteps.y += (1 * 0.5);
 
 			if (vec2NumMicroSteps.y >= cSettings->NUM_STEPS_PER_TILE_YAXIS)
 			{

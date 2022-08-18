@@ -140,11 +140,7 @@ void CTurretBase::Update(const double dElapsedTime)
 	if (!bIsActive)
 		return;
 
-	if (damageTimer > 1 && Level == 0)
-	{
-		damageTimer -= dElapsedTime;
-	}
-	else if(damageTimer > 0.5 && Level >= 1)
+	if (damageTimer > 0)
 	{
 		damageTimer -= dElapsedTime;
 	}
@@ -198,19 +194,6 @@ void CTurretBase::Update(const double dElapsedTime)
 			iFSMCounter = 0;
 		}
 		iFSMCounter++;
-		//Animation
-		switch (Level)
-		{
-		case 0:
-			animatedSprites->PlayAnimation("L1idle", -1, 1.0f);
-			break;
-		case 1:
-			animatedSprites->PlayAnimation("L2idle", -1, 1.0f);
-			break;
-		case 2:
-			animatedSprites->PlayAnimation("L3idle", -1, 1.0f);
-			break;
-		}
 
 		break;
 	case ATTACK:
@@ -225,17 +208,31 @@ void CTurretBase::Update(const double dElapsedTime)
 				switch (Level)
 				{
 				case 0:
-					animatedSprites->PlayAnimation("L1Attack", 1, 1.0f);
+					animatedSprites->PlayAnimation("L1Attack", 1, 0.7f);
+					(*cEnemyList)[i]->SetHealth((*cEnemyList)[i]->GetHealth() - 10);
+					damageTimer = 1;
 					break;
 				case 1:
-					animatedSprites->PlayAnimation("L2Attack", 1, 1.0f);
+					animatedSprites->PlayAnimation("L2Attack", 1, 0.7f);
+					(*cEnemyList)[i]->SetHealth((*cEnemyList)[i]->GetHealth() - 10);
+					damageTimer = 0.5;
 					break;
 				case 2:
-					animatedSprites->PlayAnimation("L3Attack", 1, 1.0f);
+					animatedSprites->PlayAnimation("L3Attack", 1, 0.3f);
+					for (int j = 0; j < cEnemyList->size(); j++)
+					{
+						if (cPhysics2D.CalculateDistance((*cEnemyList)[i]->vec2Index, (*cEnemyList)[j]->vec2Index) < 2.0f
+							&& (*cEnemyList)[j]->bIsActive == true
+							&& (*cEnemyList)[j] != (*cEnemyList)[i])
+						{
+							(*cEnemyList)[j]->SetHealth((*cEnemyList)[j]->GetHealth() - 40);
+						}
+					}
+					(*cEnemyList)[i]->SetHealth((*cEnemyList)[i]->GetHealth() - 40);
+					damageTimer = 0.5;
 					break;
 				}
 				CSoundController::GetInstance()->PlaySoundByID(15);
-				(*cEnemyList)[i]->SetHealth((*cEnemyList)[i]->GetHealth() - 1);
 			}
 		}
 

@@ -518,7 +518,7 @@ void CGUI_Scene2D::SwapItems(int itemindex, int swapindex)
 	OGclicked = 0;
 }
 
-std::string CGUI_Scene2D::GetCurrentHotbarItem()
+std::string CGUI_Scene2D::GetCurrentHotbarItem(void)
 {
 	return inventory_item_name_list[hotbarlevel];
 }
