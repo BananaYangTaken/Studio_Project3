@@ -300,10 +300,10 @@ bool CUpgradeState::Update(const double dElapsedTime)
 								// Reset the CKeyboardController
 								CKeyboardController::GetInstance()->Reset();
 							}
-							cMap2D->SetMapInfo(50, 9, 52);
-							cMap2D->SetMapInfo(50, 17, 52);
-							cMap2D->SetMapInfo(36, 9, 52);
-							cMap2D->SetMapInfo(36, 17, 52);
+							cMap2D->SetMapInfo(50, 9, 53);
+							cMap2D->SetMapInfo(50, 17, 53);
+							cMap2D->SetMapInfo(36, 9, 53);
+							cMap2D->SetMapInfo(36, 17, 53);
 						}
 					}
 				}
