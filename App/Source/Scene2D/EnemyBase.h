@@ -92,12 +92,12 @@ protected:
 	int Health;
 	unsigned int Death;
 	float InvulnerabilityFrame;
-	float speedMultiplier;
 	bool Stunned;
 	float StunDuration;
 	bool Attack;
 	float AttackAnim;
 	float ReloadDuration;
+	float speedMultiplier;
 
 	// Handler to the CMap2D instance
 	CMap2D* cMap2D;

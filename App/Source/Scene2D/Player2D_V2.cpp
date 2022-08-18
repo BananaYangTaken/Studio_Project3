@@ -587,6 +587,16 @@ unsigned int CPlayer2D_V2::GetDirection(void)
 	return Direction;
 }
 
+void CPlayer2D_V2::SetMotionFlag(const bool bMotion)
+{
+	this->motion = bMotion;
+}
+
+bool CPlayer2D_V2::GetMotionFlag(void)
+{
+	return motion;
+}
+
 
 /**
  @brief Constraint the player's position within a boundary

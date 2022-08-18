@@ -17,9 +17,8 @@ public:
 	void Update(const double dElapsedTime);
 
 protected:
-
-	unsigned int HealCount;
-	float HealDuration;
 	float deathTimer;
+	float speedMultiplier;
+
 };
 

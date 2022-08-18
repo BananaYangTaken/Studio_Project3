@@ -87,6 +87,9 @@ public:
 
 	unsigned int GetDirection(void);
 
+	void SetMotionFlag(const bool bMotion);
+	bool GetMotionFlag(void);
+
 protected:
 	enum DIRECTION
 	{

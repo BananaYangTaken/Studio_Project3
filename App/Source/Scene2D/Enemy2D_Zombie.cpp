@@ -196,7 +196,7 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		//FSM Transition
 		if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 7.0f)
 		{
-			if (AStarCalculate == true)
+			if (Player->GetMotionFlag() == true)
 			{
 				auto path = cMap2D->PathFind(vec2Index, Player->vec2Index, heuristic::euclidean, 10);
 				//Calculate New Destination
@@ -223,19 +223,13 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 							break;
 					}
 				}
+				Player->SetMotionFlag(false);
 			}
-			else if (cKeyboardController->IsKeyDown(GLFW_KEY_A) ||
-				cKeyboardController->IsKeyDown(GLFW_KEY_S) ||
-				cKeyboardController->IsKeyDown(GLFW_KEY_D) ||
-				cKeyboardController->IsKeyDown(GLFW_KEY_W))
-			{
-				AStarCalculate = false;
-			}
-			if (Attack == false)
+   			if (Attack == false)
 			{
 				UpdatePosition();
 				// Attack
-				if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index, 'x') < 0.5f && Attack == false)
+				if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 0.5f && Attack == false)
 				{
 					Attack = true;
 					AttackAnim = 1;
@@ -349,3 +343,4 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		}
 	}
 }
+
