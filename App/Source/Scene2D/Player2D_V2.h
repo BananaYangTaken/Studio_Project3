@@ -36,6 +36,8 @@
 
 // Include Keyboard controller
 #include "Inputs\KeyboardController.h"
+// Include MouseController controller
+#include "Inputs/MouseController.h"
 
 // Include AnimatedSprites
 #include "Primitives/SpriteAnimation.h"
@@ -114,6 +116,8 @@ protected:
 
 	// Keyboard Controller singleton instance
 	CKeyboardController* cKeyboardController;
+	// Mouse Controller singleton instance
+	CMouseController* cMouseController;
 
 	//Item pointer
 	CInventoryItem* cInventoryItem;
@@ -134,11 +138,13 @@ protected:
 
 	// Player's Current Direction
 	unsigned int Direction;
-	bool idle;
-	float attackAnim;
+	bool motion;
+	float AnimationTimer;
 
 	//If player interact with map and creates a new object
 	bool LoadObject;
+
+	bool LButtonState;
 
 	// Constraint the player's position within a boundary
 	void Constraint(DIRECTION eDirection = LEFT);
