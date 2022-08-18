@@ -172,37 +172,37 @@ bool CPlayer2D_V2::Init(void)
 		cInventoryItem = cInventoryManager->Add("Health", "Image/Health.tga", 1, 0);
 		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-		cInventoryItem = cInventoryManager->Add("Hard wood", "Image/Hard wood.tga", 1, 0);
+		cInventoryItem = cInventoryManager->Add("Hard wood", "Image/Iteme/Hard wood.tga", 1, 0);
 		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-		cInventoryItem = cInventoryManager->Add("Stone Ore", "Image/Stone Ore.tga", 1, 0);
+		cInventoryItem = cInventoryManager->Add("Stone Ore", "Image/Iteme/Stone Ore.tga", 1, 0);
 		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-		cInventoryItem = cInventoryManager->Add("Scrap Metal", "Image/Scrap Metal.tga", 1, 0);
+		cInventoryItem = cInventoryManager->Add("Scrap Metal", "Image/Iteme/Scrap Metal.tga", 1, 0);
 		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-		cInventoryItem = cInventoryManager->Add("Pistol Bullets", "Image/Pistol Bullets.tga", 1, 0);
+		cInventoryItem = cInventoryManager->Add("Pistol Bullets", "Image/Iteme/Pistol Bullets.tga", 1, 0);
 		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-		cInventoryItem = cInventoryManager->Add("Rifle Bullets", "Image/Rifle Bullets.tga", 1, 0);
+		cInventoryItem = cInventoryManager->Add("Rifle Bullets", "Image/Iteme/Rifle Bullets.tga", 1, 0);
 		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-		cInventoryItem = cInventoryManager->Add("Rifle", "Image/Rifle.tga", 1, 0);
+		cInventoryItem = cInventoryManager->Add("Rifle", "Image/Iteme/Rifle.tga", 1, 0);
 		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-		cInventoryItem = cInventoryManager->Add("Pistol", "Image/Pistol.tga", 1, 0);
+		cInventoryItem = cInventoryManager->Add("Pistol", "Image/Iteme/Pistol.tga", 1, 0);
 		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-		cInventoryItem = cInventoryManager->Add("Medkit", "Image/Medkit.tga", 1, 0);
+		cInventoryItem = cInventoryManager->Add("Medkit", "Image/Iteme/Medkit.tga", 1, 0);
 		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-		cInventoryItem = cInventoryManager->Add("Bandage", "Image/Bandage.tga", 1, 0);
+		cInventoryItem = cInventoryManager->Add("Bandage", "Image/Iteme/Bandage.tga", 1, 0);
 		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-		cInventoryItem = cInventoryManager->Add("Fabric", "Image/Fabric.tga", 1, 0);
+		cInventoryItem = cInventoryManager->Add("Fabric", "Image/Iteme/Fabric.tga", 1, 0);
 		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-		cInventoryItem = cInventoryManager->Add("Blueprint", "Image/Blueprint.tga", 1, 0);
+		cInventoryItem = cInventoryManager->Add("Blueprint", "Image/Iteme/Blueprint.tga", 1, 0);
 		cInventoryItem->vec2Size = glm::vec2(25, 25);
 		cInventoryItem = cInventoryManager->Add("empty0", "Image/BlankBox.tga", 1, 0);
 		cInventoryItem->vec2Size = glm::vec2(25, 25);
@@ -637,6 +637,7 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 	case 110:
 		if (cKeyboardController->IsKeyPressed('F'))
 		{
+			cout << "CASE 110 " << endl;
 			if (cGUI_Scene2D->looting == false)
 			{
 				cGUI_Scene2D->searchtxt = "SEARCHING...";
@@ -655,9 +656,11 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 				cGUI_Scene2D->crafting = false;
 			}
 		}
-	case 114:
+		break;
+	case 27:
 		if (cKeyboardController->IsKeyPressed('F'))
 		{
+			cout << "CASE 114 " << endl;
 			if (cGUI_Scene2D->checkinginventory == false)
 			{
 				cGUI_Scene2D->checkinginventory = true;
@@ -670,10 +673,13 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 				cGUI_Scene2D->chestactive = false;
 				cGUI_Scene2D->crafting = false;
 			}
+
 		}
-	case 113:
+		break;
+	case 26:
 		if (cKeyboardController->IsKeyPressed('F'))
 		{
+			cout << "CASE 113 " << endl;
 			if (cGUI_Scene2D->crafting == false)
 			{
 				cGUI_Scene2D->crafting = true;
@@ -685,6 +691,7 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 				cGUI_Scene2D->checkinginventory = false;
 			}
 		}
+		break;
 	default:
 		break;
 	}

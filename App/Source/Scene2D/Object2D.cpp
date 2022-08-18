@@ -158,7 +158,7 @@ bool CObject2D::Init(int x , int y)
 	}*/
 	else if (ObjectID == 26)
 	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/KeySpriteSheet.png", true);
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/CTable.png", true);
 		if (iTextureID == 0)
 		{
 			cout << "Unable to load Image/KeySpriteSheet.png" << endl;
@@ -167,7 +167,7 @@ bool CObject2D::Init(int x , int y)
 	}
 	else if (ObjectID == 27)
 	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/RuneSpriteSheet.png", true);
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Box.png", true);
 		if (iTextureID == 0)
 		{
 			cout << "Unable to load Image/RuneSpriteSheet.png" << endl;
@@ -203,15 +203,13 @@ bool CObject2D::Init(int x , int y)
 	}*/
 	else if (ObjectID == 26)
 	{
-		animatedSprites = CMeshBuilder::GenerateSpriteAnimation(1, 4, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
+		animatedSprites = CMeshBuilder::GenerateSpriteAnimation(1, 1, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
 		animatedSprites->AddAnimation("idle", 0, 0);
-		animatedSprites->AddAnimation("active", 0, 3);
 	}
 	else if (ObjectID == 27)
 	{
-		animatedSprites = CMeshBuilder::GenerateSpriteAnimation(1, 4, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
+		animatedSprites = CMeshBuilder::GenerateSpriteAnimation(1, 1, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
 		animatedSprites->AddAnimation("idle", 0, 0);
-		animatedSprites->AddAnimation("active", 0, 3);
 	}
 	else if (ObjectID == 28)
 	{
