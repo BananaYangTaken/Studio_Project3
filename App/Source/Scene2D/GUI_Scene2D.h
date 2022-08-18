@@ -56,7 +56,10 @@ public:
 	std::string inventory_item_name_list[9] = {"Scrap Metal", "Hard wood", "Stone Ore", "Pistol Bullets", "Rifle Bullets", "Rifle", "Pistol", "Medkit", "Blueprint"};
 	int inventory_item_quantity[9] = {999,999,999,999,999,1,1,90,200};
 	int inventory_item_max_quantity[9] = {999,999,999,999,999,999,999,999,999};
-
+	std::string searchtxt;
+	bool issearched = false;
+	float searchtimer = 0;
+	int chestactive = false;
 	int Crafting_list_size = 5;
 	std::string Crafting_item_name_list[5] = { "Rifle Bullets", "Pistol Bullets", "Scrap Metal","Bandage","Medkit" };
 	int Crafting_item_Quantity[5] = {25,50,30,5,1};
@@ -73,10 +76,6 @@ public:
 	int crate_item_quantity[8] = { 0,0,0,0,0,0,0,0 };
 	int crate_item_max_quantity[8] = { 15,15,15,15,15,15,15,15};
 
-	std::string searchtxt;
-	bool issearched = false;
-	float searchtimer = 0;
-	int chestactive = false;
 	int chestkey = 1;
 	float buttonWidth = 64;
 	float buttonHeight = 64;

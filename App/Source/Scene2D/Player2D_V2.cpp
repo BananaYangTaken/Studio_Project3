@@ -305,7 +305,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		// Calculate the new position to the left
 		if (vec2Index.x >= 0)
 		{
-			vec2NumMicroSteps.x -= 1;
+			vec2NumMicroSteps.x -= 5;
 			if (vec2NumMicroSteps.x < 0)
 			{
 				vec2NumMicroSteps.x = ((int)cSettings->NUM_STEPS_PER_TILE_XAXIS) - 1;
@@ -329,7 +329,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		// Calculate the new position to the right
 		if (vec2Index.x < (int)cSettings->NUM_TILES_XAXIS)
 		{
-			vec2NumMicroSteps.x += 1;
+			vec2NumMicroSteps.x += 5;
 
 			if (vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
 			{
@@ -354,7 +354,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		// Calculate the new position up
 		if (vec2Index.y < (int)cSettings->NUM_TILES_YAXIS)
 		{
-			vec2NumMicroSteps.y += 1;
+			vec2NumMicroSteps.y += 5;
 			if (vec2NumMicroSteps.y > cSettings->NUM_STEPS_PER_TILE_YAXIS)
 			{
 				vec2NumMicroSteps.y = 0;
@@ -379,7 +379,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		// Calculate the new position down
 		if (vec2Index.y >= 0)
 		{
-			vec2NumMicroSteps.y -= 1;
+			vec2NumMicroSteps.y -= 5;
 			if (vec2NumMicroSteps.y < 0)
 			{
 				vec2NumMicroSteps.y = ((int)cSettings->NUM_STEPS_PER_TILE_YAXIS) - 1;
@@ -635,7 +635,8 @@ void CPlayer2D_V2::Constraint(DIRECTION eDirection)
 
 void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 {
-
+	unsigned int IRow;
+	unsigned int ICol;
 	switch (cMap2D->GetMapInfo(vec2Index.y + ydisplacement,vec2Index.x + xdisplacement))
 	{
 	case 110:
@@ -680,6 +681,20 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 
 		}
 		break;
+	/*	30 - bandages
+		32 - Blueprint
+		35 - medkit
+		36 - pistol bullets
+		37 - pistol
+		38 - rifle bullets
+		39 - rifle
+
+
+		40 - Scrap
+		41 - Stone ore
+		33 - Fabric
+		34 - hard wood*/
+
 	case 26:
 		if (cKeyboardController->IsKeyPressed('F'))
 		{
@@ -695,6 +710,35 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 				cGUI_Scene2D->checkinginventory = false;
 			}
 		}
+		break;
+	case 30:
+		cMap2D->FindValue(30, IRow, ICol);
+		cMap2D->SetMapInfo(IRow, ICol, 0);
+
+		break;
+	case 32:
+		cMap2D->FindValue(32, IRow, ICol);
+		cMap2D->SetMapInfo(IRow, ICol, 0);
+		break;
+	case 35:
+		cMap2D->FindValue(35, IRow, ICol);
+		cMap2D->SetMapInfo(IRow, ICol, 0);
+		break;
+	case 36:
+		cMap2D->FindValue(36, IRow, ICol);
+		cMap2D->SetMapInfo(IRow, ICol, 0);
+		break;
+	case 37:
+		cMap2D->FindValue(37, IRow, ICol);
+		cMap2D->SetMapInfo(IRow, ICol, 0);
+		break;
+	case 38:
+		cMap2D->FindValue(38, IRow, ICol);
+		cMap2D->SetMapInfo(IRow, ICol, 0);
+		break;
+	case 39:
+		cMap2D->FindValue(39, IRow, ICol);
+		cMap2D->SetMapInfo(IRow, ICol, 0);
 		break;
 	default:
 		break;

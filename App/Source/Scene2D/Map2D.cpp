@@ -541,19 +541,168 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,const unsigned int uiNumRows,c
 		}
 	}
 
+
+
+
+
+	//Items
+	//bandages
 	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Box.tga", true);
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Bandage.tga", true);
 		if (iTextureID == 0)
 		{
-			cout << "Unable to load Image/Envi/Box.tga" << endl;
+			cout << "Unable to load Image/Iteme/Bandage.tga" << endl;
 			return false;
 		}
 		else
 		{
 			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(114, iTextureID));
+			MapOfTextureIDs.insert(pair<int, int>(30, iTextureID));
 		}
 	}
+	//Blueprint
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Blueprint.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Iteme/Blueprint.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(32, iTextureID));
+		}
+	}
+	//Fabric
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Fabric.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Iteme/Fabric.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(33, iTextureID));
+		}
+	}
+	//Hard Wood
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Hard Wood.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Iteme/Hard Wood.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(34, iTextureID));
+		}
+	}
+	//Medkit
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Medkit.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Iteme/Medkit.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(35, iTextureID));
+		}
+	}
+	//Pistol Bullets
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Pistol Bullets.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Iteme/Pistol Bullets.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(36, iTextureID));
+		}
+	}
+	//Pistol
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Pistol.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Iteme/Pistol.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(37, iTextureID));
+		}
+	}
+	//Rifle bullet
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Rifle Bullets.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Iteme/Rifle Bullets.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(38, iTextureID));
+		}
+	}
+	//Rifle
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Rifle.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Iteme/Pistol.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(39, iTextureID));
+		}
+	}
+	//Scrap metal
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Scrap Metal.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Iteme/Scrap Metal.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(40, iTextureID));
+		}
+	}
+	//Stone Ore
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Stone Ore.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Iteme/Stone Ore.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(41, iTextureID));
+		}
+	}
+
+
+	
 
 
 	

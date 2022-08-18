@@ -269,7 +269,6 @@ bool CUpgradeState::Update(const double dElapsedTime)
 									CurrentWindowLv += 1;
 								// Reset the CKeyboardController
 								CKeyboardController::GetInstance()->Reset();
-								CSoundController::GetInstance()->MasterVolumeIncrease(10);
 							}
 
 						}
@@ -283,7 +282,6 @@ bool CUpgradeState::Update(const double dElapsedTime)
 									CurrentWindowLv += 1;
 								// Reset the CKeyboardController
 								CKeyboardController::GetInstance()->Reset();
-								CSoundController::GetInstance()->MasterVolumeIncrease(10);
 							}
 							cMap2D->SetMapInfo(50, 9, 111);
 							cMap2D->SetMapInfo(50, 17, 111);
@@ -298,7 +296,6 @@ bool CUpgradeState::Update(const double dElapsedTime)
 							{
 								// Reset the CKeyboardController
 								CKeyboardController::GetInstance()->Reset();
-								CSoundController::GetInstance()->MasterVolumeIncrease(10);
 							}
 							cMap2D->SetMapInfo(50, 9, 112);
 							cMap2D->SetMapInfo(50, 17, 112);
@@ -329,7 +326,7 @@ bool CUpgradeState::Update(const double dElapsedTime)
 					itemlist[2] = "Stone Ore";
 					itemlistcount[0] = 0;
 					itemlistcount[1] = 0;
-					itemlistcount[2] = 0;
+					itemlistcount[2] = 100;
 				}
 				if (CurrentWindowLv == 2)
 				{
@@ -390,8 +387,6 @@ bool CUpgradeState::Update(const double dElapsedTime)
 								CurrentTurretLv += 1;
 							// Reset the CKeyboardController
 							CKeyboardController::GetInstance()->Reset();
-
-							CSoundController::GetInstance()->MasterVolumeIncrease(10);
 						}
 					}
 					if (CurrentTurretLv == 1)
@@ -402,8 +397,6 @@ bool CUpgradeState::Update(const double dElapsedTime)
 							CurrentTurretLv += 1;
 							// Reset the CKeyboardController
 							CKeyboardController::GetInstance()->Reset();
-
-							CSoundController::GetInstance()->MasterVolumeIncrease(10);
 						}
 					}
 					if (CurrentTurretLv == 2)
@@ -413,8 +406,6 @@ bool CUpgradeState::Update(const double dElapsedTime)
 						{
 							// Reset the CKeyboardController
 							CKeyboardController::GetInstance()->Reset();
-
-							CSoundController::GetInstance()->MasterVolumeIncrease(10);
 						}
 					}
 
@@ -499,7 +490,6 @@ bool CUpgradeState::Update(const double dElapsedTime)
 								CurrentBarbWireLv += 1;
 							// Reset the CKeyboardController
 							CKeyboardController::GetInstance()->Reset();
-							CSoundController::GetInstance()->MasterVolumeIncrease(10);
 						}
 					}
 					if (CurrentBarbWireLv == 1)
@@ -509,7 +499,6 @@ bool CUpgradeState::Update(const double dElapsedTime)
 						{
 							// Reset the CKeyboardController
 							CKeyboardController::GetInstance()->Reset();
-							CSoundController::GetInstance()->MasterVolumeIncrease(10);
 						}
 						for (int x = 5; x < 22; x++)
 						{
