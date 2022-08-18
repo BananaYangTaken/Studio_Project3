@@ -43,8 +43,8 @@ public:
 	std::string Turretitemlist[3] = { "empty1", "empty2", "empty3" };
 	int Turretitemlistcount[3];
 
-	std::string Wireitemlist[2] = { "empty1", "empty2" };
-	int Wireitemlistcount[2];
+	std::string Wireitemlist[3] = { "empty1", "empty2", "empty3"};
+	int Wireitemlistcount[3];
 	// Init this class instance
 	virtual bool Init(void);
 	//change button stuff

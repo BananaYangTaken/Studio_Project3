@@ -547,6 +547,16 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 			// Display the FPS
 			ImGui::TextColored(ImVec4(1, 1, 0, 1), "FPS: %d", cFPSCounter->GetFrameRate());
 			std::string recName = inventory_item_name_list[0];
+			ImGuiWindowFlags window_flags_bg = 0;
+			window_flags_bg |= ImGuiWindowFlags_NoTitleBar;
+			window_flags_bg |= ImGuiWindowFlags_NoScrollbar;
+			//window_flags |= ImGuiWindowFlags_MenuBar;
+			//window_flags |= ImGuiWindowFlags_NoMove;
+			window_flags_bg |= ImGuiWindowFlags_NoCollapse;
+			window_flags_bg |= ImGuiWindowFlags_NoBringToFrontOnFocus;
+			window_flags_bg |= ImGuiWindowFlags_NoFocusOnAppearing;
+			window_flags_bg |= ImGuiWindowFlags_NoNav;
+			window_flags_bg |= ImGuiWindowFlags_NoResize;
 			// Render the inventory items
 			if (checkinginventory == true)
 			{
@@ -701,6 +711,18 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						else continue;
 					}
 				}
+				ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.2f, 0.f, 0.2f, 1.0f));  // Set a background color
+				ImGui::Begin("Main Menu", NULL, window_flags_bg);
+				{
+					ImGui::SetWindowPos(ImVec2(CSettings::GetInstance()->iWindowWidth / 11.0, 15));				// Set the top-left of the window at (10,10)
+					ImGui::SetWindowSize(ImVec2(CSettings::GetInstance()->iWindowWidth / 1.25, CSettings::GetInstance()->iWindowHeight / 0.5));
+
+					//Added rounding for nicer effect
+					ImGuiStyle& style = ImGui::GetStyle();
+					style.FrameRounding = 200.0f;
+				}
+				ImGui::End();
+				ImGui::PopStyleColor();
 			}
 			else if (checkinginventory == false && crafting == false && descactive == false && chestactive == false)
 			{

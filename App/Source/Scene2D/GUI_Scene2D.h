@@ -56,7 +56,9 @@ public:
 	std::string inventory_item_name_list[9] = {"Scrap Metal", "Hard wood", "Stone Ore", "Pistol Bullets", "Rifle Bullets", "Rifle", "Pistol", "Medkit", "Bandage"};
 	int inventory_item_quantity[9] = {155,150,150,100,50,1,1,90,200};
 	int inventory_item_max_quantity[9] = {200,200,200,200,200,200,200,200,200};
-
+	std::string searchtxt;
+	bool issearched = false;
+	float searchtimer = 0;
 	int Crafting_list_size = 5;
 	std::string Crafting_item_name_list[5] = { "Rifle Bullets", "Pistol Bullets", "Scrap Metal","Bandage","Medkit" };
 	int Crafting_item_Quantity[5] = {25,50,30,5,1};
@@ -94,6 +96,7 @@ public:
 	void InventoryItemSetZero(std::string arrayindex);
 	void ChestItemSetZero(std::string arrayindex);
 	void checkforzero(void);
+	std::string GetCurrentHotbarItem(void);
 	void dropitem(int key);
 	void OpenCrate(std::string size);
 	bool looting = false;

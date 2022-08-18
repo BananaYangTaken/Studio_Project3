@@ -620,6 +620,9 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 		{
 			if (cGUI_Scene2D->looting == false)
 			{
+				cGUI_Scene2D->searchtxt = "SEARCHING...";
+				cGUI_Scene2D->issearched = false;
+				cGUI_Scene2D->searchtimer = 0;
 				cSoundController->PlaySoundByID(18);
 				cGUI_Scene2D->checkinginventory = true;
 				cGUI_Scene2D->OpenCrate("Large");
