@@ -19,6 +19,6 @@ public:
 protected:
 	float deathTimer;
 	float speedMultiplier;
-
+	float motionResetter;
 };
 

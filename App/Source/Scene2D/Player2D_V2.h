@@ -161,7 +161,5 @@ protected:
 	bool CheckPosition(DIRECTION);
 
 
-private:
-	unsigned int Player;
 };
 

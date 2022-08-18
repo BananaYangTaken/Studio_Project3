@@ -223,7 +223,6 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 							break;
 					}
 				}
-				Player->SetMotionFlag(false);
 			}
    			if (Attack == false)
 			{

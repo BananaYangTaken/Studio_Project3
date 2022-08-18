@@ -189,6 +189,10 @@ bool CScene2D::Update(const double dElapsedTime)
 	{
 		cEnemyList[i]->Update(dElapsedTime);
 	}
+	if (Player->GetMotionFlag() == true)
+	{
+		Player->SetMotionFlag(false);
+	}
 	LoadEnemies();
 	
 	
