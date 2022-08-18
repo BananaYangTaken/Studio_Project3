@@ -130,6 +130,7 @@ bool CScene2D::Init(void)
 		std::cout << "Failed to load Player" << std::endl;
 		return false;
 	}
+	Player->SetObjectList(&cObjectList);
 
 	LoadObjects();
 	LoadEnemies();
@@ -173,11 +174,6 @@ bool CScene2D::Update(const double dElapsedTime)
 		cObjectList[i]->SetruntimeColour(glm::vec4(1, 1, 1, 1));
 	}
 	LoadObjects();
-	for (int i = 0; i < cEnemyList.size(); i++)
-	{
-		cEnemyList[i]->Update(dElapsedTime);
-	}
-	LoadEnemies();
 	vector<CEnemyBase*>::iterator it = cEnemyList.begin();
 	while (it != cEnemyList.end())
 	{
@@ -190,6 +186,12 @@ bool CScene2D::Update(const double dElapsedTime)
 			++it;
 		}
 	}
+	for (int i = 0; i < cEnemyList.size(); i++)
+	{
+		cEnemyList[i]->Update(dElapsedTime);
+	}
+	LoadEnemies();
+	
 	
 	for (int i = 0; i < cTurretList.size(); i++)
 	{

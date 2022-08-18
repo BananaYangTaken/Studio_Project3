@@ -33,7 +33,6 @@
 // Include Singleton template
 #include "DesignPatterns\SingletonTemplate.h"
 
-
 // Include Keyboard controller
 #include "Inputs\KeyboardController.h"
 // Include MouseController controller
@@ -73,6 +72,7 @@ public:
 
 	//cObjectList Setter
 	void SetObjectList(std::vector< CObject2D*>*);
+	void SetEnemyList(std::vector< CEntity2D*>*);
 
 	//LoadObject Setter and Getter
 	void SetLoadObject(bool);
@@ -99,6 +99,8 @@ protected:
 
 
 	std::vector< CObject2D*>* cObjectList;
+
+	std::vector< CEntity2D*>* cEnemyList;
 
 	glm::vec2 vec2OldIndex;
 

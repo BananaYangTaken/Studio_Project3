@@ -404,7 +404,7 @@ bool CGUI_Scene2D::Init(void)
 	window_flags |= ImGuiWindowFlags_NoMove;
 	window_flags |= ImGuiWindowFlags_NoResize;
 	window_flags |= ImGuiWindowFlags_NoCollapse;
-
+	window_flags |= ImGuiWindowFlags_NoScrollbar;
 	//// Show the mouse pointer
 	//glfwSetInputMode(CSettings::GetInstance()->pWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
@@ -786,58 +786,58 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				}
 
 				}
-				if (crafting == true && recipeactive == false)
+			if (crafting == true && recipeactive == false)
+			{
+				wspace = 0.0f;
+				hspace = 0.5f;
+				ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 3));
+				ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
+				ImGui::SetWindowFontScale(2.5f * relativeScale_y);
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), "Crafting recipes", cFPSCounter->GetFrameRate());
+				ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, 1));
+				ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
+				ImGui::SetWindowFontScale(2.5f * relativeScale_y);
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), " ", cFPSCounter->GetFrameRate());
+				ImGuiWindowFlags inventoryWindowFlags =
+					ImGuiWindowFlags_AlwaysAutoResize |
+					ImGuiWindowFlags_NoTitleBar |
+					ImGuiWindowFlags_NoResize |
+					ImGuiWindowFlags_NoBringToFrontOnFocus |
+					ImGuiWindowFlags_NoNavFocus |
+					ImGuiWindowFlags_NoCollapse |
+					ImGuiWindowFlags_NoScrollbar;
+				for (int i = 0; i < Crafting_list_size; i++)
 				{
-					wspace = 0.0f;
-					hspace = 0.5f;
-					ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 3));
-					ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
-					ImGui::SetWindowFontScale(2.5f * relativeScale_y);
-					ImGui::TextColored(ImVec4(1, 1, 0, 1), "Crafting recipes", cFPSCounter->GetFrameRate());
-					ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, 1));
-					ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
-					ImGui::SetWindowFontScale(2.5f * relativeScale_y);
-					ImGui::TextColored(ImVec4(1, 1, 0, 1), " ", cFPSCounter->GetFrameRate());
-					ImGuiWindowFlags inventoryWindowFlags =
-						ImGuiWindowFlags_AlwaysAutoResize |
-						ImGuiWindowFlags_NoTitleBar |
-						ImGuiWindowFlags_NoResize |
-						ImGuiWindowFlags_NoBringToFrontOnFocus |
-						ImGuiWindowFlags_NoNavFocus |
-						ImGuiWindowFlags_NoCollapse |
-						ImGuiWindowFlags_NoScrollbar;
-					for (int i = 0; i < Crafting_list_size; i++)
+					level++;
+					if (level >= 3)
 					{
-						level++;
-						if (level >= 3)
-						{
-							level = 0;
-							hspace += 0.1f;
-							wspace = 0.0f;
-						}
-						wspace = wspace + 0.20f;
-
-					recName = Crafting_item_name_list[i];
-					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.2f, 0.0f, 0.2f, 1.0f));  // Set a background color
-					std::string ctxt = (Crafting_item_name_list[i] + "5");
-					const char* c = ctxt.c_str();
-					std::string cText = "Press (" + std::to_string(i) + ") to view recipe";
-					{
-						ImGui::Begin(c, NULL, inventoryWindowFlags);
-						{
-							ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wspace, cSettings->iWindowHeight * hspace));
-							ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
-							cInventoryItem = cInventoryManager->GetItem(Crafting_item_name_list[i]);
-							ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(50, 50), ImVec2(0, 1), ImVec2(1, 0));
-							ImGui::SameLine();
-							ImGui::SetWindowFontScale(1.0f * relativeScale_y);
-							ImGui::TextColored(ImVec4(1, 1, 0, 1), cText.c_str(), cFPSCounter->GetFrameRate());
-						}
-						ImGui::End();
+						level = 0;
+						hspace += 0.1f;
+						wspace = 0.0f;
 					}
-					ImGui::PopStyleColor();
+					wspace = wspace + 0.20f;
+
+				recName = Crafting_item_name_list[i];
+				ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.2f, 0.0f, 0.2f, 1.0f));  // Set a background color
+				std::string ctxt = (Crafting_item_name_list[i] + "5");
+				const char* c = ctxt.c_str();
+				std::string cText = "Press (" + std::to_string(i) + ") to view recipe";
+				{
+					ImGui::Begin(c, NULL, inventoryWindowFlags);
+					{
+						ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wspace, cSettings->iWindowHeight * hspace));
+						ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
+						cInventoryItem = cInventoryManager->GetItem(Crafting_item_name_list[i]);
+						ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(50, 50), ImVec2(0, 1), ImVec2(1, 0));
+						ImGui::SameLine();
+						ImGui::SetWindowFontScale(1.0f * relativeScale_y);
+						ImGui::TextColored(ImVec4(1, 1, 0, 1), cText.c_str(), cFPSCounter->GetFrameRate());
+					}
+					ImGui::End();
 				}
+				ImGui::PopStyleColor();
 			}
+		}
 			else if (crafting == true && recipeactive == true)
 			{
 				std::string seltext = "RECIPE SELECTED: " + Crafting_item_name_list[reckey];
@@ -1051,295 +1051,295 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						ImGui::PopStyleColor(4);
 					}
 				}
-				else if (chestactive == true)
-				{
-					ImGuiWindowFlags chestbutton =
-						ImGuiWindowFlags_AlwaysAutoResize |
-						ImGuiWindowFlags_NoTitleBar |
-						ImGuiWindowFlags_NoNavFocus |
-						ImGuiWindowFlags_NoBringToFrontOnFocus |
-						ImGuiWindowFlags_NoResize |
-						ImGuiWindowFlags_NoCollapse |
-						ImGuiWindowFlags_NoScrollbar;
-					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.f, 0.f, 1.0f));  // Set a background color
-					ImGui::SetWindowPos(ImVec2(CSettings::GetInstance()->iWindowWidth * 0.70,CSettings::GetInstance()->iWindowHeight * 0.3));				// Set the top-left of the window at (10,10)
-					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 0.2f));
-					ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.f, 0.f, 0.f, 1.f));
-					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.2f, 0.2f, 1.f));
-					// Add codes for Start button here
-					if (ImGui::ImageButton((ImTextureID)Add1Button.textureID,
-						ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
-					{
-						// Reset the CKeyboardController
-						CKeyboardController::GetInstance()->Reset();
-
-					// Load the menu state
-					//cout << "Loading PlayGameState" << endl;
-					if (selectinventory == true)
-					{
-						TransferToChest(inventory_item_name_list[chestkey], 1);
-					}
-					else TransferTohand(chest_item_name_list[chestkey], 1);
-				}
-				if (ImGui::ImageButton((ImTextureID)Add10Button.textureID,
+			else if (chestactive == true)
+			{
+				ImGuiWindowFlags chestbutton =
+					ImGuiWindowFlags_AlwaysAutoResize |
+					ImGuiWindowFlags_NoTitleBar |
+					ImGuiWindowFlags_NoNavFocus |
+					ImGuiWindowFlags_NoBringToFrontOnFocus |
+					ImGuiWindowFlags_NoResize |
+					ImGuiWindowFlags_NoCollapse |
+					ImGuiWindowFlags_NoScrollbar;
+				ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.f, 0.f, 1.0f));  // Set a background color
+				ImGui::SetWindowPos(ImVec2(CSettings::GetInstance()->iWindowWidth * 0.70,CSettings::GetInstance()->iWindowHeight * 0.3));				// Set the top-left of the window at (10,10)
+				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 0.2f));
+				ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.f, 0.f, 0.f, 1.f));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.2f, 0.2f, 1.f));
+				// Add codes for Start button here
+				if (ImGui::ImageButton((ImTextureID)Add1Button.textureID,
 					ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
 				{
 					// Reset the CKeyboardController
 					CKeyboardController::GetInstance()->Reset();
 
-						// Load the menu state
-						//cout << "Loading PlayGameState" << endl;
-						if (selectinventory == true)
-						{
-							TransferToChest(inventory_item_name_list[chestkey], 10);
-						}
-						else TransferTohand(chest_item_name_list[chestkey], 10);
-					}
-					if (ImGui::ImageButton((ImTextureID)AddAllButton.textureID,
-						ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
-					{
-						if (selectinventory == true)
-						{
-							TransferToChest(inventory_item_name_list[chestkey], 100);
-						}
-						else TransferTohand(chest_item_name_list[chestkey], 100);
-					}
-					ImGui::PopStyleColor(4);
-					std::string selecttext = "";
-					float hhspace = 0.65f;
-					float wwspace = 0.1f;
-					if (inventory_item_name_list[chestkey].find("empty") == string::npos)
-					{
-						if (selectinventory == true) selecttext = "Selected item : " + inventory_item_name_list[chestkey];
-					}
-					else if (chest_item_name_list[chestkey].find("empty") == string::npos)
-					{
-						if (selectinventory == false) selecttext = "Selected item : " + chest_item_name_list[chestkey];
-					}
-					level = 0;
-					ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 6.55));
-					ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
-					ImGui::SetWindowFontScale(2.5f * relativeScale_y);
-					ImGui::TextColored(ImVec4(1, 1, 0, 1), "CHEST INVENTORY", cFPSCounter->GetFrameRate());
-					ImGui::SetWindowFontScale(1.0f * relativeScale_y);
-					ImGui::TextColored(ImVec4(1, 1, 0, 1), "Click on the inventory or chest boxes to select them!", cFPSCounter->GetFrameRate());
-					if (selectinventory == true) ImGui::TextColored(ImVec4(1, 1, 0, 1), "Currently selected: Inventory", cFPSCounter->GetFrameRate());
-					else ImGui::TextColored(ImVec4(1, 1, 0, 1), "Currently selected: Chest", cFPSCounter->GetFrameRate());
-					ImGui::TextColored(ImVec4(1, 1, 0, 1), selecttext.c_str(), cFPSCounter->GetFrameRate());
-					ImGuiWindowFlags inventoryWindowFlags =
-						ImGuiWindowFlags_AlwaysAutoResize |
-						ImGuiWindowFlags_NoTitleBar |
-						ImGuiWindowFlags_NoResize |
-						ImGuiWindowFlags_NoNavFocus |
-						ImGuiWindowFlags_NoCollapse |
-						ImGuiWindowFlags_NoScrollbar;
-
-				for (int i = 0; i < Chest_size; i++)
+				// Load the menu state
+				//cout << "Loading PlayGameState" << endl;
+				if (selectinventory == true)
 				{
-					level++;
-					if (level >= 5)
-					{
-						level = 0;
-						hhspace += 0.1f;
-						wwspace = 0.1f;
-					}
-					wwspace = wwspace + 0.15f;
-
-					recName = chest_item_name_list[i];
-					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.f, 0.f, 1.0f));  // Set a background color
-					std::string ctxt = (chest_item_name_list[i] + "45");
-					const char* c = ctxt.c_str();
-					{
-						ImGui::Begin(c, NULL, inventoryWindowFlags);
-						{
-							ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wwspace, cSettings->iWindowHeight * hhspace));
-							ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
-							cInventoryItem = cInventoryManager->GetItem(chest_item_name_list[i]);
-							ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(75, 75), ImVec2(0, 1), ImVec2(1, 0));
-							ImGui::SameLine();
-							ImGui::SetWindowFontScale(1.0f * relativeScale_y);
-							if (chest_item_name_list[i].find("empty") == string::npos)
-								ImGui::TextColored(ImVec4(1, 1, 1, 1), "%d", chest_item_quantity[i], chest_item_max_quantity[i]);
-							else ImGui::TextColored(ImVec4(1, 1, 1, 1), " ", chest_item_quantity[i], chest_item_max_quantity[i]);
-						}
-						ImGui::End();
-					}
-					ImGui::PopStyleColor();
-					///
-					ImGuiWindowFlags chestWindowFlagsButton =
-						ImGuiWindowFlags_AlwaysAutoResize |
-						ImGuiWindowFlags_NoTitleBar |
-						ImGuiWindowFlags_NoResize |
-						ImGuiWindowFlags_NoNavFocus |
-						ImGuiWindowFlags_NoCollapse |
-						ImGuiWindowFlags_NoBackground |
-						ImGuiWindowFlags_NoScrollbar;
-
-					std::string istr = std::to_string(i + 36);
-					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 0.f));
-					ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.f, 0.f, 0.f, 0.1f));
-					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.2f, 0.2f, 0.3f));
-					{
-						if (inventoryloaded == false)
-						{
-							PreloadInventoryTextures();
-							inventoryloaded = true;
-						}
-						ctxt = (inventory_item_name_list[i] + istr);
-						c = ctxt.c_str();
-						ImGui::Begin(c, NULL, chestWindowFlagsButton);
-						{
-							ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wwspace, cSettings->iWindowHeight * hhspace));
-							ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
-							if (ImGui::ImageButton((ImTextureID)newChestbutton.textureID,
-								ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(0.0, 0.0)))
-							{
-								CKeyboardController::GetInstance()->Reset();
-								chestkey = i;
-								cout << chestkey << endl;
-								selectinventory = false;
-
-							}
-						}
-						ImGui::End();
-					}
-					ImGui::PopStyleColor(3);
+					TransferToChest(inventory_item_name_list[chestkey], 1);
 				}
+				else TransferTohand(chest_item_name_list[chestkey], 1);
+			}
+			if (ImGui::ImageButton((ImTextureID)Add10Button.textureID,
+				ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
+			{
+				// Reset the CKeyboardController
+				CKeyboardController::GetInstance()->Reset();
 
-				if (cKeyboardController->IsKeyPressed('C'))
+					// Load the menu state
+					//cout << "Loading PlayGameState" << endl;
+					if (selectinventory == true)
+					{
+						TransferToChest(inventory_item_name_list[chestkey], 10);
+					}
+					else TransferTohand(chest_item_name_list[chestkey], 10);
+				}
+				if (ImGui::ImageButton((ImTextureID)AddAllButton.textureID,
+					ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
 				{
 					if (selectinventory == true)
 					{
-						selectinventory = false;
+						TransferToChest(inventory_item_name_list[chestkey], 100);
 					}
-					else if (selectinventory == false)
-					{
-						selectinventory = true;
-					}
+					else TransferTohand(chest_item_name_list[chestkey], 100);
 				}
-				if (cKeyboardController->IsKeyPressed('1')) chestkey = 1;
-				else if (cKeyboardController->IsKeyPressed('2')) chestkey = 2;
-				else if (cKeyboardController->IsKeyPressed('3')) chestkey = 3;
-				else if (cKeyboardController->IsKeyPressed('4')) chestkey = 4;
-				else if (cKeyboardController->IsKeyPressed('5')) chestkey = 5;
-				else if (cKeyboardController->IsKeyPressed('6')) chestkey = 6;
-				else if (cKeyboardController->IsKeyPressed('7')) chestkey = 7;
-				else if (cKeyboardController->IsKeyPressed('8')) chestkey = 8;
-				else if (cKeyboardController->IsKeyPressed('9')) chestkey = 9;
-
-
-				}
-				if (looting == true)
+				ImGui::PopStyleColor(4);
+				std::string selecttext = "";
+				float hhspace = 0.65f;
+				float wwspace = 0.1f;
+				if (inventory_item_name_list[chestkey].find("empty") == string::npos)
 				{
-					int level = 0;
-					/*std::string searchtxt = "SEARCHING...";
-					issearched = false;
-					searchtimer = 0;*/
-					searchtimer++;
-					float hhspace = 0.65f;
-					float wwspace = 0.1f;
-					if (searchtimer >= 40)
+					if (selectinventory == true) selecttext = "Selected item : " + inventory_item_name_list[chestkey];
+				}
+				else if (chest_item_name_list[chestkey].find("empty") == string::npos)
+				{
+					if (selectinventory == false) selecttext = "Selected item : " + chest_item_name_list[chestkey];
+				}
+				level = 0;
+				ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 6.55));
+				ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
+				ImGui::SetWindowFontScale(2.5f * relativeScale_y);
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), "CHEST INVENTORY", cFPSCounter->GetFrameRate());
+				ImGui::SetWindowFontScale(1.0f * relativeScale_y);
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), "Click on the inventory or chest boxes to select them!", cFPSCounter->GetFrameRate());
+				if (selectinventory == true) ImGui::TextColored(ImVec4(1, 1, 0, 1), "Currently selected: Inventory", cFPSCounter->GetFrameRate());
+				else ImGui::TextColored(ImVec4(1, 1, 0, 1), "Currently selected: Chest", cFPSCounter->GetFrameRate());
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), selecttext.c_str(), cFPSCounter->GetFrameRate());
+				ImGuiWindowFlags inventoryWindowFlags =
+					ImGuiWindowFlags_AlwaysAutoResize |
+					ImGuiWindowFlags_NoTitleBar |
+					ImGuiWindowFlags_NoResize |
+					ImGuiWindowFlags_NoNavFocus |
+					ImGuiWindowFlags_NoCollapse |
+					ImGuiWindowFlags_NoScrollbar;
+
+			for (int i = 0; i < Chest_size; i++)
+			{
+				level++;
+				if (level >= 5)
+				{
+					level = 0;
+					hhspace += 0.1f;
+					wwspace = 0.1f;
+				}
+				wwspace = wwspace + 0.15f;
+
+				recName = chest_item_name_list[i];
+				ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.f, 0.f, 1.0f));  // Set a background color
+				std::string ctxt = (chest_item_name_list[i] + "45");
+				const char* c = ctxt.c_str();
+				{
+					ImGui::Begin(c, NULL, inventoryWindowFlags);
 					{
-						searchtxt = "CRATE INVENTORY";
+						ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wwspace, cSettings->iWindowHeight * hhspace));
+						ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
+						cInventoryItem = cInventoryManager->GetItem(chest_item_name_list[i]);
+						ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(75, 75), ImVec2(0, 1), ImVec2(1, 0));
+						ImGui::SameLine();
+						ImGui::SetWindowFontScale(1.0f * relativeScale_y);
+						if (chest_item_name_list[i].find("empty") == string::npos)
+							ImGui::TextColored(ImVec4(1, 1, 1, 1), "%d", chest_item_quantity[i], chest_item_max_quantity[i]);
+						else ImGui::TextColored(ImVec4(1, 1, 1, 1), " ", chest_item_quantity[i], chest_item_max_quantity[i]);
+					}
+					ImGui::End();
+				}
+				ImGui::PopStyleColor();
+				///
+				ImGuiWindowFlags chestWindowFlagsButton =
+					ImGuiWindowFlags_AlwaysAutoResize |
+					ImGuiWindowFlags_NoTitleBar |
+					ImGuiWindowFlags_NoResize |
+					ImGuiWindowFlags_NoNavFocus |
+					ImGuiWindowFlags_NoCollapse |
+					ImGuiWindowFlags_NoBackground |
+					ImGuiWindowFlags_NoScrollbar;
 
-						for (int i = 0; i < Chest_size; i++)
+				std::string istr = std::to_string(i + 36);
+				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 0.f));
+				ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.f, 0.f, 0.f, 0.1f));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.2f, 0.2f, 0.3f));
+				{
+					if (inventoryloaded == false)
+					{
+						PreloadInventoryTextures();
+						inventoryloaded = true;
+					}
+					ctxt = (inventory_item_name_list[i] + istr);
+					c = ctxt.c_str();
+					ImGui::Begin(c, NULL, chestWindowFlagsButton);
+					{
+						ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wwspace, cSettings->iWindowHeight * hhspace));
+						ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
+						if (ImGui::ImageButton((ImTextureID)newChestbutton.textureID,
+							ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(0.0, 0.0)))
 						{
-							level++;
-							if (level >= 5)
-							{
-								level = 0;
-								hhspace += 0.1f;
-								wwspace = 0.1f;
-							}
-							wwspace = wwspace + 0.15f;
+							CKeyboardController::GetInstance()->Reset();
+							chestkey = i;
+							cout << chestkey << endl;
+							selectinventory = false;
 
-							recName = crate_item_name_list[i];
-							ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.f, 0.f, 1.0f));  // Set a background color
-							std::string istr = std::to_string(i + 45);
-							std::string ctxt = (crate_item_name_list[i] + istr);
-							const char* c = ctxt.c_str();
-							ImGuiWindowFlags LootCrateFlags =
-								ImGuiWindowFlags_AlwaysAutoResize |
-								ImGuiWindowFlags_NoTitleBar |
-								ImGuiWindowFlags_NoResize |
-								ImGuiWindowFlags_NoCollapse |
-								ImGuiWindowFlags_NoScrollbar;
+						}
+					}
+					ImGui::End();
+				}
+				ImGui::PopStyleColor(3);
+			}
+
+			if (cKeyboardController->IsKeyPressed('C'))
+			{
+				if (selectinventory == true)
+				{
+					selectinventory = false;
+				}
+				else if (selectinventory == false)
+				{
+					selectinventory = true;
+				}
+			}
+			if (cKeyboardController->IsKeyPressed('1')) chestkey = 1;
+			else if (cKeyboardController->IsKeyPressed('2')) chestkey = 2;
+			else if (cKeyboardController->IsKeyPressed('3')) chestkey = 3;
+			else if (cKeyboardController->IsKeyPressed('4')) chestkey = 4;
+			else if (cKeyboardController->IsKeyPressed('5')) chestkey = 5;
+			else if (cKeyboardController->IsKeyPressed('6')) chestkey = 6;
+			else if (cKeyboardController->IsKeyPressed('7')) chestkey = 7;
+			else if (cKeyboardController->IsKeyPressed('8')) chestkey = 8;
+			else if (cKeyboardController->IsKeyPressed('9')) chestkey = 9;
+
+
+			}
+			if (looting == true)
+			{
+				int level = 0;
+				/*std::string searchtxt = "SEARCHING...";
+				issearched = false;
+				searchtimer = 0;*/
+				searchtimer++;
+				float hhspace = 0.65f;
+				float wwspace = 0.1f;
+				if (searchtimer >= 40)
+				{
+					searchtxt = "CRATE INVENTORY";
+
+					for (int i = 0; i < Chest_size; i++)
+					{
+						level++;
+						if (level >= 5)
+						{
+							level = 0;
+							hhspace += 0.1f;
+							wwspace = 0.1f;
+						}
+						wwspace = wwspace + 0.15f;
+
+						recName = crate_item_name_list[i];
+						ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.f, 0.f, 1.0f));  // Set a background color
+						std::string istr = std::to_string(i + 45);
+						std::string ctxt = (crate_item_name_list[i] + istr);
+						const char* c = ctxt.c_str();
+						ImGuiWindowFlags LootCrateFlags =
+							ImGuiWindowFlags_AlwaysAutoResize |
+							ImGuiWindowFlags_NoTitleBar |
+							ImGuiWindowFlags_NoResize |
+							ImGuiWindowFlags_NoCollapse |
+							ImGuiWindowFlags_NoScrollbar;
+						{
+							ImGui::Begin(c, NULL, LootCrateFlags);
 							{
+								ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wwspace, cSettings->iWindowHeight * hhspace));
+								ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
+								cInventoryItem = cInventoryManager->GetItem(crate_item_name_list[i]);
+								ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(75, 75), ImVec2(0, 1), ImVec2(1, 0));
+								ImGui::SameLine();
+								ImGui::SetWindowFontScale(1.0f * relativeScale_y);
+								if (crate_item_name_list[i].find("empty") == string::npos)
+									ImGui::TextColored(ImVec4(1, 1, 1, 1), "%d", crate_item_quantity[i]);
+								else ImGui::TextColored(ImVec4(1, 1, 1, 1), " ");
+							}
+							ImGui::End();
+						}
+						ImGui::PopStyleColor();
+						if (crate_item_name_list[i].find("empty") == string::npos)
+						{
+							ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 0.f));
+							ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.f, 0.f, 0.f, 0.1f));
+							ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.2f, 0.2f, 0.3f));
+							{
+								if (inventoryloaded == false)
+								{
+									PreloadInventoryTextures();
+									inventoryloaded = true;
+								}
+								istr = std::to_string(i + 63);
+								ctxt = (crate_item_name_list[i] + istr);
+								c = ctxt.c_str();
 								ImGui::Begin(c, NULL, LootCrateFlags);
 								{
 									ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wwspace, cSettings->iWindowHeight * hhspace));
 									ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
-									cInventoryItem = cInventoryManager->GetItem(crate_item_name_list[i]);
-									ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(75, 75), ImVec2(0, 1), ImVec2(1, 0));
-									ImGui::SameLine();
-									ImGui::SetWindowFontScale(1.0f * relativeScale_y);
-									if (crate_item_name_list[i].find("empty") == string::npos)
-										ImGui::TextColored(ImVec4(1, 1, 1, 1), "%d", crate_item_quantity[i]);
-									else ImGui::TextColored(ImVec4(1, 1, 1, 1), " ");
+									if (ImGui::ImageButton((ImTextureID)newLootButton.textureID,
+										ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(0.0, 0.0)))
+									{
+										if (IncreaseInventoryItemCount(crate_item_name_list[i], crate_item_quantity[i]) == 0)
+										{
+											std::string str = "empty" + std::to_string(i);
+											crate_item_name_list[i] = str;
+											crate_item_quantity[i] = 0;
+
+											cout << "added item: " << crate_item_name_list[i] << endl;
+										}
+
+									}
 								}
 								ImGui::End();
 							}
-							ImGui::PopStyleColor();
-							if (crate_item_name_list[i].find("empty") == string::npos)
-							{
-								ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 0.f));
-								ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.f, 0.f, 0.f, 0.1f));
-								ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.2f, 0.2f, 0.3f));
-								{
-									if (inventoryloaded == false)
-									{
-										PreloadInventoryTextures();
-										inventoryloaded = true;
-									}
-									istr = std::to_string(i + 63);
-									ctxt = (crate_item_name_list[i] + istr);
-									c = ctxt.c_str();
-									ImGui::Begin(c, NULL, LootCrateFlags);
-									{
-										ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wwspace, cSettings->iWindowHeight * hhspace));
-										ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
-										if (ImGui::ImageButton((ImTextureID)newLootButton.textureID,
-											ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(0.0, 0.0)))
-										{
-											if (IncreaseInventoryItemCount(crate_item_name_list[i], crate_item_quantity[i]) == 0)
-											{
-												std::string str = "empty" + std::to_string(i);
-												crate_item_name_list[i] = str;
-												crate_item_quantity[i] = 0;
-
-												cout << "added item: " << crate_item_name_list[i] << endl;
-											}
-
-										}
-									}
-									ImGui::End();
-								}
-								ImGui::PopStyleColor(3);
-							}
+							ImGui::PopStyleColor(3);
 						}
 					}
+				}
 					
-					cout << "LOOTING LARGE CRATE";
-					if(descactive == false)
-						ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 2.55));
-					else ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 3.55));
-					ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
-					ImGui::SetWindowFontScale(2.5f * relativeScale_y);
-					ImGui::TextColored(ImVec4(1, 1, 0, 1), searchtxt.c_str(), cFPSCounter->GetFrameRate());
-					ImGui::SetWindowFontScale(1.0f * relativeScale_y);
-					ImGui::TextColored(ImVec4(1, 1, 0, 1), "Click on the items in the crate to loot them!", cFPSCounter->GetFrameRate());
-					/*ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 10));
-					ImGui::TextColored(ImVec4(1, 1, 0, 1), " ", cFPSCounter->GetFrameRate());*/
+				cout << "LOOTING LARGE CRATE";
+				if(descactive == false)
+					ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 2.55));
+				else ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 3.55));
+				ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
+				ImGui::SetWindowFontScale(2.5f * relativeScale_y);
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), searchtxt.c_str(), cFPSCounter->GetFrameRate());
+				ImGui::SetWindowFontScale(1.0f * relativeScale_y);
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), "Click on the items in the crate to loot them!", cFPSCounter->GetFrameRate());
+				/*ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 10));
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), " ", cFPSCounter->GetFrameRate());*/
 
 				
-			}
+		}
 
 
 			// Render Progress Bar
 			ImGui::Begin("ProgressBar", NULL, window_flags);
 			{
 				ImGui::SetWindowPos(ImVec2((float)cSettings->iWindowWidth - 320.0f, 20.0f));
-				ImGui::SetWindowSize(ImVec2(300.0f, 40.0f));
+				ImGui::SetWindowSize(ImVec2(300.0f, 60.0f));
 				ImVec4 col = ImVec4(0.f, 1.f, 0.f, 1.f);
 				ImGui::PushStyleColor(ImGuiCol_PlotHistogram, col);
 					col = ImVec4(1.f, 0.f, 0.f, 1.f);

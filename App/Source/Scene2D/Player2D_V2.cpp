@@ -78,6 +78,10 @@ void CPlayer2D_V2::SetObjectList(std::vector<CObject2D*>* newObjectList)
 {
 	cObjectList = newObjectList;
 }
+void CPlayer2D_V2::SetEnemyList(std::vector<CEntity2D*>* newEnemyList)
+{
+	cEnemyList = newEnemyList;
+}
 void CPlayer2D_V2::SetLoadObject(bool newState)
 {
 	LoadObject = newState;
