@@ -1344,7 +1344,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				ImGui::PushStyleColor(ImGuiCol_PlotHistogram, col);
 					col = ImVec4(1.f, 0.f, 0.f, 1.f);
 					ImGui::PushStyleColor(ImGuiCol_FrameBg, col);
-					m_fProgressBar = CPlayer2D_V2::GetInstance()->GetHealth() / CPlayer2D_V2::GetInstance()->GetMaxHealth();
+					m_fProgressBar = float(CPlayer2D_V2::GetInstance()->GetHealth()) / float(CPlayer2D_V2::GetInstance()->GetMaxHealth());
 					const char* empty = " ";
 						ImGui::ProgressBar(m_fProgressBar, ImVec2(300.0f, 60.0f), empty);
 						// Render the Health
@@ -1375,7 +1375,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						ImGui::End();
 					ImGui::PopStyleColor();
 				ImGui::PopStyleColor();
-			}
+			} 
 			ImGui::End();
 			
 		}
