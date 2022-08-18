@@ -83,8 +83,9 @@ CEnemy2D_Zombie::~CEnemy2D_Zombie(void)
 bool  CEnemy2D_Zombie::checkforLOS()
 {
 	// Store the old player position
+	cout << "DIRECTION X Y: " << vec2Direction.x << vec2Direction.y << endl;
 	Playervec2OldIndex = cPlayer->vec2Index;
-	int distfromplayer = cPhysics2D.CalculateDistance(Playervec2OldIndex, vec2Index);
+	int distfromplayer = cPhysics2D.CalculateDistance(Playervec2OldIndex, vec2Index) - 2;
 	float Xdiff = Playervec2OldIndex.x - vec2Index.x;
 	float Ydiff = Playervec2OldIndex.y - vec2Index.y;
 	float diffratio = Xdiff / Ydiff;
@@ -117,13 +118,14 @@ bool  CEnemy2D_Zombie::checkforLOS()
 
 
 	// TOP LEFT VIEW
-	if (vec2Direction.x > 0 && vec2Direction.y < 0)
+	else if (vec2Direction.x > 0 && vec2Direction.y < 0)
 	{
 		cout << "enemy is TOP LEFT OF PLAYER!" << endl;
 		for (int i = 0; i < distfromplayer; i++)
 		{
 			blockscounted++;
 			Xcount--;
+			//cMap2D->SetMapInfo(Playervec2OldIndex.y + Ycount, Playervec2OldIndex.x + Xcount, 100);
 			if (blockscounted >= diffratio)
 			{
 				Ycount++;
@@ -140,7 +142,7 @@ bool  CEnemy2D_Zombie::checkforLOS()
 
 
 	// BOTTOM LEFT VIEW
-	if (vec2Direction.x > 0 && vec2Direction.y > 0)
+	else if (vec2Direction.x > 0 && vec2Direction.y > 0)
 	{
 		cout << "enemy is BOTTOM LEFT  OF PLAYER!" << endl;
 		for (int i = 0; i < distfromplayer; i++)
@@ -162,7 +164,7 @@ bool  CEnemy2D_Zombie::checkforLOS()
 	}
 
 	// BOTTOM RIGHT VIEW
-	if (vec2Direction.x < 0 && vec2Direction.y > 0)
+	else if (vec2Direction.x < 0 && vec2Direction.y > 0)
 	{
 		cout << "enemy is BOTTOM RIGHT OF PLAYER!" << endl;
 		for (int i = 0; i < distfromplayer; i++)
@@ -181,6 +183,40 @@ bool  CEnemy2D_Zombie::checkforLOS()
 		}
 		cout << "CAN SEE PLAYER!";
 		return true;
+	}
+
+	else if (vec2Direction.x == 0 && vec2Direction.y >= 0 || vec2Direction.x == 0 && vec2Direction.y <= 0)
+	{
+		cout << "enemy is BOTTOM OR ONTOP OF PLAYER!" << endl;
+		for (int i = 0; i < distfromplayer; i++)
+		{
+			blockscounted++;
+			Ycount++;
+			if (cMap2D->GetMapInfo(Playervec2OldIndex.y + Ycount, Playervec2OldIndex.x) >= 100)
+			{
+				cout << "LOS LOST, VIEW BLOCKED!" << endl;
+				return false;
+			}
+		}
+		cout << "CAN SEE PLAYER!";
+		return true;
+	}
+
+	else if (vec2Direction.x <= 0 && vec2Direction.y == 0 || vec2Direction.x >= 0 && vec2Direction.y == 0)
+	{
+	cout << "enemy is LEFT OR RIGHT OF PLAYER!" << endl;
+	for (int i = 0; i < distfromplayer; i++)
+	{
+		blockscounted++;
+		Xcount++;
+		if (cMap2D->GetMapInfo(Playervec2OldIndex.y, Playervec2OldIndex.x + Xcount) >= 100)
+		{
+			cout << "LOS LOST, VIEW BLOCKED!" << endl;
+			return false;
+		}
+	}
+	cout << "CAN SEE PLAYER!";
+	return true;
 	}
 }
 
@@ -267,7 +303,9 @@ void CEnemy2D_Zombie::UpdateToLastLOS()
 
 void CEnemy2D_Zombie::Update(const double dElapsedTime)
 {
-	cout << "CURRENT FSM: " << sCurrentFSM << endl;
+	UpdateDirection();
+	checkforLOS();
+	cout << "DISTANCE: " << cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) << endl;
 	if (!bIsActive)
 		return;
 	if (Health <= 0)
@@ -301,14 +339,18 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		//FSM Transition
 		if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 1.0f)
 		{
+			cout << "attac" << endl;
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(ATTACK);
 			iFSMCounter = 0;
 			bool bFirstPosition = true;
 		}
-		else if(checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < DetectionRadius)
+		else if(checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) <= DetectionRadius)
 		{
+			std::cout << (idlecount);
+			idlecount++;
+			cout << "in range and moving!";
 			hasseenplayeronce = true;
-			if (idlecount >= 20)
+			if (idlecount >= 15)
 			{
 				OldPositu = cPlayer->vec2Index;
 				cout << "Changed viewpos to " << std::to_string(OldPositu.x) << ", " << std::to_string(OldPositu.y);
@@ -317,14 +359,19 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 			UpdateDirection();
 			UpdatePosition();
 		}
-		else if(checkforLOS() == false && hasseenplayeronce == true)
+		else if(checkforLOS() == false && hasseenplayeronce == true || checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) > DetectionRadius)
 		{
+			cout << "cant find player, moving to last known location";
 			UpdateToLastLOS();
 			UpdatePosition();
 		}
 		else if (hasseenplayeronce == false)
 		{
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(IDLE);
+		}
+		else
+		{
+			cout << "REDUND" << endl;
 		}
 		iFSMCounter++;
 		//Animation

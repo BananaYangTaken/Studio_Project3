@@ -304,7 +304,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		// Calculate the new position to the left
 		if (vec2Index.x >= 0)
 		{
-			vec2NumMicroSteps.x -= 1;
+			vec2NumMicroSteps.x -= 5;
 			if (vec2NumMicroSteps.x < 0)
 			{
 				vec2NumMicroSteps.x = ((int)cSettings->NUM_STEPS_PER_TILE_XAXIS) - 1;
@@ -328,7 +328,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		// Calculate the new position to the right
 		if (vec2Index.x < (int)cSettings->NUM_TILES_XAXIS)
 		{
-			vec2NumMicroSteps.x += 1;
+			vec2NumMicroSteps.x += 5;
 
 			if (vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
 			{
@@ -353,7 +353,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		// Calculate the new position up
 		if (vec2Index.y < (int)cSettings->NUM_TILES_YAXIS)
 		{
-			vec2NumMicroSteps.y += 1;
+			vec2NumMicroSteps.y += 5;
 			if (vec2NumMicroSteps.y > cSettings->NUM_STEPS_PER_TILE_YAXIS)
 			{
 				vec2NumMicroSteps.y = 0;
@@ -378,7 +378,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		// Calculate the new position down
 		if (vec2Index.y >= 0)
 		{
-			vec2NumMicroSteps.y -= 1;
+			vec2NumMicroSteps.y -= 5;
 			if (vec2NumMicroSteps.y < 0)
 			{
 				vec2NumMicroSteps.y = ((int)cSettings->NUM_STEPS_PER_TILE_YAXIS) - 1;
