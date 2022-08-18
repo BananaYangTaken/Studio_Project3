@@ -398,25 +398,27 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 
 
 	//Player Use Item
-	if (cMouseController->IsButtonDown(0) && !LButtonState)
+	if (cGUI_Scene2D->checkinginventory == false && cGUI_Scene2D->crafting == false && cGUI_Scene2D->chestactive == false)
 	{
-		LButtonState = true;
-		CInventoryItem HeldItem = *(cInventoryManager->GetItem(cGUI_Scene2D->GetCurrentHotbarItem()));
-		if (HeldItem.itemtype == ITEM_TYPE::RESOURCES || HeldItem.itemtype == ITEM_TYPE::MELEE)
+		if (cMouseController->IsButtonDown(0) && !LButtonState)
 		{
-			//Attack with Knife
-			AnimationTimer = 0.3f;
-			animatedSprites->PlayAnimation("meleeAttack", -1, AnimationTimer);
+			LButtonState = true;
+			CInventoryItem HeldItem = *(cInventoryManager->GetItem(cGUI_Scene2D->GetCurrentHotbarItem()));
+			if (HeldItem.itemtype == ITEM_TYPE::RESOURCES || HeldItem.itemtype == ITEM_TYPE::MELEE)
+			{
+				//Attack with Knife
+				AnimationTimer = 0.3f;
+				animatedSprites->PlayAnimation("meleeAttack", -1, AnimationTimer);
+			}
+		}
+		else if (cMouseController->IsButtonUp(0) && LButtonState)
+		{
+			LButtonState = false;
+		}
+		if (LButtonState)
+		{
 		}
 	}
-	else if (cMouseController->IsButtonUp(0) && LButtonState)
-	{
-		LButtonState = false;
-	}
-	if (LButtonState)
-	{
-	}
-
 	//Animation
 	if (motion == false && AnimationTimer == 0)
 	{

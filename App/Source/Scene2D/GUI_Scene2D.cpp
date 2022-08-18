@@ -538,14 +538,6 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 	ImGui::NewFrame();
 	{
 		// Create an invisible window which covers the entire OpenGL window
-		ImGuiWindowFlags window_flags =
-			ImGuiWindowFlags_AlwaysAutoResize |
-			ImGuiWindowFlags_NoTitleBar |
-			ImGuiWindowFlags_NoMove |
-			ImGuiWindowFlags_NoResize |
-			ImGuiWindowFlags_NoCollapse |
-			ImGuiWindowFlags_NoBackground |
-			ImGuiWindowFlags_NoScrollbar;
 		ImGui::Begin("Invisible window", NULL, window_flags);
 		{
 
@@ -993,6 +985,10 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				{
 					description = "A cloth like material crafted\nfrom fiber and hemp.\nused to craft all sorts\nof items";
 				}
+				else if (itemname == "Blueprint")
+				{
+					description = "A set of blueprint, likely\nused by the military to\ncraft special weapons.\nCan be used to craft\nstuff with";
+				}
 
 					if (itemname.find("empty") == string::npos)
 					{
@@ -1066,8 +1062,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						ImGuiWindowFlags_NoCollapse |
 						ImGuiWindowFlags_NoScrollbar;
 					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.f, 0.f, 1.0f));  // Set a background color
-					ImGui::SetWindowPos(ImVec2(CSettings::GetInstance()->iWindowWidth * 0.70,
-						CSettings::GetInstance()->iWindowHeight / 5.0));				// Set the top-left of the window at (10,10)
+					ImGui::SetWindowPos(ImVec2(CSettings::GetInstance()->iWindowWidth * 0.70,CSettings::GetInstance()->iWindowHeight * 0.3));				// Set the top-left of the window at (10,10)
 					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 0.2f));
 					ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.f, 0.f, 0.f, 1.f));
 					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.2f, 0.2f, 1.f));
@@ -1241,12 +1236,89 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					issearched = false;
 					searchtimer = 0;*/
 					searchtimer++;
-					if (searchtimer >= 100)
-					{
-						searchtxt = "CRATE INVENTORY";
-					}
 					float hhspace = 0.65f;
 					float wwspace = 0.1f;
+					if (searchtimer >= 40)
+					{
+						searchtxt = "CRATE INVENTORY";
+
+						for (int i = 0; i < Chest_size; i++)
+						{
+							level++;
+							if (level >= 5)
+							{
+								level = 0;
+								hhspace += 0.1f;
+								wwspace = 0.1f;
+							}
+							wwspace = wwspace + 0.15f;
+
+							recName = crate_item_name_list[i];
+							ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.f, 0.f, 1.0f));  // Set a background color
+							std::string istr = std::to_string(i + 45);
+							std::string ctxt = (crate_item_name_list[i] + istr);
+							const char* c = ctxt.c_str();
+							ImGuiWindowFlags LootCrateFlags =
+								ImGuiWindowFlags_AlwaysAutoResize |
+								ImGuiWindowFlags_NoTitleBar |
+								ImGuiWindowFlags_NoResize |
+								ImGuiWindowFlags_NoCollapse |
+								ImGuiWindowFlags_NoScrollbar;
+							{
+								ImGui::Begin(c, NULL, LootCrateFlags);
+								{
+									ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wwspace, cSettings->iWindowHeight * hhspace));
+									ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
+									cInventoryItem = cInventoryManager->GetItem(crate_item_name_list[i]);
+									ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(75, 75), ImVec2(0, 1), ImVec2(1, 0));
+									ImGui::SameLine();
+									ImGui::SetWindowFontScale(1.0f * relativeScale_y);
+									if (crate_item_name_list[i].find("empty") == string::npos)
+										ImGui::TextColored(ImVec4(1, 1, 1, 1), "%d", crate_item_quantity[i]);
+									else ImGui::TextColored(ImVec4(1, 1, 1, 1), " ");
+								}
+								ImGui::End();
+							}
+							ImGui::PopStyleColor();
+							if (crate_item_name_list[i].find("empty") == string::npos)
+							{
+								ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 0.f));
+								ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.f, 0.f, 0.f, 0.1f));
+								ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.2f, 0.2f, 0.3f));
+								{
+									if (inventoryloaded == false)
+									{
+										PreloadInventoryTextures();
+										inventoryloaded = true;
+									}
+									istr = std::to_string(i + 63);
+									ctxt = (crate_item_name_list[i] + istr);
+									c = ctxt.c_str();
+									ImGui::Begin(c, NULL, LootCrateFlags);
+									{
+										ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wwspace, cSettings->iWindowHeight * hhspace));
+										ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
+										if (ImGui::ImageButton((ImTextureID)newLootButton.textureID,
+											ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(0.0, 0.0)))
+										{
+											if (IncreaseInventoryItemCount(crate_item_name_list[i], crate_item_quantity[i]) == 0)
+											{
+												std::string str = "empty" + std::to_string(i);
+												crate_item_name_list[i] = str;
+												crate_item_quantity[i] = 0;
+
+												cout << "added item: " << crate_item_name_list[i] << endl;
+											}
+
+										}
+									}
+									ImGui::End();
+								}
+								ImGui::PopStyleColor(3);
+							}
+						}
+					}
+					
 					cout << "LOOTING LARGE CRATE";
 					if(descactive == false)
 						ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 2.55));
@@ -1256,84 +1328,10 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					ImGui::TextColored(ImVec4(1, 1, 0, 1), searchtxt.c_str(), cFPSCounter->GetFrameRate());
 					ImGui::SetWindowFontScale(1.0f * relativeScale_y);
 					ImGui::TextColored(ImVec4(1, 1, 0, 1), "Click on the items in the crate to loot them!", cFPSCounter->GetFrameRate());
-					ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 10));
-					ImGui::TextColored(ImVec4(1, 1, 0, 1), " ", cFPSCounter->GetFrameRate());
-					ImGuiWindowFlags LootCrateFlags =
-						ImGuiWindowFlags_AlwaysAutoResize |
-						ImGuiWindowFlags_NoTitleBar |
-						ImGuiWindowFlags_NoResize |
-						ImGuiWindowFlags_NoCollapse |
-						ImGuiWindowFlags_NoScrollbar;
+					/*ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 10));
+					ImGui::TextColored(ImVec4(1, 1, 0, 1), " ", cFPSCounter->GetFrameRate());*/
 
-				for (int i = 0; i < Chest_size; i++)
-				{
-					level++;
-					if (level >= 5)
-					{
-						level = 0;
-						hhspace += 0.1f;
-						wwspace = 0.1f;
-					}
-					wwspace = wwspace + 0.15f;
-
-						recName = crate_item_name_list[i];
-						ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.f, 0.f, 1.0f));  // Set a background color
-						std::string istr = std::to_string(i + 45);
-						std::string ctxt = (crate_item_name_list[i] + istr);
-						const char* c = ctxt.c_str();
-						{
-							ImGui::Begin(c, NULL, LootCrateFlags);
-							{
-								ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wwspace, cSettings->iWindowHeight * hhspace));
-								ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
-								cInventoryItem = cInventoryManager->GetItem(crate_item_name_list[i]);
-								ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(75, 75), ImVec2(0, 1), ImVec2(1, 0));
-								ImGui::SameLine();
-								ImGui::SetWindowFontScale(1.0f * relativeScale_y);
-								if (crate_item_name_list[i].find("empty") == string::npos)
-									ImGui::TextColored(ImVec4(1, 1, 1, 1), "%d", crate_item_quantity[i]);
-								else ImGui::TextColored(ImVec4(1, 1, 1, 1), " ");
-							}
-							ImGui::End();
-						}
-						ImGui::PopStyleColor();
-						if (crate_item_name_list[i].find("empty") == string::npos)
-						{
-							ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 0.f));
-							ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.f, 0.f, 0.f, 0.1f));
-							ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.2f, 0.2f, 0.3f));
-							{
-								if (inventoryloaded == false)
-								{
-									PreloadInventoryTextures();
-									inventoryloaded = true;
-								}
-								istr = std::to_string(i + 63);
-								ctxt = (crate_item_name_list[i] + istr);
-								c = ctxt.c_str();
-								ImGui::Begin(c, NULL, LootCrateFlags);
-								{
-									ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wwspace, cSettings->iWindowHeight * hhspace));
-									ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
-									if (ImGui::ImageButton((ImTextureID)newLootButton.textureID,
-										ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(0.0, 0.0)))
-									{
-										if(IncreaseInventoryItemCount(crate_item_name_list[i], crate_item_quantity[i]) == 0)
-										{ 
-											std::string str = "empty" + std::to_string(i);
-											crate_item_name_list[i] = str;
-											crate_item_quantity[i] = 0;
-										
-											cout << "added item: " << crate_item_name_list[i] << endl;
-										}
-
-								}
-							}
-							ImGui::End();
-						}
-						ImGui::PopStyleColor(3);
-					}
-				}
+				
 			}
 
 
