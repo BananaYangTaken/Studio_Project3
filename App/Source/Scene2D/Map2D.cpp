@@ -898,10 +898,17 @@ int CMap2D::GetMapInfo(const unsigned int uiRow, const int unsigned uiCol, const
 		return arrMapInfo[uiCurLevel][uiRow][uiCol].value;
 }
 
+bool CMap2D::CheckValue(const unsigned int uiRow, const unsigned int uiCol, const unsigned int ObjID)
+{
+	return arrMapInfo[0][uiRow][uiCol].value == ObjID;
+}
+
 Grid*** CMap2D::GetarrMapInfo(void)
 {
 	return arrMapInfo;
 }
+
+
 
 /**
  @brief Load a map

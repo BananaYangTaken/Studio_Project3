@@ -413,6 +413,19 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(DEATH);
 		}
 	}
+
+	unsigned int IRow;
+	unsigned int ICol;
+
+	if (cMap2D->CheckValue(cSettings->NUM_TILES_YAXIS - vec2Index.y, vec2Index.x, 24))
+	{
+		sCurrentFSM = static_cast<CEnemyBase::FSM>(SLOWED);
+	}
+	else if(sCurrentFSM == static_cast<CEnemyBase::FSM>(SLOWED))
+	{
+		sCurrentFSM= static_cast<CEnemyBase::FSM>(CHASE);
+	}
+	
 	
 	switch (sCurrentFSM)
 	{
@@ -436,7 +449,7 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		}
 		else if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 5.0f)
 		{
-			sCurrentFSM = CHASE;
+			sCurrentFSM = static_cast<CEnemyBase::FSM>(CHASE);
 			iFSMCounter = 0;
 		}
 		else
@@ -545,6 +558,49 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		}
 		//Animation
 		animatedSprites->PlayAnimation("idle", -1, 1.0f);
+		break;
+	case SLOWED:
+		//FSM Transition
+		if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 0.5f)
+		{
+			cout << "attac" << endl;
+			sCurrentFSM = static_cast<CEnemyBase::FSM>(ATTACK);
+			iFSMCounter = 0;
+			bool bFirstPosition = true;
+		}
+		else if (checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) <= DetectionRadius)
+		{
+			std::cout << (idlecount);
+			idlecount++;
+			cout << "in range and moving!";
+			hasseenplayeronce = true;
+			if (idlecount >= 15)
+			{
+				OldPositu = dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index;
+				cout << "Changed viewpos to " << std::to_string(OldPositu.x) << ", " << std::to_string(OldPositu.y);
+				idlecount = 0;
+			}
+			UpdateDirection();
+			UpdatePositionSlowed();
+		}
+		else if (checkforLOS() == false && hasseenplayeronce == true
+			|| checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) > DetectionRadius)
+		{
+			cout << "cant find player, moving to last known location";
+			UpdateToLastLOS();
+			UpdatePositionSlowed();
+		}
+		else if (hasseenplayeronce == false)
+		{
+			sCurrentFSM = static_cast<CEnemyBase::FSM>(IDLE);
+		}
+		else
+		{
+			cout << "REDUND" << endl;
+		}
+		iFSMCounter++;
+		//Animation
+		animatedSprites->PlayAnimation("move", -1, 1.0f);
 		break;
 	case DEATH:
 		animatedSprites->PlayAnimation("death", 1, 1.0f);

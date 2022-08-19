@@ -109,6 +109,8 @@ public:
 	// Get the value at certain indices in the arrMapInfo
 	int GetMapInfo(const unsigned int uiRow, const unsigned int uiCol, const bool bInvert = true) const;
 
+	bool CheckValue(const unsigned int uiRow, const unsigned int uiCol, const unsigned int ObjID);
+
 	Grid*** GetarrMapInfo(void);
 
 	// Load a map

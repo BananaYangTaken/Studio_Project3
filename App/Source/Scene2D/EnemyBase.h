@@ -84,6 +84,7 @@ protected:
 		EXPLOSION = 7,
 		DEATH = 8,
 		CHASE = 9,
+		SLOWED = 10,
 		NUM_FSM
 	};
 
@@ -157,6 +158,9 @@ protected:
 
 	// Update position
 	virtual void UpdatePosition(void);
+
+	// Update position slowed
+	virtual void UpdatePositionSlowed(void);
 
 	
 };

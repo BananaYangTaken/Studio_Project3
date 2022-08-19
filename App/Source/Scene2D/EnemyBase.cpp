@@ -561,6 +561,123 @@ void CEnemyBase::UpdatePosition(void)
 	}
 }
 
+void CEnemyBase::UpdatePositionSlowed(void)
+{
+	// Store the old position
+	vec2OldIndex = vec2Index;
+
+	// if the player is to the left or right of the enemy2D
+	if (vec2Direction.x < 0)
+	{
+		// Move left
+		const int iOldIndex = vec2Index.x;
+		if (vec2Index.x >= 0)
+		{
+			vec2NumMicroSteps.x -= (0.5);
+			if (vec2NumMicroSteps.x < 0)
+			{
+				vec2NumMicroSteps.x = ((int)cSettings->NUM_STEPS_PER_TILE_XAXIS) - 0.5;
+				vec2Index.x--;
+			}
+		}
+		Direction = LEFT;
+
+		// Constraint the enemy2D's position within the screen boundary
+		Constraint(LEFT);
+
+		// Find a feasible position for the enemy2D's current position
+		if (CheckPosition(LEFT) == false)
+		{
+			FlipHorizontalDirection();
+			vec2Index.x = vec2OldIndex.x;
+			vec2NumMicroSteps.x = 0;
+		}
+
+	}
+	else if (vec2Direction.x > 0)
+	{
+		// Move right
+		const int iOldIndex = vec2Index.x;
+		if (vec2Index.x < (int)cSettings->NUM_TILES_XAXIS)
+		{
+			vec2NumMicroSteps.x += (0.5);
+
+			if (vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
+			{
+				vec2NumMicroSteps.x = 0;
+				vec2Index.x++;
+			}
+		}
+		Direction = RIGHT;
+
+		// Constraint the enemy2D's position within the screen boundary
+		Constraint(RIGHT);
+
+		// Find a feasible position for the enemy2D's current position
+		if (CheckPosition(RIGHT) == false)
+		{
+			FlipHorizontalDirection();
+			//vec2Index = vec2OldIndex;
+			vec2NumMicroSteps.x = 0;
+		}
+
+	}
+
+	// if the player is to the above or below of the enemy2D
+	if (vec2Direction.y < 0)
+	{
+		// Move Down
+		const int iOldIndex = vec2Index.y;
+		if (vec2Index.y < (int)cSettings->NUM_TILES_YAXIS)
+		{
+			vec2NumMicroSteps.y -= (0.5);
+			if (vec2NumMicroSteps.y < 0)
+			{
+				vec2NumMicroSteps.y = ((int)cSettings->NUM_STEPS_PER_TILE_YAXIS) - 0.5;
+				vec2Index.y--;
+			}
+		}
+		Direction = DOWN;
+
+		// Constraint the enemy2D's position within the screen boundary
+		Constraint(DOWN);
+
+		// Find a feasible position for the enemy2D's current position
+		if (CheckPosition(DOWN) == false)
+		{
+			vec2Index.y = vec2OldIndex.y;
+			vec2NumMicroSteps.y = 0;
+		}
+
+	}
+	else if (vec2Direction.y > 0)
+	{
+		// Move Up
+		const int iOldIndex = vec2Index.y;
+		if (vec2Index.y < (int)cSettings->NUM_TILES_YAXIS)
+		{
+			vec2NumMicroSteps.y += (0.5);
+
+			if (vec2NumMicroSteps.y >= cSettings->NUM_STEPS_PER_TILE_YAXIS)
+			{
+				vec2NumMicroSteps.y = 0;
+				vec2Index.y++;
+			}
+		}
+		Direction = UP;
+
+		// Constraint the enemy2D's position within the screen boundary
+		Constraint(UP);
+
+		// Find a feasible position for the enemy2D's current position
+		if (CheckPosition(UP) == false)
+		{
+			vec2NumMicroSteps.y = 0;
+		}
+
+	}
+}
+
 /**
  @brief Set up the OpenGL display environment before rendering
  */
