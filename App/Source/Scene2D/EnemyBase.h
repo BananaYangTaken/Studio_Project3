@@ -18,6 +18,9 @@
 #include "GameControl\Settings.h"
 #include "Physics2D.h"
 
+// Include Math
+#include "../MyMath.h"
+
 // Include AnimatedSprites
 #include "Primitives/SpriteAnimation.h"
 
@@ -99,6 +102,7 @@ protected:
 	float AttackAnim;
 	float ReloadDuration;
 	float speedMultiplier;
+	int dir = 0;
 
 	// Handler to the CMap2D instance
 	CMap2D* cMap2D;
@@ -162,6 +166,9 @@ protected:
 	// Update position slowed
 	virtual void UpdatePositionSlowed(float speedofEnemy);
 
-	
+	// Randomise a direction for patrol
+	virtual void randomDir();
+	virtual void randomiseDirectionMove(float speedofEnemy);
+
 };
 

@@ -432,20 +432,18 @@ void CEnemy2D_Nurse::Update(const double dElapsedTime)
 		break;
 	case PATROL:
 		cout << iFSMCounter << endl;
-		if (iFSMCounter > iMaxFSMCounter)
+		if (iFSMCounter / 10 > iMaxFSMCounter)
 		{
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(IDLE);
 			CSoundController::GetInstance()->PlaySoundByID(35);
-			iFSMCounter = 0;			
+			iFSMCounter = 0;		
+			randomDir();
 		}
 		else if (checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) <= DetectionRadius)
 		{
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(CHASE);
 			CSoundController::GetInstance()->PlaySoundByID(33);
 			iFSMCounter = 0;
-
-			hasseenplayeronce = true;
-			OldPositu = dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index;
 		}
 		else if (Health < 100 && readyToHeal <= 0)
 		{
@@ -453,11 +451,17 @@ void CEnemy2D_Nurse::Update(const double dElapsedTime)
 			CSoundController::GetInstance()->PlaySoundByID(33);
 			iFSMCounter = 0;
 		}
+		else if (Health <= 30)
+		{
+			sCurrentFSM = static_cast<CEnemyBase::FSM>(RETREAT);
+			CSoundController::GetInstance()->PlaySoundByID(35);
+			iFSMCounter = 0;
+		}
 		else
 		{
 			// Patrol around
 			// Update the Enemy2D's position for patrol
-			UpdatePosition(speedMultiplier);
+			randomiseDirectionMove(speedMultiplier); (speedMultiplier);
 		}
 		iFSMCounter++;
 		//Animation

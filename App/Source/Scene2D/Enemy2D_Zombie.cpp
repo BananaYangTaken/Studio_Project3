@@ -421,21 +421,28 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		runtimeColour = glm::vec4(1, 1, 1, 1.0);
 		break;
 	case PATROL:
-		if (iFSMCounter > iMaxFSMCounter)
+		if (iFSMCounter / 10 > iMaxFSMCounter)
 		{
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(IDLE);
 			iFSMCounter = 0;
+			randomDir();
 		}
 		else if (checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) <= DetectionRadius)
 		{
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(CHASE);
 			iFSMCounter = 0;
 		}
+		else if (Health <= 30)
+		{
+			sCurrentFSM = static_cast<CEnemyBase::FSM>(RETREAT);
+			CSoundController::GetInstance()->PlaySoundByID(35);
+			iFSMCounter = 0;
+		}
 		else
 		{
 			// Patrol around
 			// Update the Enemy2D's position for patrol
-			UpdatePosition(speedMultiplier);
+			randomiseDirectionMove(speedMultiplier);
 		}
 		iFSMCounter++;
 		//Animation

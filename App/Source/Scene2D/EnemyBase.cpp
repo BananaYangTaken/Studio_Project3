@@ -671,6 +671,103 @@ void CEnemyBase::UpdatePositionSlowed(float speedofEnemy)
 	}
 }
 
+void CEnemyBase::randomDir()
+{
+	dir = Math::RandIntMinMax(1, 4);
+}
+
+void CEnemyBase::randomiseDirectionMove(float speedofEnemy)
+{
+	// Store the old position
+	vec2OldIndex = vec2Index;
+	// if the player is to the left or right of the enemy2D
+	if (dir == 1)
+	{
+		// Move left
+		vec2NumMicroSteps.x -= (1 * speedofEnemy);
+		if (vec2NumMicroSteps.x < 0)
+		{
+			vec2NumMicroSteps.x = ((int)cSettings->NUM_STEPS_PER_TILE_XAXIS) - 1;
+			vec2Index.x--;
+		}
+		Direction = LEFT;
+
+		// Constraint the enemy2D's position within the screen boundary
+		Constraint(LEFT);
+
+		// Find a feasible position for the enemy2D's current position
+		if (CheckPosition(LEFT) == false)
+		{
+			FlipHorizontalDirection();
+			vec2Index.x = vec2OldIndex.x;
+			vec2NumMicroSteps.x = 0;
+		}
+	}
+	else if (dir == 2)
+	{
+		// Move right
+		vec2NumMicroSteps.x += (1 * speedofEnemy);
+		if (vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
+		{
+			vec2NumMicroSteps.x = 0;
+			vec2Index.x++;
+		}
+		Direction = RIGHT;
+
+		// Constraint the enemy2D's position within the screen boundary
+		Constraint(RIGHT);
+
+		// Find a feasible position for the enemy2D's current position
+		if (CheckPosition(RIGHT) == false)
+		{
+			FlipHorizontalDirection();
+			//vec2Index = vec2OldIndex;
+			vec2NumMicroSteps.x = 0;
+		}
+	}
+	else if (dir == 3)
+	{
+		// Move Down
+		vec2NumMicroSteps.y -= (1 * speedofEnemy);
+		if (vec2NumMicroSteps.y < 0)
+		{
+			vec2NumMicroSteps.y = ((int)cSettings->NUM_STEPS_PER_TILE_YAXIS) - 1;
+			vec2Index.y--;
+		}
+		Direction = DOWN;
+
+		// Constraint the enemy2D's position within the screen boundary
+		Constraint(DOWN);
+
+		// Find a feasible position for the enemy2D's current position
+		if (CheckPosition(DOWN) == false)
+		{
+			vec2Index.y = vec2OldIndex.y;
+			vec2NumMicroSteps.y = 0;
+		}
+	}
+	else if (dir == 4)
+	{
+		// Move Up
+		vec2NumMicroSteps.y += (1 * speedofEnemy);
+		if (vec2NumMicroSteps.y >= cSettings->NUM_STEPS_PER_TILE_YAXIS)
+		{
+			vec2NumMicroSteps.y = 0;
+			vec2Index.y++;
+		}
+		Direction = UP;
+
+		// Constraint the enemy2D's position within the screen boundary
+		Constraint(UP);
+
+		// Find a feasible position for the enemy2D's current position
+		if (CheckPosition(UP) == false)
+		{
+			vec2NumMicroSteps.y = 0;
+		}
+	}
+}
+
 /**
  @brief Set up the OpenGL display environment before rendering
  */
