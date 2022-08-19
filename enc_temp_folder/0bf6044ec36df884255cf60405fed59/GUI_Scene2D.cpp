@@ -555,7 +555,7 @@ void CGUI_Scene2D::SwapItems(int itemindex, int swapindex)
 
 std::string CGUI_Scene2D::GetCurrentHotbarItem(void)
 {
-	return inventory_item_name_list[hotbarselection - 1];
+	return inventory_item_name_list[hotbarselection];
 }
 
 void CGUI_Scene2D::SpawnRandomPoliceStation()

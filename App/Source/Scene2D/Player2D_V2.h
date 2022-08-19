@@ -84,7 +84,7 @@ public:
 	unsigned int GetHealth(void);
 	unsigned int GetMaxHealth(void);
 	float GetInvulnerabilityFrame(void);
-
+	bool unlockedYellow = false;
 	unsigned int GetDirection(void);
 
 	void SetMotionFlag(const bool bMotion);

@@ -64,7 +64,6 @@ CIntroState::CIntroState(void)
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SwordSwing.ogg"), 15, true, false, CSoundInfo::SOUNDGROUP::Player);
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\Explosion.ogg"), 16, true, false, CSoundInfo::SOUNDGROUP::Creatures);
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\Hiss.ogg"), 17, true, false, CSoundInfo::SOUNDGROUP::Creatures);	
-		
 		//search
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Search.ogg"), 18, true, false, CSoundInfo::SOUNDGROUP::Player);
 		//Rifle Fire
@@ -101,7 +100,10 @@ CIntroState::CIntroState(void)
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Zombie_Idle.ogg"), 35, true, false, CSoundInfo::SOUNDGROUP::Player);
 		//Footsteps
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\FootSteps.ogg"), 36, true, false, CSoundInfo::SOUNDGROUP::Player);
-
+		//Keycard Accept
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\KeycardActivate.ogg"), 37, true, false, CSoundInfo::SOUNDGROUP::Player);
+		//Keycard Reject
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\KeycardReject.ogg"), 38, true, false, CSoundInfo::SOUNDGROUP::Player);
 
 		cSoundController->LoadSoundSystem();
 		

@@ -540,7 +540,19 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,const unsigned int uiNumRows,c
 			MapOfTextureIDs.insert(pair<int, int>(113, iTextureID));
 		}
 	}
-
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Yellow_Wall.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Envi/Yellow_Wall.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(115, iTextureID));
+		}
+	}
 
 
 
@@ -700,7 +712,20 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,const unsigned int uiNumRows,c
 			MapOfTextureIDs.insert(pair<int, int>(41, iTextureID));
 		}
 	}
-
+	//Yellow Keycard
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Yellow Keycard.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Iteme/Yellow Keycard.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(42, iTextureID));
+		}
+	}
 
 	
 
@@ -786,8 +811,8 @@ void CMap2D::Render(void)
 		for (unsigned int uiCol = Displacement.x; uiCol < Displacement.x + cSettings->VIEW_TILES_XAXIS; uiCol++)
 		{
 			transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-			transform = glm::translate(transform, glm::vec3(cSettings->ConvertIndexToUVSpace(cSettings->x, uiCol - Displacement.x, false, 0),
-															cSettings->ConvertIndexToUVSpace(cSettings->y, uiRow - Displacement.y, true, 0),
+			transform = glm::translate(transform, glm::vec3(cSettings->ConvertIndexToUVSpace(cSettings->x, uiCol - Displacement.x, false, cSettings->MICRO_STEP_XAXIS * vec2NumMicroSteps.x * -1),
+															cSettings->ConvertIndexToUVSpace(cSettings->y, uiRow - Displacement.y, true, cSettings->MICRO_STEP_YAXIS * vec2NumMicroSteps.y * -1),
 															0.0f));
 
 			//transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));

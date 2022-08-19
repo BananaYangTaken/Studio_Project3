@@ -53,13 +53,14 @@ public:
 	bool selectinventory = true;
 	void spawnloot(float vecX, float vecY);
 	const int inventory_size = 9;
-	std::string inventory_item_name_list[9] = {"Scrap Metal", "Hard wood", "Stone Ore", "Pistol Bullets", "Rifle Bullets", "Rifle", "Pistol", "Medkit", "Blueprint"};
-	int inventory_item_quantity[9] = {999,999,999,999,999,1,1,90,200};
+	std::string inventory_item_name_list[9] = {"Yellow Keycard", "Hard wood", "Stone Ore", "Pistol Bullets", "Rifle Bullets", "Rifle", "Pistol", "Medkit", "Blueprint"};
+	int inventory_item_quantity[9] = {1,999,999,999,999,1,1,90,200};
 	int inventory_item_max_quantity[9] = {999,999,999,999,999,999,999,999,999};
 	std::string searchtxt;
 	bool issearched = false;
 	float searchtimer = 0;
 	int chestactive = false;
+	std::string actiontext;
 	int Crafting_list_size = 5;
 	std::string Crafting_item_name_list[5] = { "Rifle Bullets", "Pistol Bullets", "Scrap Metal","Bandage","Medkit" };
 	int Crafting_item_Quantity[5] = {25,50,30,5,1};
