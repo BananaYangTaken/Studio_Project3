@@ -26,5 +26,7 @@ protected:
 	float deathTimer;
 	float speedMultiplier;
 	float motionResetter;
+	int prevHP;
+	float redTimer;
 };
 

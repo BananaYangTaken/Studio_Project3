@@ -40,6 +40,7 @@ CEnemy2D_Nurse::CEnemy2D_Nurse(void)
 	healTimer = 0;
 	readyToHeal = 0;
 	Attack = false;
+	redTimer = 0;
 
 	transform = glm::mat4(1.0f);	// make sure to initialize matrix to identity matrix first
 
@@ -457,10 +458,11 @@ void CEnemy2D_Nurse::Update(const double dElapsedTime)
 		iFSMCounter++;
 		//Animation
 		animatedSprites->PlayAnimation("move", -1, 1.0f);
+		runtimeColour = glm::vec4(1, 1, 1, 1.0);
 		break;
 	case CHASE:
 		//FSM Transition
-		if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 1.f)
+		if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 1.5f)
 		{
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(ATTACK);
 			iFSMCounter = 0;
@@ -501,10 +503,11 @@ void CEnemy2D_Nurse::Update(const double dElapsedTime)
 		iFSMCounter++;
 		//Animation
 		animatedSprites->PlayAnimation("move", -1, 1.0f);
+		runtimeColour = glm::vec4(1, 1, 1, 1.0);
 		break;
 	case ATTACK:
 		//FSM Transition
-		if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 1.f)
+		if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 1.5f)
 		{
 			if (Attack == false)
 			{
@@ -515,14 +518,12 @@ void CEnemy2D_Nurse::Update(const double dElapsedTime)
 				CSoundController::GetInstance()->PlaySoundByID(15);
 				sCurrentFSM = static_cast<CEnemyBase::FSM>(RELOAD);
 				ReloadDuration = 1;
-				if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index, 'x') < 1.5f)
+
+				if (dynamic_cast<CPlayer2D_V2*>(Player)->GetInvulnerabilityFrame() <= 0)
 				{
-					if (dynamic_cast<CPlayer2D_V2*>(Player)->GetInvulnerabilityFrame() <= 0)
-					{
-						dynamic_cast<CPlayer2D_V2*>(Player)->SetHealth(dynamic_cast<CPlayer2D_V2*>(Player)->GetHealth() - 10);
-						dynamic_cast<CPlayer2D_V2*>(Player)->SetInvulnerabilityFrame(0.5);
-						CSoundController::GetInstance()->PlaySoundByID(5);
-					}
+					dynamic_cast<CPlayer2D_V2*>(Player)->SetHealth(dynamic_cast<CPlayer2D_V2*>(Player)->GetHealth() - 10);
+					dynamic_cast<CPlayer2D_V2*>(Player)->SetInvulnerabilityFrame(0.5);
+					CSoundController::GetInstance()->PlaySoundByID(5);
 				}
 			}
 		}
@@ -540,6 +541,7 @@ void CEnemy2D_Nurse::Update(const double dElapsedTime)
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(RETREAT);
 			iFSMCounter = 0;
 		}
+		runtimeColour = glm::vec4(1, 1, 1, 1.0);
 		break;
 	case RELOAD:
 		//FSM Transition
@@ -553,10 +555,11 @@ void CEnemy2D_Nurse::Update(const double dElapsedTime)
 		{
 			ReloadDuration -= dElapsedTime;
 		}
+		runtimeColour = glm::vec4(1, 1, 1, 1.0);
 		break;
 	case SLOWED:
 		//FSM Transition
-		if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 1.f)
+		if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 1.5f)
 		{
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(ATTACK);
 			iFSMCounter = 0;
@@ -587,6 +590,7 @@ void CEnemy2D_Nurse::Update(const double dElapsedTime)
 		iFSMCounter++;
 		//Animation
 		animatedSprites->PlayAnimation("move", -1, 1.0f);
+		runtimeColour = glm::vec4(1, 1, 1, 1.0);
 		break;
 	case DEATH:
 		animatedSprites->PlayAnimation("death", 1, 1.0f);
@@ -625,9 +629,19 @@ void CEnemy2D_Nurse::Update(const double dElapsedTime)
 			iFSMCounter = 0;
 		}
 		iFSMCounter++;
+		runtimeColour = glm::vec4(1, 1, 1, 1.0);
 		break;
 	default:
 		break;
+	}
+	if (prevHP > Health)
+	{
+		redTimer = 0.3;
+	}
+	if (redTimer > 0)
+	{
+		runtimeColour = glm::vec4(1, 0, 0, 1.0);
+		redTimer -= dElapsedTime;
 	}
 	prevHP = Health;
 

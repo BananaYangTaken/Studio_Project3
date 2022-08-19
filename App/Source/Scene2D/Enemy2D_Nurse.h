@@ -29,5 +29,6 @@ protected:
 	float healTimer;
 	int prevHP;
 	float readyToHeal;
+	float redTimer;
 };
 
