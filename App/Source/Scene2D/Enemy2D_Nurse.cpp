@@ -438,11 +438,13 @@ void CEnemy2D_Nurse::Update(const double dElapsedTime)
 		}
 		else if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 20.0f)
 		{
+			CSoundController::GetInstance()->PlaySoundByID(33);
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(CHASE);
 			iFSMCounter = 0;
 		}
 		else if (Health < 100 && readyToHeal <= 0)
 		{
+			CSoundController::GetInstance()->PlaySoundByID(33);
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(HEAL);
 			iFSMCounter = 0;
 		}

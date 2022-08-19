@@ -241,7 +241,6 @@ bool CEnemy2D_Zombie::Init(int x, int y)
 	// Get the handler to the CMap2D instance
 	cMap2D = CMap2D::GetInstance();
 
-
 	unsigned int uiRow = -1;
 	unsigned int uiCol = -1;
 	if (cMap2D->FindValue(302, uiRow, uiCol) == false)
@@ -422,11 +421,13 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 	case PATROL:
 		if (iFSMCounter > iMaxFSMCounter)
 		{
+			CSoundController::GetInstance()->PlaySoundByID(33);
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(CHASE);
 			iFSMCounter = 0;
 		}
 		else if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 5.0f)
 		{
+			CSoundController::GetInstance()->PlaySoundByID(33);
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(CHASE);
 			iFSMCounter = 0;
 		}
@@ -454,7 +455,7 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 			idlecount++;
 			hasseenplayeronce = true;
 			if (idlecount >= 15)
-			{
+			{				
 				OldPositu = dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index;
 				idlecount = 0;
 			}
@@ -469,6 +470,7 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		}
 		else if (hasseenplayeronce == false)
 		{
+			CSoundController::GetInstance()->PlaySoundByID(35);
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(IDLE);
 		}
 		if (vec2Index == OldPositu)
@@ -481,14 +483,19 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		break;
 	case ATTACK:
 		//FSM Transition
-		if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 1.f)
+		
+		if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 1.5f)
 		{
 			if (Attack == false)
 			{
 				// Attack
 				Attack = true;
 				animatedSprites->PlayAnimation("attack", 1, 1.0f);
-				CSoundController::GetInstance()->PlaySoundByID(15);
+				CSoundController::GetInstance()->PlaySoundByID(32);
+			}
+			else if (Attack && AttackAnim <= 0)
+			{
+				Attack = false;
 				sCurrentFSM = static_cast<CEnemyBase::FSM>(RELOAD);
 				ReloadDuration = 1;
 				if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index, 'x') < 1.5f)
@@ -497,7 +504,6 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 					{
 						dynamic_cast<CPlayer2D_V2*>(Player)->SetHealth(dynamic_cast<CPlayer2D_V2*>(Player)->GetHealth() - 10);
 						dynamic_cast<CPlayer2D_V2*>(Player)->SetInvulnerabilityFrame(0.5);
-						CSoundController::GetInstance()->PlaySoundByID(5);
 					}
 				}
 			}
@@ -512,6 +518,7 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 			}
 			iFSMCounter++;
 		}
+
 		break;
 	case RELOAD:
 		//FSM Transition

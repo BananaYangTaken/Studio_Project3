@@ -97,8 +97,6 @@ CIntroState::CIntroState(void)
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Zombie_Attack.ogg"), 32, true, false, CSoundInfo::SOUNDGROUP::Player);
 		//Zombie Chase
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Zombie_Chase.ogg"), 33, true, false, CSoundInfo::SOUNDGROUP::Player);
-		//Zombie Death
-		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Zombie_Death.ogg"), 34, true, false, CSoundInfo::SOUNDGROUP::Player);
 		//Zombie_Idle
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Zombie_Idle.ogg"), 35, true, false, CSoundInfo::SOUNDGROUP::Player);
 		//Footsteps

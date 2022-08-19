@@ -746,6 +746,8 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 			cMap2D->FindValue(30, IRow, ICol);
 			cMap2D->SetMapInfo(IRow, ICol, 0);
 			cGUI_Scene2D->IncreaseInventoryItemCount("Bandage", 1);
+			cSoundController->PlaySoundByID(22);
+
 		}
 		break;
 	case 32:
@@ -754,6 +756,8 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 			cMap2D->FindValue(32, IRow, ICol);
 			cMap2D->SetMapInfo(IRow, ICol, 0);
 			cGUI_Scene2D->IncreaseInventoryItemCount("Blueprint", 1);
+			cSoundController->PlaySoundByID(22);
+
 			break;
 		}
 	case 33:
@@ -761,6 +765,8 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 		{
 			cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
 			cGUI_Scene2D->IncreaseInventoryItemCount("Fabric", 1);
+			cSoundController->PlaySoundByID(22);
+
 		}
 		break;
 	case 34:
@@ -769,6 +775,8 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 
 			cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
 			cGUI_Scene2D->IncreaseInventoryItemCount("Hard wood", 1);
+			cSoundController->PlaySoundByID(22);
+
 		}
 		break;
 	case 35:
@@ -776,6 +784,8 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 		{
 			cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
 			cGUI_Scene2D->IncreaseInventoryItemCount("Medkit", 1);
+			cSoundController->PlaySoundByID(22);
+
 		}
 		break;
 	case 36:
@@ -783,6 +793,8 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 		{
 			cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
 			cGUI_Scene2D->IncreaseInventoryItemCount("Pistol Bullet", 10);
+			cSoundController->PlaySoundByID(22);
+
 		}
 		break;
 	case 37:
@@ -791,6 +803,8 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 			cMap2D->FindValue(37, IRow, ICol);
 			cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
 			cGUI_Scene2D->IncreaseInventoryItemCount("Pistol", 1);
+			cSoundController->PlaySoundByID(22);
+
 		}
 		break;
 	case 38:
@@ -799,6 +813,8 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 			cMap2D->FindValue(38, IRow, ICol);
 			cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
 			cGUI_Scene2D->IncreaseInventoryItemCount("Rifle Bullet", 10);
+			cSoundController->PlaySoundByID(22);
+
 		}
 		break;
 	case 39:
@@ -807,6 +823,8 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 			cMap2D->FindValue(39, IRow, ICol);
 			cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
 			cGUI_Scene2D->IncreaseInventoryItemCount("Rifle", 1);
+			cSoundController->PlaySoundByID(22);
+
 		}
 	case 40:
 		if (cKeyboardController->IsKeyPressed('F'))
@@ -814,6 +832,8 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 			cMap2D->FindValue(40, IRow, ICol);
 			cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
 			cGUI_Scene2D->IncreaseInventoryItemCount("Scrap Metal", 1);
+			cSoundController->PlaySoundByID(22);
+
 		}
 	case 41:
 		if (cKeyboardController->IsKeyPressed('F'))
@@ -821,6 +841,8 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 			cMap2D->FindValue(41, IRow, ICol);
 			cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
 			cGUI_Scene2D->IncreaseInventoryItemCount("Stone Ore", 1);
+			cSoundController->PlaySoundByID(22);
+
 		}
 		break;
 	default:
