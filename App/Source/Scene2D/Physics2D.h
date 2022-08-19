@@ -54,8 +54,9 @@ public:
 	void AddElapsedTime(const float fElapseTime);
 
 	// Calculate the distance between two vec2 varables
-	float CalculateDistance(glm::vec2 source, glm::vec2 destination, char axis = 'n');
+	float CalculateDistance(glm::vec2 source, glm::vec2 destination, char axis = 'n', bool micro = false, glm::vec2 sourcemicro = glm::vec2(0,0), glm::vec2 destinationmicro = glm::vec2(0, 0));
 	float CalculateRotation(glm::vec2 Origin, glm::vec2 DefaultPos, glm::vec2 NewPos);
+	glm::vec2 RotateVec2(glm::vec2 vec2, float Radian);
 	void Normalize(glm::vec2 vec2);
 
 	// PrintSelf

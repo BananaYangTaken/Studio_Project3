@@ -25,6 +25,7 @@
 #include "GUI_Scene2D.h"
 #include "GameManager.h"
 #include "Object2D.h"
+#include "Projectile2DManager.h"
 // Include SoundController
 #include "..\SoundController\SoundController.h"
 //Include Physics2D
@@ -124,7 +125,8 @@ protected:
 	CKeyboardController* cKeyboardController;
 	// Mouse Controller singleton instance
 	CMouseController* cMouseController;
-
+	// Projectile Handler
+	CProjectileManager* cProjectileManager;
 	//Item pointer
 	CInventoryItem* cInventoryItem;
 

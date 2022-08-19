@@ -116,6 +116,8 @@ bool CPlayer2D_V2::Init(void)
 
 	//Get the handler to the Game Manager Instance
 	cGameManager = CGameManager::GetInstance();
+	//Get the handler to the Game Manager Instance
+	cProjectileManager = CProjectileManager::GetInstance();
 
 	LoadObject = false;
 
@@ -420,6 +422,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 				AnimationTimer = 0.3f;
 				animatedSprites->PlayAnimation("meleeAttack", -1, AnimationTimer);
 				cSoundController->PlaySoundByID(15);
+				cProjectileManager->SpawnProjectile(vec2Index, vec2NumMicroSteps, glm::vec2(1,0), 0, CProjectile2D::FRIENDLY, CProjectile2D::KNIFE, 30);
 			}
 		}
 		else if (cMouseController->IsButtonUp(0) && LButtonState)

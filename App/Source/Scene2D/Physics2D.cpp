@@ -169,19 +169,43 @@ void CPhysics2D::AddElapsedTime(const float fElapseTime)
 }
 
 // Calculate the distance between two vec2 varables
-float CPhysics2D::CalculateDistance(glm::vec2 source, glm::vec2 destination, char axis)
+float CPhysics2D::CalculateDistance(glm::vec2 source, glm::vec2 destination, char axis, bool micro, glm::vec2 sourcemicro, glm::vec2 destinationmicro)
 {
-	if (axis == 'n')
+	if (!micro)
 	{
-		return glm::length(destination - source);
+		if (axis == 'n')
+		{
+			return glm::length(destination - source);
+		}
+		else if (axis == 'x')
+		{
+			return abs(destination.x - source.x);
+		}
+		else if (axis == 'y')
+		{
+			return abs(destination.y - source.y);
+		}
 	}
-	else if (axis == 'x')
+	else
 	{
-		return abs(destination.x - source.x);
-	}
-	else if (axis == 'y')
-	{
-		return abs(destination.y - source.y);
+		if (axis == 'n')
+		{
+			glm::vec2 destinationMicro;
+			destinationMicro.x = destination.x * CSettings::GetInstance()->NUM_TILES_XAXIS + destinationmicro.x;
+			destinationMicro.y = destination.y * CSettings::GetInstance()->NUM_TILES_YAXIS + destinationmicro.y;
+			glm::vec2 sourceMicro;
+			sourceMicro.x = source.x * CSettings::GetInstance()->NUM_TILES_XAXIS + sourcemicro.x;
+			sourceMicro.y = source.y * CSettings::GetInstance()->NUM_TILES_YAXIS + sourcemicro.y;
+			return glm::length(destinationMicro - sourceMicro);
+		}
+		else if (axis == 'x')
+		{
+			return abs(destination.x * CSettings::GetInstance()->NUM_TILES_XAXIS + destinationmicro.x - source.x * CSettings::GetInstance()->NUM_TILES_XAXIS + sourcemicro.x);
+		}
+		else if (axis == 'y')
+		{
+			return abs(destination.y * CSettings::GetInstance()->NUM_TILES_YAXIS + destinationmicro.y - source.y * CSettings::GetInstance()->NUM_TILES_YAXIS + sourcemicro.y);
+		}
 	}
 }
 
@@ -204,21 +228,31 @@ float CPhysics2D::CalculateRotation(glm::vec2 Origin, glm::vec2 DefaultPos, glm:
 	Normalize(OriginalPoint);
 	Normalize(TransformedPoint);
 	float Result = atan2(TransformedPoint.y * OriginalPoint.x - TransformedPoint.x * OriginalPoint.y,TransformedPoint.x*OriginalPoint.x + TransformedPoint.y + OriginalPoint.y );
-	float angle;
+	float Radian;
 	if (Result < 0)
 	{
-		angle = -Result;
+		Radian = -Result;
 	}
 	else if (Result > 0)
 	{
-		angle = Math::TWO_PI - Result;
+		Radian = Math::TWO_PI - Result;
 	}
 	else
 	{
-		angle = 0;
+		Radian = 0;
 	}
-	angle = Math::TWO_PI - angle;
-	return angle;
+	Radian = Math::TWO_PI - Radian;
+	return Radian;
+}
+
+glm::vec2 CPhysics2D::RotateVec2(glm::vec2 vec2, float Radian)
+{
+	glm::vec2 Temp;
+	Temp = glm::vec2((vec2.x * cos(Radian)) - (vec2.y * sin(Radian))
+		, (vec2.y * cos(Radian)) + (vec2.x * sin(Radian)));
+	Temp.x = ceil(Temp.x * float(10 ^ 7)) * float(10 ^ -7);
+	Temp.y = ceil(Temp.y * float(10 ^ 7)) * float(10 ^ -7);
+	return Temp;
 }
 
 

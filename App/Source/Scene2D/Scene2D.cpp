@@ -92,7 +92,7 @@ bool CScene2D::Init(void)
 	cSettings = CSettings::GetInstance();
 	cPhysics2D.Init();
 	cKeyboardController = CKeyboardController::GetInstance();
-
+	cSoundController = CSoundController::GetInstance();
 	//Create and initialise the Map2D
 	cMap2D = CMap2D::GetInstance();
 
@@ -150,8 +150,10 @@ bool CScene2D::Init(void)
 	cGameManager = CGameManager::GetInstance();
 	//Initialise the instance
 	cGameManager->Init(); 
-	cSoundController = CSoundController::GetInstance();
 
+	cProjectileManager = cProjectileManager->GetInstance();
+	cProjectileManager->Init();
+	cProjectileManager->SetEnemyVector(&cEnemyList);
 	return true;
 }
 
@@ -198,12 +200,12 @@ bool CScene2D::Update(const double dElapsedTime)
 		cTurretList[i]->SetTurretLevel(TurretUpgradeLvl);
 	}
 	LoadTurret();
-
+	cProjectileManager->Update(dElapsedTime);
 
 	//Call cGUI's update method
 	cGUI_Scene2D->Update(dElapsedTime);
 	//Call Sound Controller's update method
-	cSoundController->Update(dElapsedTime);
+ 	cSoundController->Update(dElapsedTime);
 
 	cMap2D->vec2Index = Player->vec2Index;
 
@@ -373,6 +375,13 @@ void CScene2D::Render(void)
 	cGUI_Scene2D->Render();
 	//Call Player2D's Post Render()
 	cGUI_Scene2D->PostRender();
+
+	//Call cProjectileManager's Pre Render()
+	cProjectileManager->PreRender();
+	//Call cProjectileManager's Render()
+	cProjectileManager->Render();
+	//Call cProjectileManager's Post Render()
+	cProjectileManager->PostRender();
 }
 
 /**
@@ -541,6 +550,11 @@ void CScene2D::Destroy(void)
 	cObjectList.clear();
 	cEnemyList.clear();
 	cTurretList.clear();
+	if (cProjectileManager)
+	{
+		cProjectileManager->Destroy();
+		cProjectileManager = NULL;
+	}
 }
 
 int CScene2D::GetWindowUpgradeLvl()

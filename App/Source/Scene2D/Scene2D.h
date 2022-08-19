@@ -41,6 +41,7 @@
 #include "EnemyBase.h"
 #include "TurretBase.h"
 
+#include "Projectile2DManager.h"
 // Include GUI
 #include "GUI_Scene2D.h"
 
@@ -110,6 +111,9 @@ protected:
 	CSoundController* cSoundController;
 	//Handler to Physics
 	CPhysics2D cPhysics2D;
+	//Handler to ProjectileManager
+	CProjectileManager* cProjectileManager;
+
 
 	//A vector containing instances of CEnemyBase Derived Class
 	std::vector<CEntity2D*> cEnemyList;
