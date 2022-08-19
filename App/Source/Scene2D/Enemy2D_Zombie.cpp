@@ -83,9 +83,11 @@ CEnemy2D_Zombie::~CEnemy2D_Zombie(void)
 bool  CEnemy2D_Zombie::checkforLOS()
 {
 	// Store the old player position
-	cout << "DIRECTION X Y: " << vec2Direction.x << vec2Direction.y << endl;
 	Playervec2OldIndex = cPlayer->vec2Index;
-	int distfromplayer = cPhysics2D.CalculateDistance(Playervec2OldIndex, vec2Index) - 2;
+	int distfromplayer = cPhysics2D.CalculateDistance(cPlayer->vec2Index, vec2Index) + 1;
+	int distcorrection = distfromplayer / 7;
+	distfromplayer = distfromplayer - distcorrection;
+	cout << "DISTANCE: " << distfromplayer << endl;
 	float Xdiff = Playervec2OldIndex.x - vec2Index.x;
 	float Ydiff = Playervec2OldIndex.y - vec2Index.y;
 	float diffratio = Xdiff / Ydiff;
@@ -97,9 +99,10 @@ bool  CEnemy2D_Zombie::checkforLOS()
 	//TOP RIGHT VIEW
 	if (vec2Direction.x < 0 && vec2Direction.y < 0)
 	{
-		cout << "enemy is TOP RIGHT OF PLAYER!" << endl;
+		//cout << "enemy is TOP RIGHT OF PLAYER!" << endl;
 		for (int i = 0; i < distfromplayer; i++)
 		{
+			//cMap2D->SetMapInfo(Playervec2OldIndex.y + Ycount, Playervec2OldIndex.x + Xcount, 100);
 			blockscounted++;
 			Xcount++;
 			if (blockscounted >= diffratio)
@@ -108,11 +111,11 @@ bool  CEnemy2D_Zombie::checkforLOS()
 			}
 			if (cMap2D->GetMapInfo(Playervec2OldIndex.y + Ycount, Playervec2OldIndex.x + Xcount) >= 100)
 			{
-				cout << "LOS LOST, VIEW BLOCKED!" << endl;
+				//cout << "LOS LOST, VIEW BLOCKED!" << endl;
 				return false;
 			}
 		}
-		cout << "CAN SEE PLAYER!";
+		//cout << "CAN SEE PLAYER!";
 		return true;
 	}
 
@@ -125,7 +128,7 @@ bool  CEnemy2D_Zombie::checkforLOS()
 		{
 			blockscounted++;
 			Xcount--;
-			//cMap2D->SetMapInfo(Playervec2OldIndex.y + Ycount, Playervec2OldIndex.x + Xcount, 100);
+			
 			if (blockscounted >= diffratio)
 			{
 				Ycount++;
@@ -185,13 +188,13 @@ bool  CEnemy2D_Zombie::checkforLOS()
 		return true;
 	}
 
-	else if (vec2Direction.x == 0 && vec2Direction.y >= 0 || vec2Direction.x == 0 && vec2Direction.y <= 0)
+	else if (vec2Direction.x == 0 && vec2Direction.y >= 0)
 	{
-		cout << "enemy is BOTTOM OR ONTOP OF PLAYER!" << endl;
+		cout << "enemy is BOTTTOM OF PLAYER!" << endl;
 		for (int i = 0; i < distfromplayer; i++)
 		{
 			blockscounted++;
-			Ycount++;
+			Ycount--;
 			if (cMap2D->GetMapInfo(Playervec2OldIndex.y + Ycount, Playervec2OldIndex.x) >= 100)
 			{
 				cout << "LOS LOST, VIEW BLOCKED!" << endl;
@@ -202,13 +205,46 @@ bool  CEnemy2D_Zombie::checkforLOS()
 		return true;
 	}
 
-	else if (vec2Direction.x <= 0 && vec2Direction.y == 0 || vec2Direction.x >= 0 && vec2Direction.y == 0)
+	else if ( vec2Direction.x == 0 && vec2Direction.y <= 0)
 	{
-	cout << "enemy is LEFT OR RIGHT OF PLAYER!" << endl;
+	cout << "enemy is TOP OF PLAYER!" << endl;
 	for (int i = 0; i < distfromplayer; i++)
 	{
 		blockscounted++;
-		Xcount++;
+		Ycount++;
+		if (cMap2D->GetMapInfo(Playervec2OldIndex.y + Ycount, Playervec2OldIndex.x) >= 100)
+		{
+			cout << "LOS LOST, VIEW BLOCKED!" << endl;
+			return false;
+		}
+	}
+	cout << "CAN SEE PLAYER!";
+	return true;
+	}
+
+	else if (vec2Direction.x <= 0 && vec2Direction.y == 0)
+	{
+		cout << "enemy is RIGHT OF PLAYER!" << endl;
+		for (int i = 0; i < distfromplayer; i++)
+		{
+			blockscounted++;
+			Xcount++;
+			if (cMap2D->GetMapInfo(Playervec2OldIndex.y, Playervec2OldIndex.x + Xcount) >= 100)
+			{
+				cout << "LOS LOST, VIEW BLOCKED!" << endl;
+				return false;
+			}
+		}
+		cout << "CAN SEE PLAYER!";
+		return true;
+	}
+	else if (vec2Direction.x >= 0 && vec2Direction.y == 0)
+	{
+	cout << "enemy is LEFT OF PLAYER!" << endl;
+	for (int i = 0; i < distfromplayer; i++)
+	{
+		blockscounted++;
+		Xcount--;
 		if (cMap2D->GetMapInfo(Playervec2OldIndex.y, Playervec2OldIndex.x + Xcount) >= 100)
 		{
 			cout << "LOS LOST, VIEW BLOCKED!" << endl;
@@ -305,7 +341,7 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 {
 	UpdateDirection();
 	checkforLOS();
-	cout << "DISTANCE: " << cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) << endl;
+	//cout << "DISTANCE: " << cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) << endl;
 	if (!bIsActive)
 		return;
 	if (Health <= 0)
