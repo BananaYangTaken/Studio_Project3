@@ -336,8 +336,29 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		animatedSprites->PlayAnimation("idle", -1, 1.0f);
 		break;
 	case PATROL:
+		if (iFSMCounter > iMaxFSMCounter)
+		{
+			sCurrentFSM = IDLE;
+			iFSMCounter = 0;
+		}
+		else if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < DetectionRadius)
+		{
+			sCurrentFSM = CHASE;
+			iFSMCounter = 0;
+		}
+		else
+		{
+			// Patrol around
+			// Update the Enemy2D's position for patrol
+			UpdatePosition();
+		}
+		iFSMCounter++;
+		//Animation
+		animatedSprites->PlayAnimation("move", -1, 1.0f);
+		break;
+	case CHASE:
 		//FSM Transition
-		if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 1.0f)
+		if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 0.5f)
 		{
 			cout << "attac" << endl;
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(ATTACK);
@@ -359,7 +380,8 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 			UpdateDirection();
 			UpdatePosition();
 		}
-		else if(checkforLOS() == false && hasseenplayeronce == true || checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) > DetectionRadius)
+		else if(checkforLOS() == false && hasseenplayeronce == true 
+			|| checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) > DetectionRadius)
 		{
 			cout << "cant find player, moving to last known location";
 			UpdateToLastLOS();
@@ -379,19 +401,15 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		break;
 	case ATTACK:
 		//FSM Transition
-		if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 3.0f)
+		if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 0.5f)
 		{
 			if (Attack == false)
 			{
 				// Attack
-				if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 0.5f && Attack == false)
-				{
-					Attack = true;
-					AttackAnim = 1;
-
-					animatedSprites->PlayAnimation("attack", 1, 1.0f);
-					CSoundController::GetInstance()->PlaySoundByID(15);
-				}
+				Attack = true;
+				AttackAnim = 1;
+				animatedSprites->PlayAnimation("attack", 1, 1.0f);
+				CSoundController::GetInstance()->PlaySoundByID(15);
 			}
 			else if (Attack && AttackAnim <= 0)
 			{

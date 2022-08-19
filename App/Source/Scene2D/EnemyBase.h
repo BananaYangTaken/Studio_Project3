@@ -84,6 +84,7 @@ protected:
 		HEAL = 6,
 		EXPLOSION = 7,
 		DEATH = 8,
+		CHASE = 9,
 		NUM_FSM
 	};
 
