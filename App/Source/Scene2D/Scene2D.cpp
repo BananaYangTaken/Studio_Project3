@@ -130,6 +130,7 @@ bool CScene2D::Init(void)
 		return false;
 	}
 	Player->SetObjectList(&cObjectList);
+	Player->SetEnemyList(&cEnemyList);
 
 	LoadObjects();
 	LoadEnemies();
@@ -173,21 +174,19 @@ bool CScene2D::Update(const double dElapsedTime)
 		cObjectList[i]->SetruntimeColour(glm::vec4(1, 1, 1, 1));
 	}
 	LoadObjects();
-	vector<CEnemyBase*>::iterator it = cEnemyList.begin();
+	vector<CEntity2D*>::iterator it = cEnemyList.begin();
 	while (it != cEnemyList.end())
 	{
+		CEnemyBase* Temp = static_cast<CEnemyBase*>(*it);
 		// remove odd numbers
-		if ((*it) && (*it)->GetHealth() <= 0 && (*it)->GetDeathState() == 1)
+		if ((*it) && Temp->GetHealth() <= 0 && Temp->GetDeathState() == 1)
 		{
 			it = cEnemyList.erase(it);
 		}
 		else {
-			++it;
+			++it; 
+			(*it)->Update(dElapsedTime);
 		}
-	}
-	for (int i = 0; i < cEnemyList.size(); i++)
-	{
-		cEnemyList[i]->Update(dElapsedTime);
 	}
 	LoadEnemies();
 	
@@ -450,6 +449,7 @@ void CScene2D::LoadEnemies(void)
 						cEnemy2D = new CEnemy2D_Zombie();
 					// Pass the shader to instance
 					cEnemy2D->SetShader("Shader2D_Colour");
+					cEnemy2D->SetPlayer(dynamic_cast<CEntity2D*>(Player));
 					if (cEnemy2D->Init(uiCol, cSettings->NUM_TILES_YAXIS - uiRow - 1))
 					{
 						cEnemyList.push_back(cEnemy2D);

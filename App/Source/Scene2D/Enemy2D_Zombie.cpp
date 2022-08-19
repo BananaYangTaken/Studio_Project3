@@ -17,6 +17,7 @@
 #include "Map2D.h"
 // Include math.h
 #include <math.h>
+#include "Player2D_V2.h"
 
 /**
  @brief Constructor This constructor has protected access modifier as this class will be a Singleton
@@ -51,7 +52,6 @@ CEnemy2D_Zombie::CEnemy2D_Zombie(void)
 	vec2Destination = glm::vec2(0, 0);	// Initialise the iDestination
 	vec2Direction = glm::vec2(0, 0);		// Initialise the iDirection
 
-	Player = CPlayer2D_V2::GetInstance();
 }
 
 /**
@@ -226,7 +226,7 @@ bool CEnemy2D_Zombie::Init(int x, int y)
 	cSettings = CSettings::GetInstance();
 	// Get the handler to the CMap2D instance
 	cMap2D = CMap2D::GetInstance();
-	cPlayer = CPlayer2D_V2::GetInstance();
+
 
 	unsigned int uiRow = -1;
 	unsigned int uiCol = -1;
@@ -341,7 +341,7 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 			sCurrentFSM = IDLE;
 			iFSMCounter = 0;
 		}
-		else if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < DetectionRadius)
+		else if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 5.0f)
 		{
 			sCurrentFSM = CHASE;
 			iFSMCounter = 0;
@@ -358,14 +358,14 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		break;
 	case CHASE:
 		//FSM Transition
-		if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 0.5f)
+		if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 0.5f)
 		{
 			cout << "attac" << endl;
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(ATTACK);
 			iFSMCounter = 0;
 			bool bFirstPosition = true;
 		}
-		else if(checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) <= DetectionRadius)
+		else if(checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) <= DetectionRadius)
 		{
 			std::cout << (idlecount);
 			idlecount++;
@@ -381,7 +381,7 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 			UpdatePosition();
 		}
 		else if(checkforLOS() == false && hasseenplayeronce == true 
-			|| checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) > DetectionRadius)
+			|| checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) > DetectionRadius)
 		{
 			cout << "cant find player, moving to last known location";
 			UpdateToLastLOS();
@@ -401,7 +401,7 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		break;
 	case ATTACK:
 		//FSM Transition
-		if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 0.5f)
+		if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 0.5f)
 		{
 			if (Attack == false)
 			{
@@ -416,12 +416,12 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 				Attack = false;
 				sCurrentFSM = static_cast<CEnemyBase::FSM>(RELOAD);
 				ReloadDuration = 0.3;
-				if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index, 'x') < 1.5f)
+				if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index, 'x') < 1.5f)
 				{
-					if (Player->GetInvulnerabilityFrame() <= 0)
+					if (dynamic_cast<CPlayer2D_V2*>(Player)->GetInvulnerabilityFrame() <= 0)
 					{
-						Player->SetHealth(Player->GetHealth() - 10);
-						Player->SetInvulnerabilityFrame(0.5);
+						dynamic_cast<CPlayer2D_V2*>(Player)->SetHealth(dynamic_cast<CPlayer2D_V2*>(Player)->GetHealth() - 10);
+						dynamic_cast<CPlayer2D_V2*>(Player)->SetInvulnerabilityFrame(0.5);
 						CSoundController::GetInstance()->PlaySoundByID(5);
 					}
 				}
@@ -466,26 +466,26 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 	// Update the UV Coordinates
 	{
 		//if within viewing distance
-		if ((abs(Player->vec2Index.x - vec2Index.x) <= cSettings->VIEW_TILES_XAXIS * 0.5 + 1) && (abs(Player->vec2Index.y - vec2Index.y) <= cSettings->VIEW_TILES_YAXIS * 0.5 + 1))
+		if ((abs(dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index.x - vec2Index.x) <= cSettings->VIEW_TILES_XAXIS * 0.5 + 1) && (abs(dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index.y - vec2Index.y) <= cSettings->VIEW_TILES_YAXIS * 0.5 + 1))
 		{
 			//Calculate Position of Entity on Screen
 			glm::vec2 ScreenPos = glm::vec2(0, 0);
 
 			//Check if Map View/Camera at Borders
-			if (Player->vec2Index.x < cSettings->VIEW_TILES_XAXIS * 0.5) // Left Side Border
+			if (dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index.x < cSettings->VIEW_TILES_XAXIS * 0.5) // Left Side Border
 			{
 				ScreenPos.x = vec2Index.x + 1;
 			}
-			else if (Player->vec2Index.x > (cSettings->NUM_TILES_XAXIS - (cSettings->VIEW_TILES_XAXIS * 0.5))) //Right Side Border
+			else if (dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index.x > (cSettings->NUM_TILES_XAXIS - (cSettings->VIEW_TILES_XAXIS * 0.5))) //Right Side Border
 			{
 				ScreenPos.x = cSettings->VIEW_TILES_XAXIS - (cSettings->NUM_TILES_XAXIS - vec2Index.x) + 1;
 			}
 
-			if (Player->vec2Index.y > (cSettings->NUM_TILES_YAXIS - (cSettings->VIEW_TILES_YAXIS * 0.5))) //Top Side Border
+			if (dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index.y > (cSettings->NUM_TILES_YAXIS - (cSettings->VIEW_TILES_YAXIS * 0.5))) //Top Side Border
 			{
 				ScreenPos.y = cSettings->VIEW_TILES_YAXIS - (cSettings->NUM_TILES_YAXIS - vec2Index.y) + 1;
 			}
-			else if (Player->vec2Index.y < cSettings->VIEW_TILES_YAXIS * 0.5) //Bottom Side Border
+			else if (dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index.y < cSettings->VIEW_TILES_YAXIS * 0.5) //Bottom Side Border
 			{
 				ScreenPos.y = vec2Index.y + 1;
 			}
@@ -494,11 +494,11 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 			//If not at Border, Entity at Center of Screen displaced by x:1 y:1
 			if (ScreenPos.x == 0)
 			{
-				ScreenPos.x = vec2Index.x + 1 - Player->vec2Index.x + cSettings->VIEW_TILES_XAXIS * 0.5;
+				ScreenPos.x = vec2Index.x + 1 - dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index.x + cSettings->VIEW_TILES_XAXIS * 0.5;
 			}
 			if (ScreenPos.y == 0)
 			{
-				ScreenPos.y = vec2Index.y + 1 - Player->vec2Index.y + cSettings->VIEW_TILES_YAXIS * 0.5;
+				ScreenPos.y = vec2Index.y + 1 - dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index.y + cSettings->VIEW_TILES_YAXIS * 0.5;
 			}
 
 			//Convert position to UV Coords

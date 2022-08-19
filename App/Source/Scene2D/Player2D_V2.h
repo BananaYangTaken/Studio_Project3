@@ -102,7 +102,6 @@ protected:
 		NUM_DIRECTIONS
 	};
 
-
 	std::vector< CObject2D*>* cObjectList;
 
 	std::vector< CEntity2D*>* cEnemyList;

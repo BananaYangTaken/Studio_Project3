@@ -16,9 +16,7 @@
 
 // Include Settings
 #include "GameControl\Settings.h"
-
-// Include Player2D_V2
-#include "Player2D_V2.h"
+#include "Physics2D.h"
 
 // Include AnimatedSprites
 #include "Primitives/SpriteAnimation.h"
@@ -60,6 +58,7 @@ public:
 	virtual unsigned int GetHealth(void);
 	virtual unsigned int GetDeathState(void);
 	virtual float GetInvulnerabilityFrame(void);
+	virtual void SetPlayer(CEntity2D*);
 
 	virtual void SetStun(bool);
 
@@ -125,7 +124,7 @@ protected:
 
 	unsigned int Direction;
 
-	CPlayer2D_V2* Player;
+	CEntity2D* Player;
 
 	CSpriteAnimation* animatedSprites;
 

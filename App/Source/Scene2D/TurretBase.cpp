@@ -151,7 +151,7 @@ void CTurretBase::Update(const double dElapsedTime)
 		//FSM Transition
 		for (int i = 0; i < cEnemyList->size(); i++)
 		{
-			if (cPhysics2D.CalculateDistance(vec2Index, (*cEnemyList)[i]->vec2Index) < 20.0f)
+			if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CEnemyBase*>((*cEnemyList)[i])->vec2Index) < 20.0f)
 			{
 				sCurrentFSM = TARGET;
 				iFSMCounter = 0;
@@ -182,7 +182,7 @@ void CTurretBase::Update(const double dElapsedTime)
 		//FSM Transition
 		for (int i = 0; i < cEnemyList->size(); i++)
 		{
-			if (cPhysics2D.CalculateDistance(vec2Index, (*cEnemyList)[i]->vec2Index) < 10.0f)
+			if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CEnemyBase*>((*cEnemyList)[i])->vec2Index) < 10.0f)
 			{
 				sCurrentFSM = ATTACK;
 				iFSMCounter = 0;
@@ -200,8 +200,8 @@ void CTurretBase::Update(const double dElapsedTime)
 		//FSM Transition
 		for (int i = 0; i < cEnemyList->size(); i++)
 		{
-			if (cPhysics2D.CalculateDistance(vec2Index, (*cEnemyList)[i]->vec2Index) < 10.0f 
-				&& (*cEnemyList)[i]->bIsActive == true
+			if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CEnemyBase*>((*cEnemyList)[i])->vec2Index) < 10.0f 
+				&& dynamic_cast<CEnemyBase*>((*cEnemyList)[i])->bIsActive == true
 				&& damageTimer <= 0)
 			{
 				// Attack
@@ -209,26 +209,26 @@ void CTurretBase::Update(const double dElapsedTime)
 				{
 				case 0:
 					animatedSprites->PlayAnimation("L1Attack", 1, 0.7f);
-					(*cEnemyList)[i]->SetHealth((*cEnemyList)[i]->GetHealth() - 10);
+					dynamic_cast<CEnemyBase*>((*cEnemyList)[i])->SetHealth(dynamic_cast<CEnemyBase*>((*cEnemyList)[i])->GetHealth() - 10);
 					damageTimer = 1;
 					break;
 				case 1:
 					animatedSprites->PlayAnimation("L2Attack", 1, 0.7f);
-					(*cEnemyList)[i]->SetHealth((*cEnemyList)[i]->GetHealth() - 10);
+					dynamic_cast<CEnemyBase*>((*cEnemyList)[i])->SetHealth(dynamic_cast<CEnemyBase*>((*cEnemyList)[i])->GetHealth() - 10);
 					damageTimer = 0.5;
 					break;
 				case 2:
 					animatedSprites->PlayAnimation("L3Attack", 1, 0.3f);
 					for (int j = 0; j < cEnemyList->size(); j++)
 					{
-						if (cPhysics2D.CalculateDistance((*cEnemyList)[i]->vec2Index, (*cEnemyList)[j]->vec2Index) < 2.0f
-							&& (*cEnemyList)[j]->bIsActive == true
-							&& (*cEnemyList)[j] != (*cEnemyList)[i])
+						if (cPhysics2D.CalculateDistance(dynamic_cast<CEnemyBase*>((*cEnemyList)[j])->vec2Index, dynamic_cast<CEnemyBase*>((*cEnemyList)[j])->vec2Index) < 2.0f
+							&& dynamic_cast<CEnemyBase*>((*cEnemyList)[j])->bIsActive == true
+							&& dynamic_cast<CEnemyBase*>((*cEnemyList)[j]) != (*cEnemyList)[i])
 						{
-							(*cEnemyList)[j]->SetHealth((*cEnemyList)[j]->GetHealth() - 40);
+							dynamic_cast<CEnemyBase*>((*cEnemyList)[j])->SetHealth(dynamic_cast<CEnemyBase*>((*cEnemyList)[j])->GetHealth() - 40);
 						}
 					}
-					(*cEnemyList)[i]->SetHealth((*cEnemyList)[i]->GetHealth() - 40);
+					dynamic_cast<CEnemyBase*>((*cEnemyList)[i])->SetHealth(dynamic_cast<CEnemyBase*>((*cEnemyList)[i])->GetHealth() - 40);
 					damageTimer = 0.5;
 					break;
 				}
@@ -718,7 +718,7 @@ void CTurretBase::PostRender(void)
 	glDisable(GL_BLEND);
 }
 
-void CTurretBase::SetEnemyList(std::vector<CEnemyBase*>* newEnemyList)
+void CTurretBase::SetEnemyList(std::vector<CEntity2D*>* newEnemyList)
 {
 	cEnemyList = newEnemyList;
 }

@@ -19,6 +19,7 @@ using namespace std;
 #include "Map2D.h"
 #include "Primitives/MeshBuilder.h"
 #include "..\Application.h"
+#include "..\Scene2D\EnemyBase.h"
 
 /**
  @brief Constructor This constructor has protected access modifier as this class will be a Singleton

@@ -112,7 +112,7 @@ protected:
 	CPhysics2D cPhysics2D;
 
 	//A vector containing instances of CEnemyBase Derived Class
-	std::vector<CEnemyBase*> cEnemyList;
+	std::vector<CEntity2D*> cEnemyList;
 	//A vector containing instances of CObject2Ds
 	std::vector<CObject2D*> cObjectList;
 	//A vector containing instances of CTurretBase Derived Class

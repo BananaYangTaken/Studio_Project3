@@ -210,6 +210,11 @@ float CEnemyBase::GetInvulnerabilityFrame(void)
 	return this->InvulnerabilityFrame;
 }
 
+void CEnemyBase::SetPlayer(CEntity2D* newPlayer)
+{
+	Player = newPlayer;
+}
+
 void CEnemyBase::SetStun(bool stun)
 {
 	Stunned = stun;

@@ -56,7 +56,7 @@ public:
 	// boolean flag to indicate if this enemy is active
 	bool bIsActive;
 
-	void SetEnemyList(std::vector<CEnemyBase*>* newEnemyList);
+	void SetEnemyList(std::vector<CEntity2D*>* newEnemyList);
 	void SetTurretLevel(int level);
 
 protected:
@@ -124,7 +124,7 @@ protected:
 	// Max count in a state
 	const int iMaxFSMCounter = 60;
 
-	std::vector<CEnemyBase*>* cEnemyList;
+	std::vector<CEntity2D*>* cEnemyList;
 
 	void Constraint(DIRECTION eDirection = LEFT);
 
