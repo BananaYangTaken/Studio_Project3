@@ -167,14 +167,15 @@ bool CScene2D::Update(const double dElapsedTime)
  	Player->Update(dElapsedTime);
 	
 	
+	LoadObjects();
 	for (int i = 0; i < cObjectList.size(); i++)
 	{
 		cObjectList[i]->SetPlayervec2Index(Player->vec2Index);
 		cObjectList[i]->Update(dElapsedTime);
 		cObjectList[i]->SetruntimeColour(glm::vec4(1, 1, 1, 1));
 	}
-	LoadObjects();
 	vector<CEntity2D*>::iterator it = cEnemyList.begin();
+	LoadEnemies();
 	while (it != cEnemyList.end())
 	{
 		CEnemyBase* Temp = static_cast<CEnemyBase*>(*it);
@@ -184,11 +185,10 @@ bool CScene2D::Update(const double dElapsedTime)
 			it = cEnemyList.erase(it);
 		}
 		else {
-			++it; 
 			(*it)->Update(dElapsedTime);
+			++it; 
 		}
 	}
-	LoadEnemies();
 	
 	
 	for (int i = 0; i < cTurretList.size(); i++)

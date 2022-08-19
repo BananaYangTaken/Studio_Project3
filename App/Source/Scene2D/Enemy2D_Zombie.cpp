@@ -83,8 +83,8 @@ CEnemy2D_Zombie::~CEnemy2D_Zombie(void)
 bool  CEnemy2D_Zombie::checkforLOS()
 {
 	// Store the old player position
-	Playervec2OldIndex = cPlayer->vec2Index;
-	int distfromplayer = cPhysics2D.CalculateDistance(cPlayer->vec2Index, vec2Index) + 1;
+	Playervec2OldIndex = dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index;
+	int distfromplayer = cPhysics2D.CalculateDistance(dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index, vec2Index) + 1;
 	int distcorrection = distfromplayer / 7;
 	distfromplayer = distfromplayer - distcorrection;
 	cout << "DISTANCE: " << distfromplayer << endl;
@@ -409,7 +409,7 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 			hasseenplayeronce = true;
 			if (idlecount >= 15)
 			{
-				OldPositu = cPlayer->vec2Index;
+				OldPositu = dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index;
 				cout << "Changed viewpos to " << std::to_string(OldPositu.x) << ", " << std::to_string(OldPositu.y);
 				idlecount = 0;
 			}

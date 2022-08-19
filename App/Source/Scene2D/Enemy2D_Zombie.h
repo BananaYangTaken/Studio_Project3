@@ -22,7 +22,6 @@ public:
 	glm::vec2 OldPositu;
 
 protected:
-	CPlayer2D_V2* cPlayer;
 	float deathTimer;
 	float speedMultiplier;
 	float motionResetter;
