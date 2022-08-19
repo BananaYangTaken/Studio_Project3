@@ -423,13 +423,11 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 	case PATROL:
 		if (iFSMCounter > iMaxFSMCounter)
 		{
-			CSoundController::GetInstance()->PlaySoundByID(33);
-			sCurrentFSM = static_cast<CEnemyBase::FSM>(CHASE);
+			sCurrentFSM = static_cast<CEnemyBase::FSM>(IDLE);
 			iFSMCounter = 0;
 		}
-		else if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 5.0f)
+		else if (checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) <= DetectionRadius)
 		{
-			CSoundController::GetInstance()->PlaySoundByID(33);
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(CHASE);
 			iFSMCounter = 0;
 		}
@@ -473,8 +471,7 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		}
 		else if (hasseenplayeronce == false)
 		{
-			CSoundController::GetInstance()->PlaySoundByID(35);
-			sCurrentFSM = static_cast<CEnemyBase::FSM>(IDLE);
+			sCurrentFSM = static_cast<CEnemyBase::FSM>(PATROL);
 		}
 		if (vec2Index == OldPositu)
 		{
@@ -494,7 +491,6 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 				// Attack
 				Attack = true;
 				animatedSprites->PlayAnimation("attack", 1, 1.0f);
-				CSoundController::GetInstance()->PlaySoundByID(32);
 			}
 			else if (Attack && AttackAnim <= 0)
 			{
@@ -506,7 +502,6 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 				{
 					dynamic_cast<CPlayer2D_V2*>(Player)->SetHealth(dynamic_cast<CPlayer2D_V2*>(Player)->GetHealth() - 10);
 					dynamic_cast<CPlayer2D_V2*>(Player)->SetInvulnerabilityFrame(0.5);
-					CSoundController::GetInstance()->PlaySoundByID(5);
 				}
 				
 			}

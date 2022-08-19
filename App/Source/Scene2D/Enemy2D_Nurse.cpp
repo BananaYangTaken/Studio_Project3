@@ -41,7 +41,6 @@ CEnemy2D_Nurse::CEnemy2D_Nurse(void)
 	readyToHeal = 0;
 	Attack = false;
 	redTimer = 0;
-	CurrentStateID = 0;
 
 	transform = glm::mat4(1.0f);	// make sure to initialize matrix to identity matrix first
 
@@ -373,7 +372,6 @@ void CEnemy2D_Nurse::Update(const double dElapsedTime)
 {
 	UpdateDirection();
 	checkforLOS();
-	cout << Health << "," << prevHP << "," << sCurrentFSM << "," << readyToHeal << endl;
 	if (!bIsActive)
 		return;
 	if (Health <= 0)
@@ -433,19 +431,26 @@ void CEnemy2D_Nurse::Update(const double dElapsedTime)
 		runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
 		break;
 	case PATROL:
+		cout << iFSMCounter << endl;
 		if (iFSMCounter > iMaxFSMCounter)
 		{
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(IDLE);
-			iFSMCounter = 0;
+			CSoundController::GetInstance()->PlaySoundByID(35);
+			iFSMCounter = 0;			
 		}
-		else if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 20.0f)
+		else if (checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) <= DetectionRadius)
 		{
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(CHASE);
+			CSoundController::GetInstance()->PlaySoundByID(33);
 			iFSMCounter = 0;
+
+			hasseenplayeronce = true;
+			OldPositu = dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index;
 		}
 		else if (Health < 100 && readyToHeal <= 0)
 		{
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(HEAL);
+			CSoundController::GetInstance()->PlaySoundByID(33);
 			iFSMCounter = 0;
 		}
 		else
@@ -458,14 +463,6 @@ void CEnemy2D_Nurse::Update(const double dElapsedTime)
 		//Animation
 		animatedSprites->PlayAnimation("move", -1, 1.0f);
 		runtimeColour = glm::vec4(1, 1, 1, 1.0);
-
-		//Sounds
-		if (CurrentStateID != 1)
-		{
-			CurrentStateID = 1;
-			CSoundController::GetInstance()->PlaySoundByID(33);
-		}
-
 
 		break;
 	case CHASE:
@@ -488,6 +485,7 @@ void CEnemy2D_Nurse::Update(const double dElapsedTime)
 			UpdateDirection();
 			UpdatePosition(speedMultiplier);
 		}
+
 		else if(checkforLOS() == false && hasseenplayeronce == true 
 			|| checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) > DetectionRadius)
 		{
@@ -497,14 +495,17 @@ void CEnemy2D_Nurse::Update(const double dElapsedTime)
 		else if (hasseenplayeronce == false)
 		{
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(PATROL);
+			iFSMCounter = 0;
 		}
 		if (vec2Index == OldPositu)
 		{
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(PATROL);
+			iFSMCounter = 0;
 		}
 		if (Health <= 30)
 		{
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(RETREAT);
+			CSoundController::GetInstance()->PlaySoundByID(35);
 			iFSMCounter = 0;
 		}
 
@@ -512,13 +513,6 @@ void CEnemy2D_Nurse::Update(const double dElapsedTime)
 		//Animation
 		animatedSprites->PlayAnimation("move", -1, 1.0f);
 		runtimeColour = glm::vec4(1, 1, 1, 1.0);
-
-		//Sounds
-		if (CurrentStateID != 9)
-		{
-			CurrentStateID = 9;
-			CSoundController::GetInstance()->PlaySoundByID(33);
-		}
 
 		break;
 	case ATTACK:
@@ -533,6 +527,7 @@ void CEnemy2D_Nurse::Update(const double dElapsedTime)
 				animatedSprites->PlayAnimation("attack", 1, 1.0f);
 				sCurrentFSM = static_cast<CEnemyBase::FSM>(RELOAD);
 				ReloadDuration = 1;
+				CSoundController::GetInstance()->PlaySoundByID(32);
 
 				if (dynamic_cast<CPlayer2D_V2*>(Player)->GetInvulnerabilityFrame() <= 0)
 				{
@@ -557,12 +552,6 @@ void CEnemy2D_Nurse::Update(const double dElapsedTime)
 		}
 		runtimeColour = glm::vec4(1, 1, 1, 1.0);
 
-		//Sounds
-		if (CurrentStateID != 2)
-		{
-			CurrentStateID = 2;
-			CSoundController::GetInstance()->PlaySoundByID(32);
-		}
 
 
 		break;
@@ -573,6 +562,7 @@ void CEnemy2D_Nurse::Update(const double dElapsedTime)
 			Attack = false;
 			ReloadDuration = 0;
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(CHASE);
+			CSoundController::GetInstance()->PlaySoundByID(33);
 		}
 		else
 		{
@@ -636,7 +626,7 @@ void CEnemy2D_Nurse::Update(const double dElapsedTime)
 			cout << "healing" << endl;
 			healTimer = 1;
 			Health += 5;
-			//PLAY HEALING SOUND HERE
+			CSoundController::GetInstance()->PlaySoundByID(21);
 		}
 		break;
 	case RETREAT:

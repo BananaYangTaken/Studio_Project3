@@ -16,7 +16,7 @@ public:
 	void Update(const double dElapsedTime);
 	bool checkforLOS();
 	void UpdateToLastLOS();
-	float DetectionRadius = 15;
+	float DetectionRadius = 20;
 	bool hasseenplayeronce = false;
 	glm::vec2 Playervec2OldIndex;
 	glm::vec2 OldPositu;
@@ -30,7 +30,5 @@ protected:
 	int prevHP;
 	float readyToHeal;
 	float redTimer;
-
-	int CurrentStateID;
 };
 
