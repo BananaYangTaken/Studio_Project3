@@ -107,13 +107,13 @@
     <ClCompile Include="Source\GameStateManagement\UpgradeState.cpp">
       <Filter>GameStateManagement\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Scene2D\Enemy2D_Nurse.cpp">
+      <Filter>Scene2D\Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Scene2D\Projectile2DManager.cpp">
       <Filter>Scene2D\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Scene2D\Projectile2D.cpp">
-      <Filter>Scene2D\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scene2D\Enemy2D_Nurse.cpp">
       <Filter>Scene2D\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -196,13 +196,13 @@
     <ClInclude Include="Source\GameStateManagement\UpgradeState.h">
       <Filter>GameStateManagement\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Scene2D\Projectile2D.h">
+    <ClInclude Include="Source\Scene2D\Enemy2D_Nurse.h">
       <Filter>Scene2D\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scene2D\Projectile2DManager.h">
       <Filter>Scene2D\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Scene2D\Enemy2D_Nurse.h">
+    <ClInclude Include="Source\Scene2D\Projectile2D.h">
       <Filter>Scene2D\Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -402,6 +402,15 @@ void CEnemy2D_Nurse::Update(const double dElapsedTime)
 		readyToHeal -= dElapsedTime;
 	}
 
+	//Update Invulnerable frames
+	if (InvulnerabilityFrame < 0)
+	{
+		InvulnerabilityFrame = 0;
+	}
+	else
+	{
+		InvulnerabilityFrame -= dElapsedTime;
+	}
 	unsigned int IRow;
 	unsigned int ICol;
 

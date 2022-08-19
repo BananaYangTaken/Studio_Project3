@@ -39,7 +39,7 @@ public:
 	};
 
 	// Init
-	bool Init(glm::vec2 vec2Index, glm::vec2 vec2NumMicroSteps,glm::vec2 Direction, float Speed, TYPE Type, PROJECTILE Projectile, float Damage);
+	bool Init(glm::vec2 vec2Index, glm::vec2 vec2NumMicroSteps, float Rotation, float Speed, TYPE Type, PROJECTILE Projectile, float Damage);
 
 	// Reset
 	bool Reset(void);
@@ -70,14 +70,12 @@ protected:
 	CPhysics2D cPhysics2D;
 
 	glm::vec2 vec2OldIndex;
-
+	glm::vec2 Direction;
 	CSpriteAnimation* animatedSprites;
 	CEntity2D* Player;
 	CSoundController* cSoundController;
 
 	glm::vec4 runtimeColour;
-
-	glm::vec2 Direction;
 	float Speed; //tile per second
 	TYPE Type;
 	PROJECTILE Projectile;

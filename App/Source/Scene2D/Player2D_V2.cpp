@@ -412,17 +412,18 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 	//Player Use Item
 	if (cGUI_Scene2D->checkinginventory == false && cGUI_Scene2D->crafting == false && cGUI_Scene2D->chestactive == false)
 	{
+		CInventoryItem HeldItem = *(cInventoryManager->GetItem(cGUI_Scene2D->GetCurrentHotbarItem()));
 		if (cMouseController->IsButtonDown(0) && !LButtonState)
 		{
 			LButtonState = true;
-			CInventoryItem HeldItem = *(cInventoryManager->GetItem(cGUI_Scene2D->GetCurrentHotbarItem()));
+			//Melee
 			if (HeldItem.itemtype == ITEM_TYPE::RESOURCES || HeldItem.itemtype == ITEM_TYPE::MELEE)
 			{
 				//Attack with Knife
 				AnimationTimer = 0.3f;
 				animatedSprites->PlayAnimation("meleeAttack", -1, AnimationTimer);
 				cSoundController->PlaySoundByID(15);
-				cProjectileManager->SpawnProjectile(vec2Index, vec2NumMicroSteps, glm::vec2(1,0), 0, CProjectile2D::FRIENDLY, CProjectile2D::KNIFE, 30);
+				cProjectileManager->SpawnProjectile(vec2Index, vec2NumMicroSteps, Rotation, 0, CProjectile2D::FRIENDLY, CProjectile2D::KNIFE, 30);
 			}
 		}
 		else if (cMouseController->IsButtonUp(0) && LButtonState)

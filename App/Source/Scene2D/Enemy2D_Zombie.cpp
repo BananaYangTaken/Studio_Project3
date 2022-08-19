@@ -392,6 +392,17 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		}
 	}
 
+	//Update Invulnerable frames
+	if (InvulnerabilityFrame < 0)
+	{
+		InvulnerabilityFrame = 0;
+	}
+	else
+	{
+		InvulnerabilityFrame -= dElapsedTime;
+	}
+	
+
 	unsigned int IRow;
 	unsigned int ICol;
 

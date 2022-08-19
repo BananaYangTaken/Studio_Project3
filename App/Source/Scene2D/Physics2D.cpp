@@ -227,15 +227,14 @@ float CPhysics2D::CalculateRotation(glm::vec2 Origin, glm::vec2 DefaultPos, glm:
 	TransformedPoint.x *= XtoYRatio;
 	Normalize(OriginalPoint);
 	Normalize(TransformedPoint);
-	float Result = atan2(TransformedPoint.y * OriginalPoint.x - TransformedPoint.x * OriginalPoint.y,TransformedPoint.x*OriginalPoint.x + TransformedPoint.y + OriginalPoint.y );
-	float Radian;
-	if (Result < 0)
+	float Radian = atan2(TransformedPoint.y * OriginalPoint.x - TransformedPoint.x * OriginalPoint.y,TransformedPoint.x*OriginalPoint.x + TransformedPoint.y + OriginalPoint.y );
+	if (Radian < 0)
 	{
-		Radian = -Result;
+		Radian = -Radian;
 	}
-	else if (Result > 0)
+	else if (Radian > 0)
 	{
-		Radian = Math::TWO_PI - Result;
+		Radian = Math::TWO_PI - Radian;
 	}
 	else
 	{
@@ -250,8 +249,8 @@ glm::vec2 CPhysics2D::RotateVec2(glm::vec2 vec2, float Radian)
 	glm::vec2 Temp;
 	Temp = glm::vec2((vec2.x * cos(Radian)) - (vec2.y * sin(Radian))
 		, (vec2.y * cos(Radian)) + (vec2.x * sin(Radian)));
-	Temp.x = ceil(Temp.x * float(10 ^ 7)) * float(10 ^ -7);
-	Temp.y = ceil(Temp.y * float(10 ^ 7)) * float(10 ^ -7);
+	Temp.x = ceil(Temp.x * pow(10, 7)) * pow(10, -7);
+	Temp.y = ceil(Temp.y * pow(10, 7)) * pow(10, -7);
 	return Temp;
 }
 

@@ -23,7 +23,7 @@ public:
 	void Render(void);
 	void PostRender(void);
 	void Reset(void);
-	void SpawnProjectile(glm::vec2 vec2Index, glm::vec2 vec2NumMicroSteps, glm::vec2 Direction, float Speed, CProjectile2D::TYPE Type, CProjectile2D::PROJECTILE Projectile, float Damage);
+	void SpawnProjectile(glm::vec2 vec2Index, glm::vec2 vec2NumMicroSteps, float Rotation, float Speed, CProjectile2D::TYPE Type, CProjectile2D::PROJECTILE Projectile, float Damage);
 	void SetEnemyVector(std::vector<CEntity2D*>* cEnemyList);
 	
 

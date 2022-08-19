@@ -19,8 +19,8 @@ using namespace std;
 CProjectile2D::CProjectile2D(void)
 	: animatedSprites(NULL)
 	, runtimeColour(glm::vec4(1.0f))
-	, Direction(NULL)
 	, Speed(1)
+	, Direction(NULL)
 	, Type(HOSTILE)
 	, Projectile(BULLET)
 	, Damage(1)
@@ -36,7 +36,10 @@ CProjectile2D::CProjectile2D(void)
 
 	// Initialise vec2UVCoordinate
 	vec2UVCoordinate = glm::vec2(0.0f);
+
+	Rotation = 0;
 }
+
 
 /**
  @brief Destructor This destructor has protected access modifier as this class will be a Singleton
@@ -65,7 +68,7 @@ float CProjectile2D::GetExistenceTimer(void)
 {
 	return ExistenceTimer;
 }
-bool CProjectile2D::Init(glm::vec2 vec2Index, glm::vec2 vec2NumMicroSteps, glm::vec2 Direction, float Speed, TYPE Type, PROJECTILE Projectile, float Damage)
+bool CProjectile2D::Init(glm::vec2 newvec2Index, glm::vec2 newvec2NumMicroSteps, float newRotation, float newSpeed, TYPE newType, PROJECTILE newProjectile, float newDamage)
 {
 	cPhysics2D.Init();
 	Player = dynamic_cast<CEntity2D*>(CPlayer2D_V2::GetInstance());
@@ -75,13 +78,15 @@ bool CProjectile2D::Init(glm::vec2 vec2Index, glm::vec2 vec2NumMicroSteps, glm::
 	// Get the handler to the CSettings instance
 	cSettings = CSettings::GetInstance();
 
-	this->Direction = Direction;
-	this->Speed = Speed;
-	this->Type = Type;
-	this->Projectile = Projectile;
-	this->vec2Index = vec2Index;
-	this->vec2NumMicroSteps = vec2NumMicroSteps;
-	this->Damage = Damage;
+	this->Rotation = newRotation;
+	Speed = newSpeed;
+	Type = newType;
+	Projectile = newProjectile;
+	this->vec2Index = newvec2Index;
+	Direction = cPhysics2D.RotateVec2(glm::vec2(1,0), newRotation);
+	vec2NumMicroSteps.x = newvec2NumMicroSteps.x + Direction.x * cSettings->NUM_STEPS_PER_TILE_XAXIS * 0.6;
+	vec2NumMicroSteps.y = newvec2NumMicroSteps.y + Direction.y * cSettings->NUM_STEPS_PER_TILE_YAXIS * 0.6;
+	Damage = newDamage;
 
 	this->SetShader("Shader2D_Colour");
 	glGenVertexArrays(1, &VAO);
@@ -127,8 +132,6 @@ bool CProjectile2D::Init(glm::vec2 vec2Index, glm::vec2 vec2NumMicroSteps, glm::
 	runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
 
 	CSoundController::GetInstance()->PlaySoundByID(7);
-
-	Rotation = cPhysics2D.CalculateRotation(vec2Index, glm::vec2(1, 0), Direction);
 }
 
 /**
@@ -166,7 +169,7 @@ void CProjectile2D::Update(const double dElapsedTime)
 		if (vec2NumMicroSteps.x < 0)
 		{
 			--vec2Index.x;
-			vec2NumMicroSteps.x = 15;
+			vec2NumMicroSteps.x += 15;
 		}
 		else if (vec2NumMicroSteps.x > 15)
 		{
@@ -177,7 +180,7 @@ void CProjectile2D::Update(const double dElapsedTime)
 		if (vec2NumMicroSteps.y < 0)
 		{
 			--vec2Index.y;
-			vec2NumMicroSteps.y = 15;
+			vec2NumMicroSteps.y += 15;
 		}
 		else if (vec2NumMicroSteps.y > 15)
 		{

@@ -81,7 +81,7 @@ void CProjectileManager::Update(const double dElapsedTime)
 					for (int i = 0; i < cEnemyList->size(); ++i)
 					{
 						//There is collision
-						if (cPhysics2D.CalculateDistance(cEnemyList->at(i)->vec2Index, (*it)->vec2Index, 'n', true, cEnemyList->at(i)->vec2NumMicroSteps, (*it)->vec2NumMicroSteps) < 10)
+						if (cPhysics2D.CalculateDistance(cEnemyList->at(i)->vec2Index, (*it)->vec2Index, 'n', true, cEnemyList->at(i)->vec2NumMicroSteps, (*it)->vec2NumMicroSteps) < 24)
 						{
 							if (dynamic_cast<CEnemyBase*>(cEnemyList->at(i))->GetInvulnerabilityFrame() <= 0)
 							{
@@ -107,10 +107,6 @@ void CProjectileManager::Update(const double dElapsedTime)
 				{
 					CollisionDetected = !CollisionDetected;
 				}
-
-
-				
-
 			}
 
 			if (CollisionDetected)
@@ -168,10 +164,10 @@ void CProjectileManager::Reset(void)
 	cProjectileList.clear();
 }
 
-void CProjectileManager::SpawnProjectile(glm::vec2 vec2Index, glm::vec2 vec2NumMicroSteps, glm::vec2 Direction, float Speed, CProjectile2D::TYPE Type, CProjectile2D::PROJECTILE Projectile, float Damage)
+void CProjectileManager::SpawnProjectile(glm::vec2 vec2Index, glm::vec2 vec2NumMicroSteps, float Rotation, float Speed, CProjectile2D::TYPE Type, CProjectile2D::PROJECTILE Projectile, float Damage)
 {
 	CProjectile2D* Temp = new CProjectile2D;
-	Temp->Init(vec2Index, vec2NumMicroSteps, Direction, Speed, Type, Projectile, Damage);
+	Temp->Init(vec2Index, vec2NumMicroSteps, Rotation, Speed, Type, Projectile, Damage);
 	cProjectileList.push_back(Temp);
 }
 
