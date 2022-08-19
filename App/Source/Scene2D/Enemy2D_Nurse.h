@@ -30,5 +30,7 @@ protected:
 	int prevHP;
 	float readyToHeal;
 	float redTimer;
+
+	int CurrentStateID;
 };
 
