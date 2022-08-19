@@ -1,4 +1,4 @@
-#include "Enemy2D_Zombie.h"
+#include "Enemy2D_Nurse.h"
 
 #include <iostream>
 
@@ -22,7 +22,7 @@
 /**
  @brief Constructor This constructor has protected access modifier as this class will be a Singleton
  */
-CEnemy2D_Zombie::CEnemy2D_Zombie(void)
+CEnemy2D_Nurse::CEnemy2D_Nurse(void)
 {
 	bIsActive = false;
 	cMap2D = NULL;
@@ -32,11 +32,13 @@ CEnemy2D_Zombie::CEnemy2D_Zombie(void)
 	iFSMCounter = 0;
 	animatedSprites = NULL;
 	AStarCalculate = true;
-	Health = 60;
+	Health = prevHP = 100;
 	Death = 0;
 	InvulnerabilityFrame = 0;
 	Direction = 2;
 	speedMultiplier = 0.5;
+	healTimer = 0;
+	readyToHeal = 0;
 
 	transform = glm::mat4(1.0f);	// make sure to initialize matrix to identity matrix first
 
@@ -57,7 +59,7 @@ CEnemy2D_Zombie::CEnemy2D_Zombie(void)
 /**
  @brief Destructor This destructor has protected access modifier as this class will be a Singleton
  */
-CEnemy2D_Zombie::~CEnemy2D_Zombie(void)
+CEnemy2D_Nurse::~CEnemy2D_Nurse(void)
 {
 	if (animatedSprites)
 	{
@@ -80,7 +82,7 @@ CEnemy2D_Zombie::~CEnemy2D_Zombie(void)
 /**
   @brief Initialise this instance
   */
-bool  CEnemy2D_Zombie::checkforLOS()
+bool  CEnemy2D_Nurse::checkforLOS()
 {
 	// Store the old player position
 	Playervec2OldIndex = dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index;
@@ -97,7 +99,6 @@ bool  CEnemy2D_Zombie::checkforLOS()
 	//TOP RIGHT VIEW
 	if (vec2Direction.x < 0 && vec2Direction.y < 0)
 	{
-		//cout << "enemy is TOP RIGHT OF PLAYER!" << endl;
 		for (int i = 0; i < distfromplayer; i++)
 		{
 			//cMap2D->SetMapInfo(Playervec2OldIndex.y + Ycount, Playervec2OldIndex.x + Xcount, 100);
@@ -109,11 +110,9 @@ bool  CEnemy2D_Zombie::checkforLOS()
 			}
 			if (cMap2D->GetMapInfo(Playervec2OldIndex.y + Ycount, Playervec2OldIndex.x + Xcount) >= 100)
 			{
-				//cout << "LOS LOST, VIEW BLOCKED!" << endl;
 				return false;
 			}
 		}
-		//cout << "CAN SEE PLAYER!";
 		return true;
 	}
 
@@ -233,7 +232,7 @@ bool  CEnemy2D_Zombie::checkforLOS()
 	}
 }
 
-bool CEnemy2D_Zombie::Init(int x, int y)
+bool CEnemy2D_Nurse::Init(int x, int y)
 {
 	// Get the handler to the CSettings instance
 	cSettings = CSettings::GetInstance();
@@ -243,7 +242,7 @@ bool CEnemy2D_Zombie::Init(int x, int y)
 
 	unsigned int uiRow = -1;
 	unsigned int uiCol = -1;
-	if (cMap2D->FindValue(302, uiRow, uiCol) == false)
+	if (cMap2D->FindValue(303, uiRow, uiCol) == false)
 	{
 		return false;	// Unable to find the start position of the enemy, so quit this game
 	}
@@ -260,10 +259,10 @@ bool CEnemy2D_Zombie::Init(int x, int y)
 	glBindVertexArray(VAO);
 
 
-	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/regularZombie.png", true);
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/NurseZombie.png", true);
 	if (iTextureID == 0)
 	{
-		cout << "Unable to load Image/regularZombie.png" << endl;
+		cout << "Unable to load Image/NurseZombie.png" << endl;
 		return false;
 	}
 
@@ -290,7 +289,7 @@ bool CEnemy2D_Zombie::Init(int x, int y)
 
 	return true;
 }
-void CEnemy2D_Zombie::UpdateToLastLOS()
+void CEnemy2D_Nurse::UpdateToLastLOS()
 {
 	// Set the destination to the player
 	vec2Destination = OldPositu;
@@ -313,8 +312,7 @@ void CEnemy2D_Zombie::UpdateToLastLOS()
 		vec2Direction = glm::vec2(0);
 	}
 }
-
-void CEnemy2D_Zombie::droploot()
+void CEnemy2D_Nurse::droploot()
 {
 	int lootcount = rand() % 3 + 1;
 
@@ -359,9 +357,7 @@ void CEnemy2D_Zombie::droploot()
 		}
 	}
 }
-
-
-void CEnemy2D_Zombie::spawnloot(float vecX, float vecY)
+void CEnemy2D_Nurse::spawnloot(float vecX, float vecY)
 {
 	int loottype = rand() % 5 + 1;
 	if(loottype == 1) cMap2D->SetMapInfo(vecX, vecY, 30); // Bandagge
@@ -370,11 +366,11 @@ void CEnemy2D_Zombie::spawnloot(float vecX, float vecY)
 	else if (loottype == 4) cMap2D->SetMapInfo(vecX, vecY, 33); // Fabric
 	else if (loottype == 5) cMap2D->SetMapInfo(vecX, vecY, 34); // Wood
 }
-void CEnemy2D_Zombie::Update(const double dElapsedTime)
+void CEnemy2D_Nurse::Update(const double dElapsedTime)
 {
 	UpdateDirection();
 	checkforLOS();
-	//cout << "DISTANCE: " << cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) << endl;
+	cout << Health << "," << prevHP << "," << sCurrentFSM << "," << readyToHeal << endl;
 	if (!bIsActive)
 		return;
 	if (Health <= 0)
@@ -389,6 +385,20 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 			deathTimer = 1;
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(DEATH);
 		}
+	}
+
+	if (healTimer > 0)
+	{
+		healTimer -= dElapsedTime;
+	}
+
+	if (prevHP > Health)
+	{
+		readyToHeal = 3;
+	}
+	else if (prevHP <= Health)
+	{
+		readyToHeal -= dElapsedTime;
 	}
 
 	unsigned int IRow;
@@ -417,16 +427,22 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		iFSMCounter++;
 		//Animation
 		animatedSprites->PlayAnimation("idle", -1, 1.0f);
+		runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
 		break;
 	case PATROL:
 		if (iFSMCounter > iMaxFSMCounter)
 		{
+			sCurrentFSM = static_cast<CEnemyBase::FSM>(IDLE);
+			iFSMCounter = 0;
+		}
+		else if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 20.0f)
+		{
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(CHASE);
 			iFSMCounter = 0;
 		}
-		else if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 5.0f)
+		else if (Health < 100 && readyToHeal <= 0)
 		{
-			sCurrentFSM = static_cast<CEnemyBase::FSM>(CHASE);
+			sCurrentFSM = static_cast<CEnemyBase::FSM>(HEAL);
 			iFSMCounter = 0;
 		}
 		else
@@ -443,14 +459,12 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		//FSM Transition
 		if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 0.5f)
 		{
-			cout << "attac" << endl;
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(ATTACK);
 			iFSMCounter = 0;
 			bool bFirstPosition = true;
 		}
 		else if(checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) <= DetectionRadius)
 		{
-			std::cout << (idlecount);
 			idlecount++;
 			hasseenplayeronce = true;
 			if (idlecount >= 15)
@@ -469,19 +483,25 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		}
 		else if (hasseenplayeronce == false)
 		{
-			sCurrentFSM = static_cast<CEnemyBase::FSM>(IDLE);
+			sCurrentFSM = static_cast<CEnemyBase::FSM>(PATROL);
 		}
-		else
+		if (vec2Index == OldPositu)
 		{
-			cout << "REDUND" << endl;
+			sCurrentFSM = static_cast<CEnemyBase::FSM>(PATROL);
 		}
+		if (Health <= 30)
+		{
+			sCurrentFSM = static_cast<CEnemyBase::FSM>(RETREAT);
+			iFSMCounter = 0;
+		}
+
 		iFSMCounter++;
 		//Animation
 		animatedSprites->PlayAnimation("move", -1, 1.0f);
 		break;
 	case ATTACK:
 		//FSM Transition
-		if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 1.5f)
+		if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 0.5f)
 		{
 			if (Attack == false)
 			{
@@ -513,9 +533,13 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 			{
 				sCurrentFSM = static_cast<CEnemyBase::FSM>(PATROL);
 				iFSMCounter = 0;
-				//cout << "ATTACK : Reset counter: " << iFSMCounter << endl;
 			}
 			iFSMCounter++;
+		}
+		if (Health <= 30)
+		{
+			sCurrentFSM = static_cast<CEnemyBase::FSM>(RETREAT);
+			iFSMCounter = 0;
 		}
 		break;
 	case RELOAD:
@@ -543,7 +567,6 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		}
 		else if (checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) <= DetectionRadius)
 		{
-			std::cout << (idlecount);
 			idlecount++;
 			hasseenplayeronce = true;
 			if (idlecount >= 15)
@@ -572,9 +595,44 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		animatedSprites->PlayAnimation("death", 1, 1.0f);
 		deathTimer += dElapsedTime;
 		break;
+	case HEAL:
+		animatedSprites->PlayAnimation("idle", -1, 1.0f);
+		runtimeColour = glm::vec4(0, 1.0, 0, 1.0);
+		if (Health >= 100)
+		{
+			Health = 100;
+			sCurrentFSM = static_cast<CEnemyBase::FSM>(IDLE);
+		}
+		else if (prevHP > Health)
+		{
+			sCurrentFSM = static_cast<CEnemyBase::FSM>(IDLE);
+		}
+		if (healTimer <= 0)
+		{
+			cout << "healing" << endl;
+			healTimer = 1;
+			Health += 5;
+			//PLAY HEALING SOUND HERE
+		}
+		break;
+	case RETREAT:
+		if (iFSMCounter / 4 < iMaxFSMCounter)
+		{
+			UpdateDirection();
+			FlipHorizontalDirection();
+			UpdatePosition(speedMultiplier);
+		}
+		else
+		{
+			sCurrentFSM = static_cast<CEnemyBase::FSM>(HEAL);
+			iFSMCounter = 0;
+		}
+		iFSMCounter++;
+		break;
 	default:
 		break;
 	}
+	prevHP = Health;
 
 	++iFSMCounter;
 	animatedSprites->Update(dElapsedTime);

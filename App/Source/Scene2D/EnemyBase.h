@@ -157,10 +157,10 @@ protected:
 	virtual void FlipHorizontalDirection(void);
 
 	// Update position
-	virtual void UpdatePosition(void);
+	virtual void UpdatePosition(float speedofEnemy);
 
 	// Update position slowed
-	virtual void UpdatePositionSlowed(void);
+	virtual void UpdatePositionSlowed(float speedofEnemy);
 
 	
 };

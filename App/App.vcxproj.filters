@@ -107,6 +107,9 @@
     <ClCompile Include="Source\GameStateManagement\UpgradeState.cpp">
       <Filter>GameStateManagement\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Scene2D\Enemy2D_Nurse.cpp">
+      <Filter>Scene2D\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -188,6 +191,9 @@
       <Filter>GameStateManagement\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scene2D\EntityManager.h">
+      <Filter>Scene2D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\Enemy2D_Nurse.h">
       <Filter>Scene2D\Header Files</Filter>
     </ClInclude>
   </ItemGroup>

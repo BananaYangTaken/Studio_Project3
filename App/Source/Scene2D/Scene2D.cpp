@@ -18,6 +18,7 @@ using namespace std;
 
 //Enemies
 #include "Enemy2D_Zombie.h"
+#include "Enemy2D_Nurse.h"
 
 /**
  @brief Constructor This constructor has protected access modifier as this class will be a Singleton
@@ -447,6 +448,8 @@ void CScene2D::LoadEnemies(void)
 					CEnemyBase* cEnemy2D;
 					if (Value == 302)
 						cEnemy2D = new CEnemy2D_Zombie();
+					if (Value == 303)
+						cEnemy2D = new CEnemy2D_Nurse();
 					// Pass the shader to instance
 					cEnemy2D->SetShader("Shader2D_Colour");
 					cEnemy2D->SetPlayer(dynamic_cast<CEntity2D*>(Player));

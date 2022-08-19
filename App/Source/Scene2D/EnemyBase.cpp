@@ -48,7 +48,6 @@ void CEnemyBase::Update(const double dElapsedTime)
 	//	std::cout << "Player1" << std::endl;
 	//else
 	//	std::cout << "Player2" << std::endl;*/
-
 	//switch (sCurrentFSM)
 	//{
 	//case IDLE:
@@ -87,7 +86,6 @@ void CEnemyBase::Update(const double dElapsedTime)
 	//	{
 	//		// Attack
 	//		// Update direction to move towards for attack
-
 	//		//Calculate a path to the player
 	//		//cMap2D->PrintSelf();
 	//		//std::cout << "StartPos: " << vec2Index.x << ", " << vec2Index.y << std::endl;
@@ -132,13 +130,8 @@ void CEnemyBase::Update(const double dElapsedTime)
 	//			AStarCalculate = false;
 	//		}
 	//		//std::cout << "--- Printing out the path ---" << std::endl;
-
-
-	//		
-
 	//		// Update the Enemy2D's position for attack
 	//		UpdatePosition();
-
 	//		//cout << "i32vec2Destination : " << i32vec2Destination.x 
 	//		//		<< ", " << i32vec2Destination.y << endl;
 	//		//cout << "i32vec2Direction : " << i32vec2Direction.x 
@@ -444,7 +437,7 @@ void CEnemyBase::FlipHorizontalDirection(void)
 /**
 @brief Update position.
 */
-void CEnemyBase::UpdatePosition(void)
+void CEnemyBase::UpdatePosition(float speedofEnemy)
 {
 	// Store the old position
 	vec2OldIndex = vec2Index;
@@ -456,7 +449,7 @@ void CEnemyBase::UpdatePosition(void)
 		const int iOldIndex = vec2Index.x;
 		if (vec2Index.x >= 0)
 		{
-			vec2NumMicroSteps.x -= (1);
+			vec2NumMicroSteps.x -= (1 * speedofEnemy);
 			if (vec2NumMicroSteps.x < 0)
 			{
 				vec2NumMicroSteps.x = ((int)cSettings->NUM_STEPS_PER_TILE_XAXIS) - 1;
@@ -483,7 +476,7 @@ void CEnemyBase::UpdatePosition(void)
 		const int iOldIndex = vec2Index.x;
 		if (vec2Index.x < (int)cSettings->NUM_TILES_XAXIS)
 		{
-			vec2NumMicroSteps.x += (1);
+			vec2NumMicroSteps.x += (1 * speedofEnemy);
 
 			if (vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
 			{
@@ -513,7 +506,7 @@ void CEnemyBase::UpdatePosition(void)
 		const int iOldIndex = vec2Index.y;
 		if (vec2Index.y < (int)cSettings->NUM_TILES_YAXIS)
 		{
-			vec2NumMicroSteps.y -= (1);
+			vec2NumMicroSteps.y -= (1 * speedofEnemy);
 			if (vec2NumMicroSteps.y < 0)
 			{
 				vec2NumMicroSteps.y = ((int)cSettings->NUM_STEPS_PER_TILE_YAXIS) - 1;
@@ -539,7 +532,7 @@ void CEnemyBase::UpdatePosition(void)
 		const int iOldIndex = vec2Index.y;
 		if (vec2Index.y < (int)cSettings->NUM_TILES_YAXIS)
 		{
-			vec2NumMicroSteps.y += (1);
+			vec2NumMicroSteps.y += (1 * speedofEnemy);
 
 			if (vec2NumMicroSteps.y >= cSettings->NUM_STEPS_PER_TILE_YAXIS)
 			{
@@ -561,7 +554,7 @@ void CEnemyBase::UpdatePosition(void)
 	}
 }
 
-void CEnemyBase::UpdatePositionSlowed(void)
+void CEnemyBase::UpdatePositionSlowed(float speedofEnemy)
 {
 	// Store the old position
 	vec2OldIndex = vec2Index;
@@ -573,7 +566,7 @@ void CEnemyBase::UpdatePositionSlowed(void)
 		const int iOldIndex = vec2Index.x;
 		if (vec2Index.x >= 0)
 		{
-			vec2NumMicroSteps.x -= (0.5);
+			vec2NumMicroSteps.x -= (0.5 * speedofEnemy);
 			if (vec2NumMicroSteps.x < 0)
 			{
 				vec2NumMicroSteps.x = ((int)cSettings->NUM_STEPS_PER_TILE_XAXIS) - 0.5;
@@ -600,7 +593,7 @@ void CEnemyBase::UpdatePositionSlowed(void)
 		const int iOldIndex = vec2Index.x;
 		if (vec2Index.x < (int)cSettings->NUM_TILES_XAXIS)
 		{
-			vec2NumMicroSteps.x += (0.5);
+			vec2NumMicroSteps.x += (0.5 * speedofEnemy);
 
 			if (vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
 			{
@@ -630,7 +623,7 @@ void CEnemyBase::UpdatePositionSlowed(void)
 		const int iOldIndex = vec2Index.y;
 		if (vec2Index.y < (int)cSettings->NUM_TILES_YAXIS)
 		{
-			vec2NumMicroSteps.y -= (0.5);
+			vec2NumMicroSteps.y -= (0.5 * speedofEnemy);
 			if (vec2NumMicroSteps.y < 0)
 			{
 				vec2NumMicroSteps.y = ((int)cSettings->NUM_STEPS_PER_TILE_YAXIS) - 0.5;
@@ -656,7 +649,7 @@ void CEnemyBase::UpdatePositionSlowed(void)
 		const int iOldIndex = vec2Index.y;
 		if (vec2Index.y < (int)cSettings->NUM_TILES_YAXIS)
 		{
-			vec2NumMicroSteps.y += (0.5);
+			vec2NumMicroSteps.y += (0.5 * speedofEnemy);
 
 			if (vec2NumMicroSteps.y >= cSettings->NUM_STEPS_PER_TILE_YAXIS)
 			{
