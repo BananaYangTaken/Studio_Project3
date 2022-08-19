@@ -20,7 +20,8 @@ public:
 	bool hasseenplayeronce = false;
 	glm::vec2 Playervec2OldIndex;
 	glm::vec2 OldPositu;
-
+	void droploot();
+	void spawnloot( float vecX, float vecY);
 protected:
 	float deathTimer;
 	float speedMultiplier;

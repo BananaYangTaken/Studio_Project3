@@ -85,7 +85,7 @@ bool  CEnemy2D_Zombie::checkforLOS()
 	// Store the old player position
 	Playervec2OldIndex = dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index;
 	int distfromplayer = cPhysics2D.CalculateDistance(dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index, vec2Index) + 1;
-	int distcorrection = distfromplayer / 7;
+	int distcorrection = (distfromplayer / 7) - 1;
 	distfromplayer = distfromplayer - distcorrection;
 	cout << "DISTANCE: " << distfromplayer << endl;
 	float Xdiff = Playervec2OldIndex.x - vec2Index.x;
@@ -337,6 +337,62 @@ void CEnemy2D_Zombie::UpdateToLastLOS()
 	}
 }
 
+void CEnemy2D_Zombie::droploot()
+{
+	int lootcount = rand() % 3 + 1;
+
+	for (int i = 0; i < lootcount; i++)
+	{
+		float recvex = vec2Index.x, recvey = vec2Index.y;
+		if (cMap2D->GetMapInfo(recvex, recvey) == 0 || cMap2D->GetMapInfo(recvex, recvey) == 22)
+		{
+			spawnloot(recvex, recvey);
+		}
+		else if (cMap2D->GetMapInfo(recvex + 1, recvey) == 0 || cMap2D->GetMapInfo(recvex + 1, recvey) == 22)
+		{
+			spawnloot(recvex + 1, recvey);
+		}
+		else if (cMap2D->GetMapInfo(recvex - 1, recvey) == 0 || cMap2D->GetMapInfo(recvex - 1, recvey) == 22)
+		{
+			spawnloot(recvex - 1, recvey);
+		}
+		else if (cMap2D->GetMapInfo(recvex, recvey + 1) == 0 || cMap2D->GetMapInfo(recvex, recvey + 1) == 22)
+		{
+			spawnloot(recvex, recvey + 1);
+		}
+		else if (cMap2D->GetMapInfo(recvex, recvey - 1) == 0 || cMap2D->GetMapInfo(recvex, recvey - 1) == 22)
+		{
+			spawnloot(recvex, recvey - 1);
+		}
+		else if (cMap2D->GetMapInfo(recvex + 1, recvey + 1) == 0 || cMap2D->GetMapInfo(recvex + 1, recvey + 1) == 22)
+		{
+			spawnloot(recvex + 1, recvey + 1);
+		}
+		else if (cMap2D->GetMapInfo(recvex - 1, recvey - 1) == 0 || cMap2D->GetMapInfo(recvex - 1, recvey - 1) == 22)
+		{
+			spawnloot(recvex - 1, recvey - 1);
+		}
+		else if (cMap2D->GetMapInfo(recvex + 1, recvey - 1) == 0 || cMap2D->GetMapInfo(recvex + 1, recvey - 1) == 22)
+		{
+			spawnloot(recvex + 1, recvey - 1);
+		}
+		else if (cMap2D->GetMapInfo(recvex - 1, recvey + 1) == 0 || cMap2D->GetMapInfo(recvex - 1, recvey + 1) == 22)
+		{
+			spawnloot(recvex - 1, recvey + 1);
+		}
+	}
+}
+
+
+void CEnemy2D_Zombie::spawnloot(float vecX, float vecY)
+{
+	int loottype = rand() % 5 + 1;
+	if(loottype == 1) cMap2D->SetMapInfo(vecX, vecY, 30); // Bandagge
+	else if (loottype == 2) cMap2D->SetMapInfo(vecX, vecY, 40); // Scrap Metal
+	else if (loottype == 3) cMap2D->SetMapInfo(vecX, vecY, 41); // Stone Ore
+	else if (loottype == 4) cMap2D->SetMapInfo(vecX, vecY, 33); // Fabric
+	else if (loottype == 5) cMap2D->SetMapInfo(vecX, vecY, 34); // Wood
+}
 void CEnemy2D_Zombie::Update(const double dElapsedTime)
 {
 	UpdateDirection();
@@ -349,6 +405,7 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		if (deathTimer > 2)
 		{
 			bIsActive = false;
+			droploot();
 		}
 		if (deathTimer == 0)
 		{
@@ -374,7 +431,7 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 	case PATROL:
 		if (iFSMCounter > iMaxFSMCounter)
 		{
-			sCurrentFSM = IDLE;
+			sCurrentFSM = static_cast<CEnemyBase::FSM>(CHASE);
 			iFSMCounter = 0;
 		}
 		else if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 5.0f)

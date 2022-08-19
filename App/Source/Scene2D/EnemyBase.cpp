@@ -423,8 +423,8 @@ void CEnemyBase::UpdateDirection(void)
 	{
 		// Calculate direction vector.
 		// We need to round the numbers as it is easier to work with whole numbers for movements
-		vec2Direction.x = (int)round(vec2Direction.x / fDistance);
-		vec2Direction.y = (int)round(vec2Direction.y / fDistance);
+		vec2Direction.x = (int)round(vec2Direction.x);
+		vec2Direction.y = (int)round(vec2Direction.y);
 	}
 	else
 	{
