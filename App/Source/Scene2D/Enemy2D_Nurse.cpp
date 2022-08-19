@@ -39,6 +39,7 @@ CEnemy2D_Nurse::CEnemy2D_Nurse(void)
 	speedMultiplier = 0.5;
 	healTimer = 0;
 	readyToHeal = 0;
+	Attack = false;
 
 	transform = glm::mat4(1.0f);	// make sure to initialize matrix to identity matrix first
 
@@ -457,7 +458,7 @@ void CEnemy2D_Nurse::Update(const double dElapsedTime)
 		break;
 	case CHASE:
 		//FSM Transition
-		if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 0.5f)
+		if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 1.f)
 		{
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(ATTACK);
 			iFSMCounter = 0;
@@ -501,7 +502,7 @@ void CEnemy2D_Nurse::Update(const double dElapsedTime)
 		break;
 	case ATTACK:
 		//FSM Transition
-		if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 0.5f)
+		if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 1.f)
 		{
 			if (Attack == false)
 			{
@@ -510,12 +511,8 @@ void CEnemy2D_Nurse::Update(const double dElapsedTime)
 				AttackAnim = 1;
 				animatedSprites->PlayAnimation("attack", 1, 1.0f);
 				CSoundController::GetInstance()->PlaySoundByID(15);
-			}
-			else if (Attack && AttackAnim <= 0)
-			{
-				Attack = false;
 				sCurrentFSM = static_cast<CEnemyBase::FSM>(RELOAD);
-				ReloadDuration = 0.3;
+				ReloadDuration = 1;
 				if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index, 'x') < 1.5f)
 				{
 					if (dynamic_cast<CPlayer2D_V2*>(Player)->GetInvulnerabilityFrame() <= 0)
@@ -544,22 +541,20 @@ void CEnemy2D_Nurse::Update(const double dElapsedTime)
 		break;
 	case RELOAD:
 		//FSM Transition
-		iFSMCounter = 0;
 		if (ReloadDuration <= 0)
 		{
+			Attack = false;
 			ReloadDuration = 0;
-			sCurrentFSM = static_cast<CEnemyBase::FSM>(ATTACK);
+			sCurrentFSM = static_cast<CEnemyBase::FSM>(CHASE);
 		}
 		else
 		{
 			ReloadDuration -= dElapsedTime;
 		}
-		//Animation
-		animatedSprites->PlayAnimation("idle", -1, 1.0f);
 		break;
 	case SLOWED:
 		//FSM Transition
-		if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 0.5f)
+		if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 1.f)
 		{
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(ATTACK);
 			iFSMCounter = 0;

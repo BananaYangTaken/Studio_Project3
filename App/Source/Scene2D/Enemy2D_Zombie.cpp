@@ -37,6 +37,7 @@ CEnemy2D_Zombie::CEnemy2D_Zombie(void)
 	InvulnerabilityFrame = 0;
 	Direction = 2;
 	speedMultiplier = 0.5;
+	Attack = false;
 
 	transform = glm::mat4(1.0f);	// make sure to initialize matrix to identity matrix first
 
@@ -441,9 +442,8 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		break;
 	case CHASE:
 		//FSM Transition
-		if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 0.5f)
+		if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 1.f)
 		{
-			cout << "attac" << endl;
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(ATTACK);
 			iFSMCounter = 0;
 			bool bFirstPosition = true;
@@ -471,9 +471,9 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		{
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(IDLE);
 		}
-		else
+		if (vec2Index == OldPositu)
 		{
-			cout << "REDUND" << endl;
+			sCurrentFSM = static_cast<CEnemyBase::FSM>(PATROL);
 		}
 		iFSMCounter++;
 		//Animation
@@ -481,21 +481,16 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		break;
 	case ATTACK:
 		//FSM Transition
-		if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 1.5f)
+		if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 1.f)
 		{
 			if (Attack == false)
 			{
 				// Attack
 				Attack = true;
-				AttackAnim = 1;
 				animatedSprites->PlayAnimation("attack", 1, 1.0f);
 				CSoundController::GetInstance()->PlaySoundByID(15);
-			}
-			else if (Attack && AttackAnim <= 0)
-			{
-				Attack = false;
 				sCurrentFSM = static_cast<CEnemyBase::FSM>(RELOAD);
-				ReloadDuration = 0.3;
+				ReloadDuration = 1;
 				if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index, 'x') < 1.5f)
 				{
 					if (dynamic_cast<CPlayer2D_V2*>(Player)->GetInvulnerabilityFrame() <= 0)
@@ -520,22 +515,20 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		break;
 	case RELOAD:
 		//FSM Transition
-		iFSMCounter = 0;
 		if (ReloadDuration <= 0)
 		{
 			ReloadDuration = 0;
-			sCurrentFSM = static_cast<CEnemyBase::FSM>(ATTACK);
+			Attack = false;
+			sCurrentFSM = static_cast<CEnemyBase::FSM>(CHASE);
 		}
 		else
 		{
 			ReloadDuration -= dElapsedTime;
 		}
-		//Animation
-		animatedSprites->PlayAnimation("idle", -1, 1.0f);
 		break;
 	case SLOWED:
 		//FSM Transition
-		if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 0.5f)
+		if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 1.f)
 		{
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(ATTACK);
 			iFSMCounter = 0;
