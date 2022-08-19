@@ -96,7 +96,6 @@ bool CPlayer2D_V2::Init(void)
 	cKeyboardController = CKeyboardController::GetInstance();
 	// Reset all keys since we are starting a new game
 	cKeyboardController->Reset();
-
 	// Store the mouse controller singleton instance here
 	cMouseController = CMouseController::GetInstance();
 
@@ -434,14 +433,20 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 	}
 
 	//Interact with Map
-	InteractWithMap();
+	InteractWithMap(0,0);
+	InteractWithMap(0, 1);
+	InteractWithMap(1, 0);
+	InteractWithMap(1,1);
+	InteractWithMap(-1, 0);
+	InteractWithMap(0, -1);
+	InteractWithMap(-1, -1);
 	if (vec2Index.y - 1 > 0)
 	{
-		InteractWithMap(0, -1);
+		InteractWithMap(0, 0);
 	}
 	if (vec2Index.x + 1 < cSettings->NUM_TILES_XAXIS)
 	{
-		InteractWithMap(1, 0);
+		InteractWithMap(0, 0);
 	}
 
 	//CS: Update the animated sprite
@@ -735,6 +740,7 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 		{
 			cMap2D->FindValue(30, IRow, ICol);
 			cMap2D->SetMapInfo(IRow, ICol, 0);
+			cGUI_Scene2D->IncreaseInventoryItemCount("Bandage", 1);
 		}
 		break;
 	case 32:
@@ -742,41 +748,74 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 		{
 			cMap2D->FindValue(32, IRow, ICol);
 			cMap2D->SetMapInfo(IRow, ICol, 0);
+			cGUI_Scene2D->IncreaseInventoryItemCount("Blueprint", 1);
 			break;
 		}
+	case 33:
+		if (cKeyboardController->IsKeyPressed('F'))
+		{
+			cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+			cGUI_Scene2D->IncreaseInventoryItemCount("Fabric", 1);
+		}
+		break;
+	case 34:
+		if (cKeyboardController->IsKeyPressed('F'))
+		{
+
+			cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+			cGUI_Scene2D->IncreaseInventoryItemCount("Hard wood", 1);
+		}
+		break;
 	case 35:
 		if (cKeyboardController->IsKeyPressed('F'))
 		{
-			cMap2D->FindValue(35, IRow, ICol);
-			cMap2D->SetMapInfo(IRow, ICol, 0);
+			cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+			cGUI_Scene2D->IncreaseInventoryItemCount("Medkit", 1);
 		}
 		break;
 	case 36:
 		if (cKeyboardController->IsKeyPressed('F'))
 		{
-			cMap2D->FindValue(36, IRow, ICol);
-			cMap2D->SetMapInfo(IRow, ICol, 0);
+			cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+			cGUI_Scene2D->IncreaseInventoryItemCount("Pistol Bullet", 10);
 		}
 		break;
 	case 37:
 		if (cKeyboardController->IsKeyPressed('F'))
 		{
 			cMap2D->FindValue(37, IRow, ICol);
-			cMap2D->SetMapInfo(IRow, ICol, 0);
+			cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+			cGUI_Scene2D->IncreaseInventoryItemCount("Pistol", 1);
 		}
 		break;
 	case 38:
 		if (cKeyboardController->IsKeyPressed('F'))
 		{
 			cMap2D->FindValue(38, IRow, ICol);
-			cMap2D->SetMapInfo(IRow, ICol, 0);
+			cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+			cGUI_Scene2D->IncreaseInventoryItemCount("Rifle Bullet", 10);
 		}
 		break;
 	case 39:
 		if (cKeyboardController->IsKeyPressed('F'))
 		{
 			cMap2D->FindValue(39, IRow, ICol);
-			cMap2D->SetMapInfo(IRow, ICol, 0);
+			cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+			cGUI_Scene2D->IncreaseInventoryItemCount("Rifle", 1);
+		}
+	case 40:
+		if (cKeyboardController->IsKeyPressed('F'))
+		{
+			cMap2D->FindValue(40, IRow, ICol);
+			cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+			cGUI_Scene2D->IncreaseInventoryItemCount("Scrap Metal", 1);
+		}
+	case 41:
+		if (cKeyboardController->IsKeyPressed('F'))
+		{
+			cMap2D->FindValue(41, IRow, ICol);
+			cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+			cGUI_Scene2D->IncreaseInventoryItemCount("Stone Ore", 1);
 		}
 		break;
 	default:

@@ -51,6 +51,7 @@ public:
 	// Init
 	bool Init(void);
 	bool selectinventory = true;
+	void spawnloot(float vecX, float vecY);
 	const int inventory_size = 9;
 	std::string inventory_item_name_list[9] = {"Scrap Metal", "Hard wood", "Stone Ore", "Pistol Bullets", "Rifle Bullets", "Rifle", "Pistol", "Medkit", "Blueprint"};
 	int inventory_item_quantity[9] = {999,999,999,999,999,1,1,90,200};
@@ -70,6 +71,11 @@ public:
 	int chest_item_quantity[8] = { 0,0,0,0,0,0,0,0};
 	int chest_item_max_quantity[8] = { 999,999,999,999,999,999,999,999};
 	
+	void SpawnRandomPoliceStation();
+	void SpawnRandomHospital();
+	void SpawnRandomHomeDepot();
+	void SpawnRandomMilBase();
+
 	int lootcrateSize = 8;
 	std::string crate_item_name_list[8] = { "empty2", "empty3", "empty4", "empty5", "empty6", "empty7", "empty8", "empty9" };
 	int crate_item_quantity[8] = { 0,0,0,0,0,0,0,0 };
@@ -114,7 +120,7 @@ public:
 	// PostRender
 	void PostRender(void);
 	void Destroy(void);
-
+	ImVec2 PStopleft, PStopright, PSbottomleft, PSbottomright;
 protected:
 	struct ButtonData
 	{

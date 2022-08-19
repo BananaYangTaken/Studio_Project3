@@ -54,7 +54,15 @@ void CGUI_Scene2D::setInventoryItem(int arrayVal, std::string item, int quantity
 	inventory_item_max_quantity[arrayVal] = maxQuantity;
 }
 
-
+void CGUI_Scene2D::spawnloot(float vecX, float vecY)
+{
+	int loottype = rand() % 5 + 1;
+	if (loottype == 1) cMap2D->SetMapInfo(vecX, vecY, 30); // Bandagge
+	else if (loottype == 2) cMap2D->SetMapInfo(vecX, vecY, 40); // Scrap Metal
+	else if (loottype == 3) cMap2D->SetMapInfo(vecX, vecY, 41); // Stone Ore
+	else if (loottype == 4) cMap2D->SetMapInfo(vecX, vecY, 33); // Fabric
+	else if (loottype == 5) cMap2D->SetMapInfo(vecX, vecY, 34); // Wood
+}
 
 int CGUI_Scene2D::IncreaseInventoryItemCount(std::string arrayindex, int incrementValue)
 {
@@ -425,7 +433,10 @@ bool CGUI_Scene2D::Init(void)
 	//KnightIcon.fileName = "Image\\HumanKnightIcon.png";
 	//.textureID = il->LoadTextureGetID(KnightIcon.fileName.c_str(), true);
 
-
+	SpawnRandomPoliceStation();
+	SpawnRandomHospital();
+	SpawnRandomHomeDepot();
+	SpawnRandomMilBase();
 	// Initialise the cInventoryManager
 	cInventoryManager = CInventoryManager::GetInstance();
 
@@ -502,27 +513,27 @@ void CGUI_Scene2D::dropitem(int key)
 {
 	cout << "ITEMNAME: " + inventory_item_name_list[key];
 	if (inventory_item_name_list[key] == "Bandage")
-		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.x, CPlayer2D_V2::GetInstance()->vec2Index.y, 30);
+		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.y, CPlayer2D_V2::GetInstance()->vec2Index.x, 30);
 	if (inventory_item_name_list[key] == "Blueprint")
 		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.y, CPlayer2D_V2::GetInstance()->vec2Index.x, 32);
 	if (inventory_item_name_list[key] == "Medkit")
-		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.x, CPlayer2D_V2::GetInstance()->vec2Index.y, 35);
+		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.y, CPlayer2D_V2::GetInstance()->vec2Index.x, 35);
 	if (inventory_item_name_list[key] == "Pistol Bullets")
-		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.x, CPlayer2D_V2::GetInstance()->vec2Index.y, 36);
+		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.y, CPlayer2D_V2::GetInstance()->vec2Index.x, 36);
 	if (inventory_item_name_list[key] == "Pistol")
-		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 37);
+		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.y, CPlayer2D_V2::GetInstance()->vec2Index.x, 37);
 	if (inventory_item_name_list[key] == "Rifle Bullets")
-		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 38);
+		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.y, CPlayer2D_V2::GetInstance()->vec2Index.x, 38);
 	if (inventory_item_name_list[key] == "Rifle")
-		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 39);
+		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.y, CPlayer2D_V2::GetInstance()->vec2Index.x, 39);
 	if (inventory_item_name_list[key] == "Scrap Metal")
-		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 40);
+		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.y, CPlayer2D_V2::GetInstance()->vec2Index.x, 40);
 	if (inventory_item_name_list[key] == "Stone Ore")
-		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 41);
+		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.y, CPlayer2D_V2::GetInstance()->vec2Index.x, 41);
 	if (inventory_item_name_list[key] == "Fabric")
-		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 33);
+		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.y, CPlayer2D_V2::GetInstance()->vec2Index.x, 33);
 	if (inventory_item_name_list[key] == "Hard wood")
-		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 34);
+		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.y, CPlayer2D_V2::GetInstance()->vec2Index.x, 34);
 	inventory_item_quantity[key] = 0;
 
 }
@@ -543,6 +554,124 @@ void CGUI_Scene2D::SwapItems(int itemindex, int swapindex)
 std::string CGUI_Scene2D::GetCurrentHotbarItem(void)
 {
 	return inventory_item_name_list[hotbarlevel];
+}
+
+void CGUI_Scene2D::SpawnRandomPoliceStation()
+{
+	cout << "SPAWNED ITEMS IN POLICE STATION" << endl;
+	PStopleft = ImVec2(5, 95);
+	PStopright = ImVec2(24,95);
+	PSbottomright = ImVec2(23, 85);
+	PSbottomleft = ImVec2(5, 85);
+	cout << "X: " << PStopleft.y - PSbottomleft.y << endl;
+	cout << "D: " << PStopright.x - PStopleft.x<< endl;
+	for (int i = 0; i < PStopright.x - PStopleft.x; i++)
+	{
+		for (int u = 0; u < PStopleft.y - PSbottomleft.y; u++)
+		{
+			int rande = rand() % 65 + 1;
+			if (rande == 2 && cMap2D->GetMapInfo(PStopleft.y - u, PStopleft.x + i) == 0)
+			{
+				cout << "SPAWNED LOOT HERE: " << PStopleft.x + i << ", " << PStopleft.y - u << endl;
+				spawnloot(PStopleft.y - u, PStopleft.x + i);
+				int loottype = rand() % 15 + 1;
+				if (loottype <= 4) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 38); // Rifle Ammo
+				else if (loottype == 5) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 37); // Pistol
+				else if (loottype >= 6) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 36); // Pistol Ammo
+
+			}
+		}
+	}
+}
+
+void CGUI_Scene2D::SpawnRandomHospital()
+{
+	cout << "SPAWNED ITEMS IN HOSPITAL" << endl;
+	PStopleft = ImVec2(80, 98);
+	PStopright = ImVec2(98, 98);
+	PSbottomright = ImVec2(98, 60);
+	PSbottomleft = ImVec2(80, 60);
+	cout << "X: " << PStopleft.y - PSbottomleft.y << endl;
+	cout << "D: " << PStopright.x - PStopleft.x << endl;
+	for (int i = 0; i < PStopright.x - PStopleft.x; i++)
+	{
+		for (int u = 0; u < PStopleft.y - PSbottomleft.y; u++)
+		{
+			int rande = rand() % 100 + 1;
+			if (rande == 2 && cMap2D->GetMapInfo(PStopleft.y - u, PStopleft.x + i) == 0)
+			{
+				cout << "SPAWNED LOOT HERE: " << PStopleft.x + i << ", " << PStopleft.y - u << endl;
+				spawnloot(PStopleft.y - u, PStopleft.x + i);
+				int loottype = rand() % 10 + 1;
+				if (loottype <= 4) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 30); // bandage
+
+				else if (loottype == 5) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 35); // medkit
+
+			}
+		}
+	}
+}
+
+
+void CGUI_Scene2D::SpawnRandomHomeDepot()
+{
+	cout << "SPAWNED ITEMS IN HOME DEPOT" << endl;
+	PStopleft = ImVec2(49, 84);
+	PStopright = ImVec2(64, 84);
+	PSbottomright = ImVec2(49, 66);
+	PSbottomleft = ImVec2(64, 66);
+	cout << "X: " << PStopleft.y - PSbottomleft.y << endl;
+	cout << "D: " << PStopright.x - PStopleft.x << endl;
+	for (int i = 0; i < PStopright.x - PStopleft.x; i++)
+	{
+		for (int u = 0; u < PStopleft.y - PSbottomleft.y; u++)
+		{
+			int rande = rand() % 65 + 1;
+			if (rande == 2 && cMap2D->GetMapInfo(PStopleft.y - u, PStopleft.x + i) == 0)
+			{
+				cout << "SPAWNED LOOT HD: " << PStopleft.x + i << ", " << PStopleft.y - u << endl;
+				spawnloot(PStopleft.y - u, PStopleft.x + i);
+				int loottype = rand() % 4 + 1;
+				if (loottype == 1) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 40); // scrap
+				else if (loottype == 2) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 41); // stone
+				else if (loottype == 3) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 33); // fabric
+				else if (loottype == 4) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 34); // wood
+			}
+		}
+	}
+}
+
+
+void CGUI_Scene2D::SpawnRandomMilBase()
+{
+	cout << "SPAWNED ITEMS IN MIL BASE" << endl;
+	PStopleft = ImVec2(45, 10);
+	PStopright = ImVec2(99, 10);
+	PSbottomright = ImVec2(45, 1);
+	PSbottomleft = ImVec2(99, 1);
+	cout << "X: " << PStopleft.y - PSbottomleft.y << endl;
+	cout << "D: " << PStopright.x - PStopleft.x << endl;
+	for (int i = 0; i < PStopright.x - PStopleft.x; i++)
+	{
+		for (int u = 0; u < PStopleft.y - PSbottomleft.y; u++)
+		{
+			int rande = rand() % 80 + 1;
+			if (rande == 2 && cMap2D->GetMapInfo(PStopleft.y - u, PStopleft.x + i) == 0)
+			{
+				cout << "SPAWNED LOOT HD: " << PStopleft.x + i << ", " << PStopleft.y - u << endl;
+				spawnloot(PStopleft.y - u, PStopleft.x + i);
+				int loottype = rand() % 5 + 1;
+				if (loottype == 1) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 40); // scrap
+				else if (loottype == 2) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 35); // medkit
+				else if (loottype == 3) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 38); // rifle bullets
+				else if (loottype == 4) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 36); // pistol bullets
+				loottype = rand() % 15 + 1;
+				if (loottype == 1) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 37); // pistol
+				if (loottype == 2) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 39); // rifle
+				if (loottype == 3) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 32); // BP
+			}
+		}
+	}
 }
 
 void CGUI_Scene2D::Update(const double dElapsedTime)
