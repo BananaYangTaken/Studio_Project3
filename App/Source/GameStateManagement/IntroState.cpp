@@ -63,9 +63,48 @@ CIntroState::CIntroState(void)
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\BowStretch.ogg"), 14, true, false, CSoundInfo::SOUNDGROUP::Player);
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SwordSwing.ogg"), 15, true, false, CSoundInfo::SOUNDGROUP::Player);
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\Explosion.ogg"), 16, true, false, CSoundInfo::SOUNDGROUP::Creatures);
-		cSoundController->LoadSound(FileSystem::getPath("Sounds\\Hiss.ogg"), 17, true, false, CSoundInfo::SOUNDGROUP::Creatures);
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\Hiss.ogg"), 17, true, false, CSoundInfo::SOUNDGROUP::Creatures);	
 		
-		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SearchingBag.ogg"), 18, true, false, CSoundInfo::SOUNDGROUP::Player);
+		//search
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Search.ogg"), 18, true, false, CSoundInfo::SOUNDGROUP::Player);
+		//Rifle Fire
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\AK_Fire.ogg"), 19, true, false, CSoundInfo::SOUNDGROUP::Player);
+		//Craft
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Craft.ogg"), 20, true, false, CSoundInfo::SOUNDGROUP::Player);
+		//Heal
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Heal.ogg"), 21, true, false, CSoundInfo::SOUNDGROUP::Player);
+		//PickUp
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\PickUp.ogg"), 22, true, false, CSoundInfo::SOUNDGROUP::Player);
+		//Pistol Fire
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Pistol_Fire.ogg"), 23, true, false, CSoundInfo::SOUNDGROUP::Player);
+		//Pistol Reload
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Pistol_Reload.ogg"), 24, true, false, CSoundInfo::SOUNDGROUP::Player);
+		//Rifle Reload
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Rifle_Reload.ogg"), 25, true, false, CSoundInfo::SOUNDGROUP::Player);
+		//Turret Active
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Turret_Active.ogg"), 26, true, false, CSoundInfo::SOUNDGROUP::Player);
+		//Turret Fire
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Turret_Fire.ogg"), 27, true, false, CSoundInfo::SOUNDGROUP::Player);
+		//Turret Idol
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Turret_Idol.ogg"), 28, true, false, CSoundInfo::SOUNDGROUP::Player);
+		//Turret2 Fire
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Turret2_Fire.ogg"), 29, true, false, CSoundInfo::SOUNDGROUP::Player);
+		//Turret3 Explosion
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Turret3_Explosion.ogg"), 30, true, false, CSoundInfo::SOUNDGROUP::Player);
+		//Turret3 Fire
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Turret3_Fire.ogg"), 31, true, false, CSoundInfo::SOUNDGROUP::Player);
+		//Zombie Attack
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Zombie_Attack.ogg"), 32, true, false, CSoundInfo::SOUNDGROUP::Player);
+		//Zombie Chase
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Zombie_Chase.ogg"), 33, true, false, CSoundInfo::SOUNDGROUP::Player);
+		//Zombie Death
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Zombie_Death.ogg"), 34, true, false, CSoundInfo::SOUNDGROUP::Player);
+		//Zombie_Idle
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Zombie_Idle.ogg"), 35, true, false, CSoundInfo::SOUNDGROUP::Player);
+		//Footsteps
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\FootSteps.ogg"), 36, true, false, CSoundInfo::SOUNDGROUP::Player);
+
+
 		cSoundController->LoadSoundSystem();
 		
 		
