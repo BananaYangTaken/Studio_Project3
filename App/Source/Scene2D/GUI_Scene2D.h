@@ -50,6 +50,12 @@ class CGUI_Scene2D : public CSingletonTemplate<CGUI_Scene2D>, public CEntity2D
 public:
 	// Init
 	bool Init(void);
+	bool darkenmap = true;
+	void clearmap();
+	float redness = 0;
+	float blueness = 0;
+	float greenness = 0;
+	float transparency = 0;
 	bool selectinventory = true;
 	void spawnloot(float vecX, float vecY);
 	const int inventory_size = 9;
@@ -76,6 +82,7 @@ public:
 	void SpawnRandomHospital();
 	void SpawnRandomHomeDepot();
 	void SpawnRandomMilBase();
+	void SpawnRandomYellowRoom();
 
 	int lootcrateSize = 8;
 	std::string crate_item_name_list[8] = { "empty2", "empty3", "empty4", "empty5", "empty6", "empty7", "empty8", "empty9" };
