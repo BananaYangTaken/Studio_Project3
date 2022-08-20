@@ -119,6 +119,9 @@
     <ClCompile Include="Source\Scene2D\Enemy2D_Police.cpp">
       <Filter>Scene2D\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Scene2D\Enemy2D_Mutant.cpp">
+      <Filter>Scene2D\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -209,6 +212,9 @@
       <Filter>Scene2D\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scene2D\Enemy2D_Police.h">
+      <Filter>Scene2D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\Enemy2D_Mutant.h">
       <Filter>Scene2D\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
