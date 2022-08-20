@@ -249,7 +249,10 @@ void CGUI_Scene2D::decreaseChestQuantity(std::string arrayindex, int decrementVa
 int CGUI_Scene2D::TransferToChest(std::string itemName, int quantity)
 {
 	int ind = 0;
+	int und = 0;
 	bool found = false;
+	cout << "SUpposed to transfer: " + itemName;
+	// checks to see if item exists in chest
 	for (int i = 0; i < Chest_size; i++)
 	{
 		if (itemName == chest_item_name_list[i])
@@ -260,6 +263,15 @@ int CGUI_Scene2D::TransferToChest(std::string itemName, int quantity)
 		}
 
 	}
+	// checks to see what position is item in inventory
+	for (int u = 0; u < inventory_size; u++)
+	{
+		if (inventory_item_name_list[u] == itemName)
+		{
+			und = u;
+		}
+	}
+	// adds 1 to the existing position of item to chest if item already exists in chest
 	if (found == true)
 	{
 		
@@ -271,10 +283,11 @@ int CGUI_Scene2D::TransferToChest(std::string itemName, int quantity)
 
 			return difference;
 		}
-		else if (inventory_item_quantity[ind] < quantity)
+		else if (inventory_item_quantity[und] < quantity)
 		{
+			cout << endl << "Cuurrent quan of item: " << inventory_item_quantity[und];
 			cout << "Not enough to init full transfer";
-			chest_item_quantity[ind] += inventory_item_quantity[ind];
+			chest_item_quantity[ind] += inventory_item_quantity[und];
 			DecreaseInventoryItemCount(itemName, quantity);
 		}
 		else
@@ -284,16 +297,19 @@ int CGUI_Scene2D::TransferToChest(std::string itemName, int quantity)
 			return 0;
 		}
 	}
+	// creates new item in empty space
 	else
 	{
-		for (int u = 0; u < inventory_size; u++)
+		for (int u = 0; u < Chest_size; u++)
 		{
 			if (chest_item_name_list[u].find("empty") != string::npos)
 			{
-				if (inventory_item_quantity[ind] <= quantity)
+				cout << endl << "Cuurrent quan of item: " << inventory_item_quantity[und];
+				if (inventory_item_quantity[und] <= quantity)
 				{
 					cout << "Not enough to init full transfer";
-					chest_item_quantity[ind] += inventory_item_quantity[ind];
+					chest_item_quantity[u] += inventory_item_quantity[und];
+					chest_item_name_list[u] = inventory_item_name_list[und];
 					DecreaseInventoryItemCount(itemName, quantity);
 					return 0;
 				}
@@ -1245,6 +1261,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				//cout << "Loading PlayGameState" << endl;
 				if (selectinventory == true)
 				{
+					cout << endl << "TRANSFERRING SHIT" << endl;
 					TransferToChest(inventory_item_name_list[chestkey], 1);
 				}
 				else TransferTohand(chest_item_name_list[chestkey], 1);

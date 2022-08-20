@@ -693,6 +693,7 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 			}
 			else
 			{
+				cout << "get rid of box";
 				cGUI_Scene2D->looting = false;
 				cGUI_Scene2D->checkinginventory = false;
 				cGUI_Scene2D->crafting = false;

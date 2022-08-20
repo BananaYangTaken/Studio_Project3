@@ -317,46 +317,46 @@ void CEnemy2D_Zombie::UpdateToLastLOS()
 
 void CEnemy2D_Zombie::droploot()
 {
-	int lootcount = rand() % 3 + 1;
+	int lootcount = rand() % 2 + 1;
 
 	for (int i = 0; i < lootcount; i++)
 	{
-		float recvex = vec2Index.x, recvey = vec2Index.y;
-		if (cMap2D->GetMapInfo(recvex, recvey) == 0 || cMap2D->GetMapInfo(recvex, recvey) == 22)
+		float recvey = vec2Index.x, recvex = vec2Index.y;
+		if (cMap2D->GetMapInfo(recvey, recvex) == 0 || cMap2D->GetMapInfo(recvey, recvey) == 22)
 		{
-			spawnloot(recvex, recvey);
+			spawnloot(recvey, recvex);
 		}
-		else if (cMap2D->GetMapInfo(recvex + 1, recvey) == 0 || cMap2D->GetMapInfo(recvex + 1, recvey) == 22)
+		else if (cMap2D->GetMapInfo(recvey + 1, recvex) == 0 || cMap2D->GetMapInfo(recvey + 1, recvey) == 22)
 		{
-			spawnloot(recvex + 1, recvey);
+			spawnloot(recvey + 1, recvex);
 		}
-		else if (cMap2D->GetMapInfo(recvex - 1, recvey) == 0 || cMap2D->GetMapInfo(recvex - 1, recvey) == 22)
+		else if (cMap2D->GetMapInfo(recvey - 1, recvex) == 0 || cMap2D->GetMapInfo(recvey - 1, recvey) == 22)
 		{
-			spawnloot(recvex - 1, recvey);
+			spawnloot(recvey - 1, recvex);
 		}
-		else if (cMap2D->GetMapInfo(recvex, recvey + 1) == 0 || cMap2D->GetMapInfo(recvex, recvey + 1) == 22)
+		else if (cMap2D->GetMapInfo(recvey, recvex + 1) == 0 || cMap2D->GetMapInfo(recvey, recvey + 1) == 22)
 		{
-			spawnloot(recvex, recvey + 1);
+			spawnloot(recvey, recvex + 1);
 		}
-		else if (cMap2D->GetMapInfo(recvex, recvey - 1) == 0 || cMap2D->GetMapInfo(recvex, recvey - 1) == 22)
+		else if (cMap2D->GetMapInfo(recvey, recvex - 1) == 0 || cMap2D->GetMapInfo(recvey, recvey - 1) == 22)
 		{
-			spawnloot(recvex, recvey - 1);
+			spawnloot(recvey, recvex - 1);
 		}
-		else if (cMap2D->GetMapInfo(recvex + 1, recvey + 1) == 0 || cMap2D->GetMapInfo(recvex + 1, recvey + 1) == 22)
+		else if (cMap2D->GetMapInfo(recvey + 1, recvex + 1) == 0 || cMap2D->GetMapInfo(recvey + 1, recvey + 1) == 22)
 		{
-			spawnloot(recvex + 1, recvey + 1);
+			spawnloot(recvey + 1, recvex + 1);
 		}
-		else if (cMap2D->GetMapInfo(recvex - 1, recvey - 1) == 0 || cMap2D->GetMapInfo(recvex - 1, recvey - 1) == 22)
+		else if (cMap2D->GetMapInfo(recvey - 1, recvex - 1) == 0 || cMap2D->GetMapInfo(recvey - 1, recvey - 1) == 22)
 		{
-			spawnloot(recvex - 1, recvey - 1);
+			spawnloot(recvey - 1, recvex - 1);
 		}
-		else if (cMap2D->GetMapInfo(recvex + 1, recvey - 1) == 0 || cMap2D->GetMapInfo(recvex + 1, recvey - 1) == 22)
+		else if (cMap2D->GetMapInfo(recvey + 1, recvex - 1) == 0 || cMap2D->GetMapInfo(recvey + 1, recvey - 1) == 22)
 		{
-			spawnloot(recvex + 1, recvey - 1);
+			spawnloot(recvey + 1, recvex - 1);
 		}
-		else if (cMap2D->GetMapInfo(recvex - 1, recvey + 1) == 0 || cMap2D->GetMapInfo(recvex - 1, recvey + 1) == 22)
+		else if (cMap2D->GetMapInfo(recvey - 1, recvex + 1) == 0 || cMap2D->GetMapInfo(recvey - 1, recvey + 1) == 22)
 		{
-			spawnloot(recvex - 1, recvey + 1);
+			spawnloot(recvey - 1, recvex + 1);
 		}
 	}
 }
