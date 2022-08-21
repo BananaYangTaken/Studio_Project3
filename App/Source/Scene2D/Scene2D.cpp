@@ -246,7 +246,7 @@ bool CScene2D::Update(const double dElapsedTime)
 	{
 		CEnemyBase* Temp = static_cast<CEnemyBase*>(*it);
 		// remove odd numbers
-		if ((*it) && Temp->GetHealth() <= 0 && Temp->GetDeathState() == 1)
+		if ((*it) && Temp->GetHealth() <= 0 && Temp->bIsActive == false)
 		{
 			it = cEnemyList.erase(it);
 		}
