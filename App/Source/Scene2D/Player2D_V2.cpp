@@ -159,9 +159,21 @@ bool CPlayer2D_V2::Init(void)
 	glBindVertexArray(VAO);
 
 	animatedSprites = CMeshBuilder::GenerateSpriteAnimation(13, 20, (cSettings->TILE_WIDTH + cSettings->TILE_HEIGHT) * 0.5, (cSettings->TILE_WIDTH + cSettings->TILE_HEIGHT) * 0.5);
-	animatedSprites->AddAnimation("idle", 0, 19);
+	animatedSprites->AddAnimation("meleeIdle", 0, 19);
 	animatedSprites->AddAnimation("meleeAttack", 20, 34);
-	animatedSprites->AddAnimation("move", 40, 59);
+	animatedSprites->AddAnimation("meleeMove", 40, 59);
+
+	animatedSprites->AddAnimation("pistolIdle", 60, 79);
+	animatedSprites->AddAnimation("pistolMove", 80, 99);
+	animatedSprites->AddAnimation("pistolAttack", 100, 114);
+	animatedSprites->AddAnimation("pistolReload", 120, 134);
+	animatedSprites->AddAnimation("pistolFire", 140, 142);
+
+	animatedSprites->AddAnimation("rifleIdle", 160, 179);
+	animatedSprites->AddAnimation("rifleAttack", 180, 194);
+	animatedSprites->AddAnimation("rifleMove", 200, 219);
+	animatedSprites->AddAnimation("rifleReload", 220, 239);
+	animatedSprites->AddAnimation("rifleFire", 240, 242);
 
 	AnimationTimer = 0;
 
@@ -409,10 +421,11 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 	}
 
 
+	CInventoryItem HeldItem = *(cInventoryManager->GetItem(cGUI_Scene2D->GetCurrentHotbarItem()));
+
 	//Player Use Item
 	if (cGUI_Scene2D->checkinginventory == false && cGUI_Scene2D->crafting == false && cGUI_Scene2D->chestactive == false)
 	{
-		CInventoryItem HeldItem = *(cInventoryManager->GetItem(cGUI_Scene2D->GetCurrentHotbarItem()));
 		if (cMouseController->IsButtonDown(0) && !LButtonState)
 		{
 			LButtonState = true;
@@ -429,8 +442,8 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 			{
 
 				//Attack with Semi Auto Gun
-				AnimationTimer = 0.3f;
-				animatedSprites->PlayAnimation("meleeAttack", -1, AnimationTimer);
+				AnimationTimer = 0.1f;
+				animatedSprites->PlayAnimation("pistolFire", -1, AnimationTimer);
 				cSoundController->PlaySoundByID(15);
 				cProjectileManager->SpawnProjectile(vec2Index, vec2NumMicroSteps, Rotation, 400, CProjectile2D::FRIENDLY, CProjectile2D::BULLET, HeldItem.WData->Damage);
 			}
@@ -446,7 +459,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 
 				//Attack with Semi Auto Gun
 				AnimationTimer = 0.3f;
-				animatedSprites->PlayAnimation("meleeAttack", -1, AnimationTimer);
+				animatedSprites->PlayAnimation("rifleFire", -1, AnimationTimer);
 				cSoundController->PlaySoundByID(15);
 				cProjectileManager->SpawnProjectile(vec2Index, vec2NumMicroSteps, Rotation, 400, CProjectile2D::FRIENDLY, CProjectile2D::BULLET, HeldItem.WData->Damage);
 			}
@@ -455,11 +468,42 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 	//Animation
 	if (motion == false && AnimationTimer == 0)
 	{
-		animatedSprites->PlayAnimation("idle", -1, 10.0f);
+		if (HeldItem.itemtype == ITEM_TYPE::GUN)
+		{
+			if (HeldItem.GData->firingtype == FIRING_TYPE::SEMIAUTO)
+			{
+				animatedSprites->PlayAnimation("pistolIdle", -1, 10.0f);
+			}
+			else if (HeldItem.GData->firingtype == FIRING_TYPE::FULLAUTO)
+			{
+				animatedSprites->PlayAnimation("rifleIdle", -1, 10.0f);
+			}
+		}
+		else
+		{
+			animatedSprites->PlayAnimation("meleeIdle", -1, 10.0f);
+		}
 	}
 	else if (motion == true && AnimationTimer == 0)
 	{
-		animatedSprites->PlayAnimation("move", -1, 1.0f);
+		if (HeldItem.itemtype == ITEM_TYPE::GUN)
+		{
+			if (HeldItem.itemtype == ITEM_TYPE::GUN)
+			{
+				if (HeldItem.GData->firingtype == FIRING_TYPE::SEMIAUTO)
+				{
+					animatedSprites->PlayAnimation("pistolMove", -1, 10.0f);
+				}
+				else if (HeldItem.GData->firingtype == FIRING_TYPE::FULLAUTO)
+				{
+					animatedSprites->PlayAnimation("rifleMove", -1, 10.0f);
+				}
+			}
+		}
+		else
+		{
+			animatedSprites->PlayAnimation("meleeMove", -1, 1.0f);
+		}
 	}
 
 	//Interact with Map
