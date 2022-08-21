@@ -59,6 +59,8 @@ CInventoryItem* CInventoryManager::Add(	const std::string& _name,
 	CInventoryItem* cNewItem = new CInventoryItem(imagePath);
 	cNewItem->iItemMaxCount = iItemMaxCount;
 	cNewItem->iItemCount = iItemCount;
+	cNewItem->sName = _name;
+	cNewItem->Load();
 
 	// Nothing wrong, add the scene to our map
 	inventoryMap[_name] = cNewItem;

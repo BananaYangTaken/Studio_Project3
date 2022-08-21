@@ -159,9 +159,9 @@ bool CPlayer2D_V2::Init(void)
 	glBindVertexArray(VAO);
 
 	animatedSprites = CMeshBuilder::GenerateSpriteAnimation(13, 20, (cSettings->TILE_WIDTH + cSettings->TILE_HEIGHT) * 0.5, (cSettings->TILE_WIDTH + cSettings->TILE_HEIGHT) * 0.5);
-	animatedSprites->AddAnimation("idle", 0, 19);
+	animatedSprites->AddAnimation("meleeIdle", 0, 19);
 	animatedSprites->AddAnimation("meleeAttack", 20, 34);
-	animatedSprites->AddAnimation("move", 40, 59);
+	animatedSprites->AddAnimation("meleeMove", 40, 59);
 
 	AnimationTimer = 0;
 
@@ -170,7 +170,7 @@ bool CPlayer2D_V2::Init(void)
 	runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
 
 	cPhysics2D.Init();
-	
+
 	//Load Inventory Item
 	{
 		// Add a Health as one of the inventory items
@@ -260,7 +260,7 @@ bool CPlayer2D_V2::Reset()
 	cMap2D->SetMapInfo(uiRow, uiCol, 0);
 	// By default, microsteps should be zero
 	vec2NumMicroSteps = glm::vec2(0, 0);
-	
+
 	// Reset Rune
 	cInventoryItem = cInventoryManager->GetItem("Rune");
 	cInventoryItem->iItemCount = 0;
@@ -279,6 +279,7 @@ bool CPlayer2D_V2::Reset()
  */
 void CPlayer2D_V2::Update(const double dElapsedTime)
 {
+	CInventoryItem Meep = *(cInventoryManager->GetItem(cGUI_Scene2D->GetCurrentHotbarItem()));
 	// Store the old position
 	vec2OldIndex = vec2Index;
 	motion = false;
@@ -416,14 +417,22 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		if (cMouseController->IsButtonDown(0) && !LButtonState)
 		{
 			LButtonState = true;
-			//Melee
-			if (HeldItem.itemtype == ITEM_TYPE::RESOURCES || HeldItem.itemtype == ITEM_TYPE::MELEE)
+			//Basic Melee
+			if (HeldItem.itemtype == ITEM_TYPE::RESOURCES) //Attack with Knife
 			{
-				//Attack with Knife
 				AnimationTimer = 0.3f;
 				animatedSprites->PlayAnimation("meleeAttack", -1, AnimationTimer);
 				cSoundController->PlaySoundByID(15);
 				cProjectileManager->SpawnProjectile(vec2Index, vec2NumMicroSteps, Rotation, 0, CProjectile2D::FRIENDLY, CProjectile2D::KNIFE, 30);
+			}
+			else if (HeldItem.itemtype == ITEM_TYPE::GUN && HeldItem.GData->firingtype == FIRING_TYPE::SEMIAUTO) //Semi-Auto
+			{
+
+				//Attack with Semi Auto Gun
+				AnimationTimer = 0.3f;
+				animatedSprites->PlayAnimation("meleeAttack", -1, AnimationTimer);
+				cSoundController->PlaySoundByID(15);
+				cProjectileManager->SpawnProjectile(vec2Index, vec2NumMicroSteps, Rotation, 0, CProjectile2D::FRIENDLY, CProjectile2D::BULLET, HeldItem.WData->Damage);
 			}
 		}
 		else if (cMouseController->IsButtonUp(0) && LButtonState)
@@ -437,18 +446,18 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 	//Animation
 	if (motion == false && AnimationTimer == 0)
 	{
-		animatedSprites->PlayAnimation("idle", -1, 10.0f);
+		animatedSprites->PlayAnimation("meleeIdle", -1, 10.0f);
 	}
 	else if (motion == true && AnimationTimer == 0)
 	{
-		animatedSprites->PlayAnimation("move", -1, 1.0f);
+		animatedSprites->PlayAnimation("meleeMove", -1, 1.0f);
 	}
 
 	//Interact with Map
-	InteractWithMap(0,0);
+	InteractWithMap(0, 0);
 	InteractWithMap(0, 1);
 	InteractWithMap(1, 0);
-	InteractWithMap(1,1);
+	InteractWithMap(1, 1);
 	InteractWithMap(-1, 0);
 	InteractWithMap(0, -1);
 	InteractWithMap(-1, -1);
@@ -543,9 +552,9 @@ void CPlayer2D_V2::Render(void)
 
 	transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 	transform = glm::translate(transform, glm::vec3(vec2UVCoordinate.x,
-													vec2UVCoordinate.y,
-													0.0f));
-	transform = glm::rotate(transform, Rotation, glm::vec3(0,0,1) );
+		vec2UVCoordinate.y,
+		0.0f));
+	transform = glm::rotate(transform, Rotation, glm::vec3(0, 0, 1));
 	// Update the shaders with the latest transform
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
 	glUniform4fv(colorLoc, 1, glm::value_ptr(runtimeColour));
@@ -673,7 +682,7 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 {
 	unsigned int IRow;
 	unsigned int ICol;
-	switch (cMap2D->GetMapInfo(vec2Index.y + ydisplacement,vec2Index.x + xdisplacement))
+	switch (cMap2D->GetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement))
 	{
 	case 110:
 		cGUI_Scene2D->actiontext = "Press F to search crate";
@@ -697,7 +706,7 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 				cGUI_Scene2D->looting = false;
 				cGUI_Scene2D->checkinginventory = false;
 				cGUI_Scene2D->crafting = false;
-				if(cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x) == 110)
+				if (cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x) == 110)
 					cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 0);
 				else if (cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x) == 110)
 					cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 0);
@@ -727,19 +736,19 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 
 		}
 		break;
-	/*	30 - bandages
-		32 - Blueprint
-		35 - medkit
-		36 - pistol bullets
-		37 - pistol
-		38 - rifle bullets
-		39 - rifle
+		/*	30 - bandages
+			32 - Blueprint
+			35 - medkit
+			36 - pistol bullets
+			37 - pistol
+			38 - rifle bullets
+			39 - rifle
 
 
-		40 - Scrap
-		41 - Stone ore
-		33 - Fabric
-		34 - hard wood*/
+			40 - Scrap
+			41 - Stone ore
+			33 - Fabric
+			34 - hard wood*/
 
 	case 26:
 		cGUI_Scene2D->actiontext = "Press F to open crafting menu";
@@ -923,7 +932,7 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 		cGUI_Scene2D->actiontext = "Press F to pickup stone";
 		if (cKeyboardController->IsKeyPressed('F'))
 		{
-			if(cGUI_Scene2D->IncreaseInventoryItemCount("Stone Ore", 1) == 1)
+			if (cGUI_Scene2D->IncreaseInventoryItemCount("Stone Ore", 1) == 1)
 			{
 				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
 			}
@@ -949,7 +958,7 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 				cSoundController->PlaySoundByID(37);
 				break;
 			}
-			
+
 			if (unlockedYellow == false)
 			{
 				cSoundController->PlaySoundByID(38);

@@ -37,7 +37,6 @@ struct GunData
 struct WeaponData
 {
 	float Damage;
-	float Range;
 	float ReloadTime;
 };
 
@@ -58,6 +57,8 @@ public:
 	int GetCount(void) const;
 	// Get the maximum number of items from this class instance
 	int GetMaxCount(void) const;
+	//Loads the Data needed depending on item name
+	void Load(void);
 
 	// Get the texture ID
 	unsigned int GetTextureID(void) const;

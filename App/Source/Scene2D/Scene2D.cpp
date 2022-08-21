@@ -164,10 +164,8 @@ bool CScene2D::Init(void)
 */
 bool CScene2D::Update(const double dElapsedTime)
 {
-
 	//Call Map2D's update method
  	cMap2D->Update(dElapsedTime);
-
 	//Call Players's update method
  	Player->Update(dElapsedTime);
 	

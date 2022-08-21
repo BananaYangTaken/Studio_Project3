@@ -46,7 +46,7 @@ public:
 	glm::vec2 GetDeltaDisplacement(void) const;	// Get Delta Displacement
 	float GetTime(void) const;					// Get Time
 	STATUS GetStatus(void) const;				// Get Status
-
+		
 	// Update
 	void Update(void);
 
