@@ -444,7 +444,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 				//Attack with Semi Auto Gun
 				AnimationTimer = 0.1f;
 				animatedSprites->PlayAnimation("pistolFire", -1, AnimationTimer);
-				cSoundController->PlaySoundByID(15);
+				cSoundController->PlaySoundByID(23);
 				cProjectileManager->SpawnProjectile(vec2Index, vec2NumMicroSteps, Rotation, 400, CProjectile2D::FRIENDLY, CProjectile2D::BULLET, HeldItem.WData->Damage);
 			}
 		}
@@ -457,10 +457,10 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 			if (HeldItem.itemtype == ITEM_TYPE::GUN && HeldItem.GData->firingtype == FIRING_TYPE::FULLAUTO) //Full-Auto
 			{
 
-				//Attack with Semi Auto Gun
-				AnimationTimer = 0.3f;
+				//Attack with Full Auto Gun
+				AnimationTimer = 0.1f;
 				animatedSprites->PlayAnimation("rifleFire", -1, AnimationTimer);
-				cSoundController->PlaySoundByID(15);
+				cSoundController->PlaySoundByID(19);
 				cProjectileManager->SpawnProjectile(vec2Index, vec2NumMicroSteps, Rotation, 400, CProjectile2D::FRIENDLY, CProjectile2D::BULLET, HeldItem.WData->Damage);
 			}
 		}
@@ -504,6 +504,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		{
 			animatedSprites->PlayAnimation("meleeMove", -1, 1.0f);
 		}
+		cSoundController->PlaySoundByID(36);
 	}
 
 	//Interact with Map

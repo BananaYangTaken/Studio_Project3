@@ -66,7 +66,6 @@ void CProjectileManager::Update(const double dElapsedTime)
 						{
 							dynamic_cast<CPlayer2D_V2*>(Player)->SetHealth(dynamic_cast<CPlayer2D_V2*>(Player)->GetHealth() - (*it)->GetDamage());
 							dynamic_cast<CPlayer2D_V2*>(Player)->SetInvulnerabilityFrame(0.5);
-							CSoundController::GetInstance()->PlaySoundByID(5);
 						
 						}
 						CollisionDetected = !CollisionDetected;
@@ -88,7 +87,6 @@ void CProjectileManager::Update(const double dElapsedTime)
 								dynamic_cast<CEnemyBase*>(cEnemyList->at(i))->SetHealth(dynamic_cast<CEnemyBase*>(cEnemyList->at(i))->GetHealth() - (*it)->GetDamage());
 								dynamic_cast<CEnemyBase*>(cEnemyList->at(i))->SetInvulnerabilityFrame(0.5);
 								dynamic_cast<CEnemyBase*>(cEnemyList->at(i))->SetStun(true);
-								CSoundController::GetInstance()->PlaySoundByID(5);
 							}
 							CollisionDetected = !CollisionDetected;
 							break;
@@ -111,7 +109,6 @@ void CProjectileManager::Update(const double dElapsedTime)
 			{
 				CollisionDetected = !CollisionDetected;
 				it = cProjectileList.erase(it);
-				CSoundController::GetInstance()->PlaySoundByID(6);
 			}
 			else if ((*it)->GetExistenceTimer() < 0 && !CollisionDetected)
 			{

@@ -53,7 +53,6 @@ CIntroState::CIntroState(void)
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\PlayerHit.ogg"), 4, true, false, CSoundInfo::SOUNDGROUP::Player);
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SkeletonHit.ogg"), 5, true, false, CSoundInfo::SOUNDGROUP::Creatures);
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\ArrowHit.ogg"), 6, true, false, CSoundInfo::SOUNDGROUP::Player);
-		cSoundController->LoadSound(FileSystem::getPath("Sounds\\FireArrow.ogg"), 7, true, false, CSoundInfo::SOUNDGROUP::Player);
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\Creeper.ogg"), 8, true, false, CSoundInfo::SOUNDGROUP::Creatures);
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\HollowKnight-Reflection.ogg"), 9, true, true, CSoundInfo::SOUNDGROUP::Background);
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\HollowKnight-Hornet.ogg"), 10, true, true, CSoundInfo::SOUNDGROUP::Background);

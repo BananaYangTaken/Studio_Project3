@@ -72,8 +72,6 @@ bool CProjectile2D::Init(glm::vec2 newvec2Index, glm::vec2 newvec2NumMicroSteps,
 {
 	cPhysics2D.Init();
 	Player = dynamic_cast<CEntity2D*>(CPlayer2D_V2::GetInstance());
-	// Load the sounds into CSoundController
-	cSoundController = CSoundController::GetInstance();
 
 	// Get the handler to the CSettings instance
 	cSettings = CSettings::GetInstance();
@@ -131,7 +129,6 @@ bool CProjectile2D::Init(glm::vec2 newvec2Index, glm::vec2 newvec2NumMicroSteps,
 	//CS: Init the color to white
 	runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
 
-	CSoundController::GetInstance()->PlaySoundByID(7);
 }
 
 /**
