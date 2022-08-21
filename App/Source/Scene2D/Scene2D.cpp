@@ -105,6 +105,10 @@ bool CScene2D::Init(void)
 	TurretUpgradeLvl = 0;
 	BarbwireUpgrade = 0;
 
+	daylightTimer = 0;
+	hours = 8;
+	mins = 0;
+
 	//Initialse this instance
 	if (cMap2D->Init(5, CSettings::GetInstance()->NUM_TILES_YAXIS, CSettings::GetInstance()->NUM_TILES_XAXIS) == false)
 	{
@@ -159,11 +163,57 @@ bool CScene2D::Init(void)
 	return true;
 }
 
+void CScene2D::UpdateDaylightCycle(const double dElapsedTime)
+{
+	daylightTimer += dElapsedTime;
+	if (daylightTimer >= 0.5)
+	{
+		mins += 1;
+		daylightTimer = 0;
+	}
+	if (mins >= 60)
+	{
+		mins = 0;
+		hours++;
+	}
+	if (hours >= 24)
+	{
+		hours = 0;
+	}
+
+	if (hours < 10)
+	{
+		if (mins < 10)
+		{
+			std::cout << "0" << hours << " : 0" << mins << std::endl;
+		}
+		else
+		{
+			std::cout << "0" << hours << " : " << mins << std::endl;
+		}
+	}
+	else
+	{
+		if (mins < 10)
+		{
+			std::cout << hours << " : 0" << mins << std::endl;
+		}
+		else
+		{
+			std::cout << hours << " : " << mins << std::endl;
+		}
+	}
+}
+
+
 /**
 @brief Update Update this instance
 */
 bool CScene2D::Update(const double dElapsedTime)
 {
+	UpdateDaylightCycle(dElapsedTime);
+
+
 
 	//Call Map2D's update method
  	cMap2D->Update(dElapsedTime);
@@ -592,3 +642,4 @@ void CScene2D::SetBarbwireUpgradeLvl(int newLV)
 {
 	BarbwireUpgrade = newLV;
 }
+

@@ -91,7 +91,10 @@ public:
 	void SetTurretUpgradeLvl(int newLV);
 	void SetBarbwireUpgradeLvl(int newLV);
 
-	
+	float daylightTimer;
+	float hours, mins;
+
+	void UpdateDaylightCycle(const double dElapsedTime);
 
 
 protected:
