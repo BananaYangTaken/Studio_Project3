@@ -396,7 +396,6 @@ void CEnemy2D_Mutant::Update(const double dElapsedTime)
 
 	regenTimer += dElapsedTime;
 	chargeTimer += dElapsedTime;
-	cout << chargeTimer << endl;
 	if (Health < 250)
 	{
 		if (regenTimer >= 0.3)
