@@ -97,13 +97,11 @@ void CProjectileManager::Update(const double dElapsedTime)
 				}
 
 				//Projectile Collision with Border
-				if((*it)->vec2Index.x < 0 || (*it)->vec2Index.x > cSettings->NUM_TILES_XAXIS || (*it)->vec2Index.y < 0 || (*it)->vec2Index.y > cSettings->NUM_TILES_YAXIS)
+				if((*it)->vec2Index.x < 0 || (*it)->vec2Index.x > cSettings->NUM_TILES_XAXIS-1 || (*it)->vec2Index.y < 0 || (*it)->vec2Index.y > cSettings->NUM_TILES_YAXIS-1)
 				{
 					CollisionDetected = !CollisionDetected;
 				}
-
-				//Projectile Collision with Map
-				if (cMap2D->GetMapInfo((*it)->vec2Index.y, (*it)->vec2Index.x) >= 100)
+				else if (cMap2D->GetMapInfo((*it)->vec2Index.y, (*it)->vec2Index.x) >= 100) //Projectile Collision with Map
 				{
 					CollisionDetected = !CollisionDetected;
 				}

@@ -425,6 +425,15 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 				cSoundController->PlaySoundByID(15);
 				cProjectileManager->SpawnProjectile(vec2Index, vec2NumMicroSteps, Rotation, 0, CProjectile2D::FRIENDLY, CProjectile2D::KNIFE, 30);
 			}
+			else if (HeldItem.itemtype == ITEM_TYPE::GUN && HeldItem.GData->firingtype == FIRING_TYPE::SEMIAUTO) //Semi-Auto
+			{
+
+				//Attack with Semi Auto Gun
+				AnimationTimer = 0.3f;
+				animatedSprites->PlayAnimation("meleeAttack", -1, AnimationTimer);
+				cSoundController->PlaySoundByID(15);
+				cProjectileManager->SpawnProjectile(vec2Index, vec2NumMicroSteps, Rotation, 400, CProjectile2D::FRIENDLY, CProjectile2D::BULLET, HeldItem.WData->Damage);
+			}
 		}
 		else if (cMouseController->IsButtonUp(0) && LButtonState)
 		{
@@ -432,6 +441,15 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		}
 		if (LButtonState)
 		{
+			if (HeldItem.itemtype == ITEM_TYPE::GUN && HeldItem.GData->firingtype == FIRING_TYPE::FULLAUTO) //Full-Auto
+			{
+
+				//Attack with Semi Auto Gun
+				AnimationTimer = 0.3f;
+				animatedSprites->PlayAnimation("meleeAttack", -1, AnimationTimer);
+				cSoundController->PlaySoundByID(15);
+				cProjectileManager->SpawnProjectile(vec2Index, vec2NumMicroSteps, Rotation, 400, CProjectile2D::FRIENDLY, CProjectile2D::BULLET, HeldItem.WData->Damage);
+			}
 		}
 	}
 	//Animation

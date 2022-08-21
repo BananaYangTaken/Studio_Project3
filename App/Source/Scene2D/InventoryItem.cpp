@@ -37,6 +37,7 @@ CInventoryItem::CInventoryItem(const char* imagePath)
 */
 CInventoryItem::~CInventoryItem(void)
 {
+	/*
 	if (WData)
 	{
 		delete WData;
@@ -46,7 +47,7 @@ CInventoryItem::~CInventoryItem(void)
 	{
 		delete GData;
 		GData = NULL;
-	}
+	}*/
 }
 
 /**
@@ -83,6 +84,37 @@ int CInventoryItem::GetCount(void) const
 int CInventoryItem::GetMaxCount(void) const
 {
 	return iItemMaxCount;
+}
+
+void CInventoryItem::Load(void)
+{
+	//Loads Item Type
+	if (sName == "Rifle" || sName == "Pistol")
+	{
+		itemtype = ITEM_TYPE::GUN;
+		GData = new GunData;
+		WData = new WeaponData;
+		if (sName == "Pistol")
+		{
+			GData->firingtype = SEMIAUTO;
+			GData->MaxAmmoSize = 17;
+			WData->Damage = 20;
+			WData->ReloadTime = 2;
+		}
+		else if (sName == "Rifle")
+		{
+			GData->firingtype = FULLAUTO;
+			GData->MaxAmmoSize = 30;
+			WData->Damage = 30;
+			WData->ReloadTime = 4;
+		}
+		GData->CurrentAmmoSize = GData->MaxAmmoSize;
+	}
+	else
+	{
+		GData = NULL;
+		WData = NULL;
+	}
 }
 
 /**
