@@ -39,6 +39,8 @@ CEnemy2D_Mutant::CEnemy2D_Mutant(void)
 	speedMultiplier = 0.4;
 	Attack = false;
 	redTimer = 0;
+	regenTimer = 0;
+	chargeTimer = 10;
 
 	transform = glm::mat4(1.0f);	// make sure to initialize matrix to identity matrix first
 
@@ -392,6 +394,18 @@ void CEnemy2D_Mutant::Update(const double dElapsedTime)
 		}
 	}
 
+	regenTimer += dElapsedTime;
+	chargeTimer += dElapsedTime;
+	cout << chargeTimer << endl;
+	if (Health < 250)
+	{
+		if (regenTimer >= 0.3)
+		{
+			Health++;
+			regenTimer = 0;
+		}
+	}
+
 	//Update Invulnerable frames
 	if (InvulnerabilityFrame < 0)
 	{
@@ -438,6 +452,11 @@ void CEnemy2D_Mutant::Update(const double dElapsedTime)
 			iFSMCounter = 0;
 			randomDir();
 		}
+		else if (checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) <= DetectionRadius && chargeTimer >= 10)
+		{
+			sCurrentFSM = static_cast<CEnemyBase::FSM>(CHARGE);
+			iFSMCounter = 0;
+		}
 		else if (checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) <= DetectionRadius)
 		{
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(CHASE);
@@ -467,6 +486,11 @@ void CEnemy2D_Mutant::Update(const double dElapsedTime)
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(ATTACK);
 			iFSMCounter = 0;
 			bool bFirstPosition = true;
+		}
+		else if (checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) <= DetectionRadius && chargeTimer >= 10)
+		{
+			sCurrentFSM = static_cast<CEnemyBase::FSM>(CHARGE);
+			iFSMCounter = 0;
 		}
 		else if(checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) <= DetectionRadius)
 		{
@@ -589,6 +613,49 @@ void CEnemy2D_Mutant::Update(const double dElapsedTime)
 	case DEATH:
 		animatedSprites->PlayAnimation("death", 1, 1.0f);
 		deathTimer += dElapsedTime;
+		break;
+	case CHARGE:
+		if (cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) < 1.5f)
+		{
+			if (dynamic_cast<CPlayer2D_V2*>(Player)->GetInvulnerabilityFrame() <= 0)
+			{
+				dynamic_cast<CPlayer2D_V2*>(Player)->SetHealth(dynamic_cast<CPlayer2D_V2*>(Player)->GetHealth() - 25);
+				dynamic_cast<CPlayer2D_V2*>(Player)->SetInvulnerabilityFrame(0.5);
+			}
+			sCurrentFSM = static_cast<CEnemyBase::FSM>(PATROL);
+			chargeTimer = 0;
+		}
+		else if (checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) <= DetectionRadius)
+		{
+			std::cout << (idlecount);
+			idlecount++;
+			hasseenplayeronce = true;
+			if (idlecount >= 15)
+			{
+				OldPositu = dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index;
+				idlecount = 0;
+			}
+			UpdateDirection();
+			UpdatePosition(speedMultiplier * 3);
+		}
+		else if (checkforLOS() == false && hasseenplayeronce == true
+			|| checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) > DetectionRadius)
+		{
+			UpdateToLastLOS();
+			UpdatePosition(speedMultiplier * 3);
+		}
+		else if (hasseenplayeronce == false)
+		{
+			sCurrentFSM = static_cast<CEnemyBase::FSM>(PATROL);
+		}
+		if (vec2Index == OldPositu)
+		{
+			sCurrentFSM = static_cast<CEnemyBase::FSM>(PATROL);
+		}
+		iFSMCounter++;
+		//Animation
+		animatedSprites->PlayAnimation("charge", -1, 1.0f);
+		runtimeColour = glm::vec4(1, 1, 1, 1.0);
 		break;
 	default:
 		break;

@@ -28,5 +28,7 @@ protected:
 	float motionResetter;
 	int prevHP;
 	float redTimer;
+	float regenTimer;
+	float chargeTimer;
 };
 

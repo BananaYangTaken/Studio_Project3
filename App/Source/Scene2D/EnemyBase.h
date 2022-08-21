@@ -88,6 +88,7 @@ protected:
 		DEATH = 8,
 		CHASE = 9,
 		SLOWED = 10,
+		CHARGE = 11,
 		NUM_FSM
 	};
 
