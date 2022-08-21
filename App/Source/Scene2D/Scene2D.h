@@ -82,7 +82,7 @@ public:
 	int WindowUpgradeLvl;
 	int TurretUpgradeLvl;
 	int BarbwireUpgrade;
-
+	bool calledonce = false;
 	int GetWindowUpgradeLvl();
 	int GetTurretUpgradeLvl();
 	int GetBarbwireUpgradeLvl();

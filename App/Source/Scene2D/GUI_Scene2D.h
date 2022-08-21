@@ -50,7 +50,7 @@ class CGUI_Scene2D : public CSingletonTemplate<CGUI_Scene2D>, public CEntity2D
 public:
 	// Init
 	bool Init(void);
-	bool darkenmap = true;
+	bool darkenmap = false;
 	void clearmap();
 	float redness = 0;
 	float blueness = 0;

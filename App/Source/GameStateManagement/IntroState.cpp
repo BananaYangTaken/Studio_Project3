@@ -104,7 +104,8 @@ CIntroState::CIntroState(void)
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\KeycardActivate.ogg"), 37, true, false, CSoundInfo::SOUNDGROUP::Player);
 		//Keycard Reject
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\KeycardReject.ogg"), 38, true, false, CSoundInfo::SOUNDGROUP::Player);
-
+		//Horde
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Horde.ogg"), 39, true, false, CSoundInfo::SOUNDGROUP::Player);
 		cSoundController->LoadSoundSystem();
 		
 		

@@ -168,7 +168,7 @@ void CScene2D::UpdateDaylightCycle(const double dElapsedTime)
 	daylightTimer += dElapsedTime;
 	if (daylightTimer >= 0.5)
 	{
-		mins += 1;
+		mins += 30;
 		daylightTimer = 0;
 	}
 	if (mins >= 60)
@@ -213,8 +213,19 @@ bool CScene2D::Update(const double dElapsedTime)
 {
 	UpdateDaylightCycle(dElapsedTime);
 
-
-
+	if (hours >= 18 && cGUI_Scene2D->darkenmap == false) cGUI_Scene2D->darkenmap = true;
+	if (hours >= 21 && cGUI_Scene2D->darkenmap == true && calledonce == false)
+	{
+		cSoundController->PlaySoundByID(39);
+		cSoundController->PlaySoundByID(39);
+		cout << "HORDE SPAWNED!";
+		calledonce = true;
+	}
+	if (hours >= 7 && hours <= 18 && cGUI_Scene2D->darkenmap == true)
+	{
+		cGUI_Scene2D->darkenmap = false;
+		calledonce = false;
+	}
 	//Call Map2D's update method
  	cMap2D->Update(dElapsedTime);
 

@@ -768,7 +768,6 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 	float wspace = 0.075f;
 	float hspace = 0.15f;
 	// Start the Dear ImGui frame
-	
 
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
@@ -955,7 +954,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 			actiontext = "Its getting late...";
 				if (transparency <= 0.6f)
 				{
-					transparency = transparency + 0.001f;
+					transparency = transparency + 0.002f;
 				}
 				ImGuiWindowFlags window_flags_bg = 0;
 				window_flags_bg |= ImGuiWindowFlags_NoTitleBar;
@@ -983,8 +982,9 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 			else if (darkenmap == false)
 			{
 				
-				if (transparency <= 0.6f)
+				if (transparency >= 0)
 				{
+					actiontext = "The sun is rising...";
 					transparency = transparency - 0.002f;
 				}
 				
