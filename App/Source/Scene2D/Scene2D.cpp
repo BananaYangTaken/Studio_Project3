@@ -299,16 +299,16 @@ void CScene2D::SpawnEnemies()
 void CScene2D::BloodMoonOrSolarEclipse()
 {
 	int EventBaseChance = Math::RandIntMinMax(1, 100);
-	int TotalChance = 1 + days;
+	int TotalChance = 100 + days;
 
 	if (EventBaseChance >= 1 && EventBaseChance <= TotalChance)
 	{
-		if (hours > 19)
+		if (hours == 19 && mins == 1)
 		{
 			BloodMoon = true;
 			cout << "BLOOD MOON" << endl;
 		}
-		else if (hours >= 5 && hours < 19)
+		else if (hours == 5 && mins == 1)
 		{
 			SolarEclipse = true;
 			cout << "SOLAR ECLIPSE" << endl;
