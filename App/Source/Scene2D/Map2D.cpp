@@ -1021,6 +1021,15 @@ void CMap2D::SetMapInfo(const unsigned int uiRow, const unsigned int uiCol, cons
  */
 int CMap2D::GetMapInfo(const unsigned int uiRow, const int unsigned uiCol, const bool bInvert) const
 {
+	if(cSettings->NUM_TILES_YAXIS - uiRow - 1 >= cSettings->NUM_TILES_YAXIS 
+		|| cSettings->NUM_TILES_YAXIS - uiRow - 1 <= 0
+		|| uiRow <= 0
+		|| uiRow >= cSettings->NUM_STEPS_PER_TILE_YAXIS
+		|| uiCol <= 0
+		|| uiCol >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
+	{ 
+		return false;
+	}
 	if (bInvert)
 		return arrMapInfo[uiCurLevel][cSettings->NUM_TILES_YAXIS - uiRow - 1][uiCol].value;
 	else

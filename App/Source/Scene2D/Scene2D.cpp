@@ -106,7 +106,7 @@ bool CScene2D::Init(void)
 	BarbwireUpgrade = 0;
 
 	daylightTimer = 0;
-	hours = 8;
+	hours = 19;
 	mins = 0;
 	days = 1;
 	spawnrate = 1;
@@ -173,7 +173,7 @@ bool CScene2D::Init(void)
 void CScene2D::UpdateDaylightCycle(const double dElapsedTime)
 {
 	daylightTimer += dElapsedTime;
-	if (daylightTimer >= 0.5)
+	if (daylightTimer >= 0.1)
 	{
 		mins += 1;
 		daylightTimer = 0;
@@ -242,7 +242,7 @@ void CScene2D::SpawnEnemies()
 	//police zombie
 	else if (EnemyRand >= 16 && EnemyRand <= 19)
 	{
-		int MilOrStn = Math::RandIntMinMax(1, 2);
+		int MilOrStn = Math::RandIntMinMax(1, 3);
 
 		if (MilOrStn == 1)
 		{
@@ -266,18 +266,44 @@ void CScene2D::SpawnEnemies()
 				randy = Math::RandIntMinMax(3, 10);
 			}
 		}
+		else if (MilOrStn == 3)
+		{
+			// GENERAL AREA
+			randx = Math::RandIntMinMax(30, 75);
+			randy = Math::RandIntMinMax(45, 80);
+			while (cMap2D->GetMapInfo(randy, randx) != 0)
+			{
+				randx = Math::RandIntMinMax(30, 75);
+				randy = Math::RandIntMinMax(45, 80);
+			}
+		}
 		cMap2D->SetMapInfo(randy, randx, 304);
 	}
 	//nurse zombie
 	else if (EnemyRand >= 11 && EnemyRand <= 15)
 	{
+		int SpawnWhere = Math::RandIntMinMax(1, 2);
 		// HOSPITAL
-		randx = Math::RandIntMinMax(80, 98);
-		randy = Math::RandIntMinMax(60, 98);
-		while (cMap2D->GetMapInfo(randy, randx) != 0)
+		if (SpawnWhere == 1)
 		{
 			randx = Math::RandIntMinMax(80, 98);
 			randy = Math::RandIntMinMax(60, 98);
+			while (cMap2D->GetMapInfo(randy, randx) != 0)
+			{
+				randx = Math::RandIntMinMax(80, 98);
+				randy = Math::RandIntMinMax(60, 98);
+			}
+		}
+		else if (SpawnWhere == 2)
+		{
+			// GENERAL AREA
+			randx = Math::RandIntMinMax(30, 75);
+			randy = Math::RandIntMinMax(45, 80);
+			while (cMap2D->GetMapInfo(randy, randx) != 0)
+			{
+				randx = Math::RandIntMinMax(30, 75);
+				randy = Math::RandIntMinMax(45, 80);
+			}
 		}
 		cMap2D->SetMapInfo(randy, randx, 303);
 	}
@@ -301,7 +327,7 @@ void CScene2D::BloodMoonOrSolarEclipse()
 	int EventBaseChance = Math::RandIntMinMax(1, 100);
 	int TotalChance = 100 + days;
 
-	if (EventBaseChance >= 1 && EventBaseChance <= TotalChance)
+	if (EventBaseChance >= 100 && EventBaseChance <= TotalChance)
 	{
 		if (hours == 19 && mins == 1)
 		{
