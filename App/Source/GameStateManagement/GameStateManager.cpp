@@ -75,7 +75,6 @@ bool CGameStateManager::Update(const double dElapsedTime)
 	{
 		if (pauseGameState)
 		{
-			//cout << "pauseGameState->Update" << endl;
 			pauseGameState->Update(dElapsedTime);
 			//For keyboard controls
 			if (CKeyboardController::GetInstance()->IsKeyReleased(GLFW_KEY_ESCAPE) || CKeyboardController::GetInstance()->IsKeyReleased(GLFW_KEY_F10))
@@ -85,14 +84,12 @@ bool CGameStateManager::Update(const double dElapsedTime)
 
 				// Load the menu state
 
-				//cout << "UnLoading PauseState" << endl;
 				CGameStateManager::GetInstance()->OffPauseGameState();
 				return true;
 			}
 		}
 		else if (UpgradeState)
 		{
-			//cout << "UpgradeState->Update" << endl;
 			UpgradeState->Update(dElapsedTime);
 			//For keyboard controls
 			if (CKeyboardController::GetInstance()->IsKeyReleased(GLFW_KEY_ESCAPE) || CKeyboardController::GetInstance()->IsKeyReleased(GLFW_KEY_F6))
@@ -102,7 +99,6 @@ bool CGameStateManager::Update(const double dElapsedTime)
 
 				// Load the menu state
 
-				//cout << "UnLoading PauseState" << endl;
 				CGameStateManager::GetInstance()->OffUpgradeState();
 				return true;
 			}

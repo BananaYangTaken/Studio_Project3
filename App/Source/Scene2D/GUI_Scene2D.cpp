@@ -66,7 +66,6 @@ void CGUI_Scene2D::spawnloot(float vecX, float vecY)
 
 int CGUI_Scene2D::IncreaseInventoryItemCount(std::string arrayindex, int incrementValue)
 {
-	std::cout << "CHECKING INVENTORY";
 	int ind = 0;
 	bool found = false;
 	for (int i = 0; i < inventory_size; i++)
@@ -84,7 +83,6 @@ int CGUI_Scene2D::IncreaseInventoryItemCount(std::string arrayindex, int increme
 		inventory_item_quantity[ind] += incrementValue;
 		if (inventory_item_quantity[ind] >= inventory_item_max_quantity[ind])
 		{
-			cout << "RESOURCE FULL!";
 			float difference = inventory_item_quantity[ind] - inventory_item_max_quantity[ind];
 			inventory_item_quantity[ind] = inventory_item_max_quantity[ind];
 			for (int u = 0; u < inventory_size; u++)
@@ -113,7 +111,6 @@ int CGUI_Scene2D::IncreaseInventoryItemCount(std::string arrayindex, int increme
 			}
 
 		}
-		cout << "INVENTORY FULL!";
 		{
 			return 0;
 		}
@@ -214,7 +211,6 @@ void CGUI_Scene2D::InventoryItemSetZero(std::string arrayindex)
 	int ind = 0;
 	for (int i = 0; i < inventory_size; i++)
 	{
-		std::cout << inventory_item_name_list[i];
 		if (arrayindex == inventory_item_name_list[i])
 		{
 			inventory_item_name_list[i] = "empty" + (i + 1);
@@ -262,7 +258,6 @@ int CGUI_Scene2D::TransferToChest(std::string itemName, int quantity)
 	int ind = 0;
 	int und = 0;
 	bool found = false;
-	cout << "SUpposed to transfer: " + itemName;
 	// checks to see if item exists in chest
 	for (int i = 0; i < Chest_size; i++)
 	{
@@ -288,7 +283,6 @@ int CGUI_Scene2D::TransferToChest(std::string itemName, int quantity)
 		
 		if (chest_item_quantity[ind] >= chest_item_max_quantity[ind])
 		{
-			cout << "RESOURCE FULL!";
 			float difference = chest_item_quantity[ind] - chest_item_max_quantity[ind];
 			chest_item_quantity[ind] = chest_item_max_quantity[ind];
 
@@ -296,8 +290,6 @@ int CGUI_Scene2D::TransferToChest(std::string itemName, int quantity)
 		}
 		else if (inventory_item_quantity[und] < quantity)
 		{
-			cout << endl << "Cuurrent quan of item: " << inventory_item_quantity[und];
-			cout << "Not enough to init full transfer";
 			chest_item_quantity[ind] += inventory_item_quantity[und];
 			DecreaseInventoryItemCount(itemName, quantity);
 		}
@@ -315,10 +307,8 @@ int CGUI_Scene2D::TransferToChest(std::string itemName, int quantity)
 		{
 			if (chest_item_name_list[u].find("empty") != string::npos)
 			{
-				cout << endl << "Cuurrent quan of item: " << inventory_item_quantity[und];
 				if (inventory_item_quantity[und] <= quantity)
 				{
-					cout << "Not enough to init full transfer";
 					chest_item_quantity[u] += inventory_item_quantity[und];
 					chest_item_name_list[u] = inventory_item_name_list[und];
 					DecreaseInventoryItemCount(itemName, quantity);
@@ -332,7 +322,6 @@ int CGUI_Scene2D::TransferToChest(std::string itemName, int quantity)
 
 
 		}
-		cout << "INVENTORY FULL!";
 		{
 			return quantity;
 		}
@@ -341,7 +330,6 @@ int CGUI_Scene2D::TransferToChest(std::string itemName, int quantity)
 }
 int CGUI_Scene2D::TransferTohand(std::string itemName, int quantity)
 {
-	cout << itemName << endl;
 	int ind = 0;
 	bool found = false;
 	for (int i = 0; i < inventory_size; i++)
@@ -356,18 +344,14 @@ int CGUI_Scene2D::TransferTohand(std::string itemName, int quantity)
 	}
 	if (found == true)
 	{
-		cout << "FOUND!" << endl;
-		cout << ind << endl;
 		if (inventory_item_quantity[ind] >= inventory_item_max_quantity[ind])
 		{
-			cout << "RESOURCE FULL!";
 			float difference = inventory_item_quantity[ind] - inventory_item_max_quantity[ind];
 			inventory_item_quantity[ind] = inventory_item_max_quantity[ind];
 			return difference;
 		}
 		else if (chest_item_quantity[ind] < quantity)
 		{
-			cout << "Not enough to init full transfer";
 			IncreaseInventoryItemCount(inventory_item_name_list[ind], chest_item_quantity[ind]);
 			decreaseChestQuantity(itemName, quantity);
 		}
@@ -381,7 +365,6 @@ int CGUI_Scene2D::TransferTohand(std::string itemName, int quantity)
 	}
 	else
 	{
-		cout << "UNFOUND!" << endl;
 		for (int u = 0; u < inventory_size; u++)
 		{
 			if (inventory_item_name_list[u].find("empty") != string::npos)
@@ -389,7 +372,6 @@ int CGUI_Scene2D::TransferTohand(std::string itemName, int quantity)
 				inventory_item_name_list[u] = itemName;
 				if (chest_item_quantity[ind] <= quantity)
 				{
-					cout << "Not enough to init full transfer";
 					inventory_item_quantity[ind] += chest_item_quantity[ind];
 					decreaseChestQuantity(itemName, quantity);
 					return 0;
@@ -401,7 +383,6 @@ int CGUI_Scene2D::TransferTohand(std::string itemName, int quantity)
 
 
 		}
-		cout << "INVENTORY FULL!";
 		{
 			return quantity;
 		}
@@ -501,11 +482,9 @@ bool CGUI_Scene2D::CheckCrafting(int recipeIngredientCount, std::string Ingredie
 	{
 		if (craftingpossible[i] != 1)
 		{
-			cout << "NOT ENOUGH MATERIALS";
 			return false;
 		}
 	}
-	cout << "ABLE TO CRAFT!";
 	for (int i = 0; i < recipeIngredientCount; i++)
 	{
 		for (int u = 0; u < inventory_size; u++)
@@ -544,7 +523,6 @@ void CGUI_Scene2D::PreloadInventoryTextures()
 }
 void CGUI_Scene2D::dropitem(int key)
 {
-	cout << "ITEMNAME: " + inventory_item_name_list[key];
 	if (inventory_item_name_list[key] == "Bandage")
 		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.y, CPlayer2D_V2::GetInstance()->vec2Index.x, 30);
 	if (inventory_item_name_list[key] == "Blueprint")
@@ -593,13 +571,10 @@ std::string CGUI_Scene2D::GetCurrentHotbarItem(void)
 
 void CGUI_Scene2D::SpawnRandomPoliceStation()
 {
-	cout << "SPAWNED ITEMS IN POLICE STATION" << endl;
 	PStopleft = ImVec2(5, 95);
 	PStopright = ImVec2(24,95);
 	PSbottomright = ImVec2(23, 85);
 	PSbottomleft = ImVec2(5, 85);
-	cout << "X: " << PStopleft.y - PSbottomleft.y << endl;
-	cout << "D: " << PStopright.x - PStopleft.x<< endl;
 	for (int i = 0; i < PStopright.x - PStopleft.x; i++)
 	{
 		for (int u = 0; u < PStopleft.y - PSbottomleft.y; u++)
@@ -607,7 +582,6 @@ void CGUI_Scene2D::SpawnRandomPoliceStation()
 			int rande = rand() % 65 + 1;
 			if (rande == 2 && cMap2D->GetMapInfo(PStopleft.y - u, PStopleft.x + i) == 0)
 			{
-				cout << "SPAWNED LOOT HERE: " << PStopleft.x + i << ", " << PStopleft.y - u << endl;
 				spawnloot(PStopleft.y - u, PStopleft.x + i);
 				int loottype = rand() % 15 + 1;
 				if (loottype <= 4) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 38); // Rifle Ammo
@@ -621,13 +595,10 @@ void CGUI_Scene2D::SpawnRandomPoliceStation()
 
 void CGUI_Scene2D::SpawnRandomHospital()
 {
-	cout << "SPAWNED ITEMS IN HOSPITAL" << endl;
 	PStopleft = ImVec2(80, 98);
 	PStopright = ImVec2(98, 98);
 	PSbottomright = ImVec2(98, 60);
 	PSbottomleft = ImVec2(80, 60);
-	cout << "X: " << PStopleft.y - PSbottomleft.y << endl;
-	cout << "D: " << PStopright.x - PStopleft.x << endl;
 	for (int i = 0; i < PStopright.x - PStopleft.x; i++)
 	{
 		for (int u = 0; u < PStopleft.y - PSbottomleft.y; u++)
@@ -635,7 +606,6 @@ void CGUI_Scene2D::SpawnRandomHospital()
 			int rande = rand() % 100 + 1;
 			if (rande == 2 && cMap2D->GetMapInfo(PStopleft.y - u, PStopleft.x + i) == 0)
 			{
-				cout << "SPAWNED LOOT HERE: " << PStopleft.x + i << ", " << PStopleft.y - u << endl;
 				spawnloot(PStopleft.y - u, PStopleft.x + i);
 				int loottype = rand() % 10 + 1;
 				if (loottype <= 4) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 30); // bandage
@@ -650,13 +620,10 @@ void CGUI_Scene2D::SpawnRandomHospital()
 
 void CGUI_Scene2D::SpawnRandomHomeDepot()
 {
-	cout << "SPAWNED ITEMS IN HOME DEPOT" << endl;
 	PStopleft = ImVec2(49, 84);
 	PStopright = ImVec2(64, 84);
 	PSbottomright = ImVec2(49, 66);
 	PSbottomleft = ImVec2(64, 66);
-	cout << "X: " << PStopleft.y - PSbottomleft.y << endl;
-	cout << "D: " << PStopright.x - PStopleft.x << endl;
 	for (int i = 0; i < PStopright.x - PStopleft.x; i++)
 	{
 		for (int u = 0; u < PStopleft.y - PSbottomleft.y; u++)
@@ -664,7 +631,6 @@ void CGUI_Scene2D::SpawnRandomHomeDepot()
 			int rande = rand() % 65 + 1;
 			if (rande == 2 && cMap2D->GetMapInfo(PStopleft.y - u, PStopleft.x + i) == 0)
 			{
-				cout << "SPAWNED LOOT HD: " << PStopleft.x + i << ", " << PStopleft.y - u << endl;
 				spawnloot(PStopleft.y - u, PStopleft.x + i);
 				int loottype = rand() % 4 + 1;
 				if (loottype == 1) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 40); // scrap
@@ -679,13 +645,10 @@ void CGUI_Scene2D::SpawnRandomHomeDepot()
 
 void CGUI_Scene2D::SpawnRandomMilBase()
 {
-	cout << "SPAWNED ITEMS IN MIL BASE" << endl;
 	PStopleft = ImVec2(45, 10);
 	PStopright = ImVec2(99, 10);
 	PSbottomright = ImVec2(45, 1);
 	PSbottomleft = ImVec2(99, 1);
-	cout << "X: " << PStopleft.y - PSbottomleft.y << endl;
-	cout << "D: " << PStopright.x - PStopleft.x << endl;
 	for (int i = 0; i < PStopright.x - PStopleft.x; i++)
 	{
 		for (int u = 0; u < PStopleft.y - PSbottomleft.y; u++)
@@ -693,7 +656,6 @@ void CGUI_Scene2D::SpawnRandomMilBase()
 			int rande = rand() % 80 + 1;
 			if (rande == 2 && cMap2D->GetMapInfo(PStopleft.y - u, PStopleft.x + i) == 0)
 			{
-				cout << "SPAWNED LOOT HD: " << PStopleft.x + i << ", " << PStopleft.y - u << endl;
 				spawnloot(PStopleft.y - u, PStopleft.x + i);
 				int loottype = rand() % 5 + 1;
 				if (loottype == 1) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 40); // scrap
@@ -711,13 +673,10 @@ void CGUI_Scene2D::SpawnRandomMilBase()
 
 void CGUI_Scene2D::SpawnRandomYellowRoom()
 {
-	cout << "SPAWNED ITEMS IN YELLOW ROOM" << endl;
 	PStopleft = ImVec2(69, 77);
 	PStopright = ImVec2(73, 77);
 	PSbottomright = ImVec2(69, 75);
 	PSbottomleft = ImVec2(73, 75);
-	cout << "X: " << PStopleft.y - PSbottomleft.y << endl;
-	cout << "D: " << PStopright.x - PStopleft.x << endl;
 	for (int i = 0; i < PStopright.x - PStopleft.x; i++)
 	{
 		for (int u = 0; u < PStopleft.y - PSbottomleft.y; u++)
@@ -725,7 +684,6 @@ void CGUI_Scene2D::SpawnRandomYellowRoom()
 			int rande = rand() % 3 + 1;
 			if (rande == 2 && cMap2D->GetMapInfo(PStopleft.y - u, PStopleft.x + i) == 0)
 			{
-				cout << "SPAWNED LOOT HD: " << PStopleft.x + i << ", " << PStopleft.y - u << endl;
 				spawnloot(PStopleft.y - u, PStopleft.x + i);
 				int loottype = rand() % 3 + 1;
 				if (loottype == 1) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 40); // scrap
@@ -883,10 +841,8 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 									}
 									else
 									{
-										cout << "PRESED";
 										if (deskey == i && descactive == true) descactive = false;
 										else {
-											cout << deskey;
 											descactive = true;
 											deskey = i;
 										}
@@ -931,8 +887,6 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 										CKeyboardController::GetInstance()->Reset();
 										chestkey = i;
 										selectinventory = true;
-										cout << chestkey;
-
 									}
 								}
 								ImGui::End();
@@ -1360,7 +1314,6 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 							CKeyboardController::GetInstance()->Reset();
 							if (inventory_item_name_list[deskey].find("empty") == string::npos)
 							{
-								cout << "Dropped " + inventory_item_name_list[deskey];
 								dropitem(deskey);
 							}
 						}
@@ -1391,10 +1344,8 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					CKeyboardController::GetInstance()->Reset();
 
 					// Load the menu state
-					//cout << "Loading PlayGameState" << endl;
 					if (selectinventory == true)
 					{
-						cout << endl << "TRANSFERRING SHIT" << endl;
 						TransferToChest(inventory_item_name_list[chestkey], 1);
 					}
 					else TransferTohand(chest_item_name_list[chestkey], 1);
@@ -1406,7 +1357,6 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					CKeyboardController::GetInstance()->Reset();
 
 					// Load the menu state
-					//cout << "Loading PlayGameState" << endl;
 					if (selectinventory == true)
 					{
 						TransferToChest(inventory_item_name_list[chestkey], 10);
@@ -1514,7 +1464,6 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 							{
 								CKeyboardController::GetInstance()->Reset();
 								chestkey = i;
-								cout << chestkey << endl;
 								selectinventory = false;
 
 							}
@@ -1625,7 +1574,6 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 											crate_item_name_list[i] = str;
 											crate_item_quantity[i] = 0;
 
-											cout << "added item: " << crate_item_name_list[i] << endl;
 										}
 
 									}
@@ -1637,7 +1585,6 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					}
 				}
 
-				cout << "LOOTING LARGE CRATE";
 				if (descactive == false)
 					ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 2.55));
 				else ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, cSettings->iWindowHeight / 3.55));

@@ -444,7 +444,6 @@ void CEnemy2D_Nurse::Update(const double dElapsedTime)
 		runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
 		break;
 	case PATROL:
-		cout << iFSMCounter << endl;
 		if (iFSMCounter / 10 > iMaxFSMCounter)
 		{
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(IDLE);

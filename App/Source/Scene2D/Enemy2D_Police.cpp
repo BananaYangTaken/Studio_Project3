@@ -99,7 +99,6 @@ bool  CEnemy2D_Police::checkforLOS()
 	//TOP RIGHT VIEW
 	if (vec2Direction.x < 0 && vec2Direction.y < 0)
 	{
-		//cout << "enemy is TOP RIGHT OF PLAYER!" << endl;
 		for (int i = 0; i < distfromplayer; i++)
 		{
 			//cMap2D->SetMapInfo(Playervec2OldIndex.y + Ycount, Playervec2OldIndex.x + Xcount, 100);
@@ -111,11 +110,9 @@ bool  CEnemy2D_Police::checkforLOS()
 			}
 			if (cMap2D->GetMapInfo(Playervec2OldIndex.y + Ycount, Playervec2OldIndex.x + Xcount) >= 100)
 			{
-				//cout << "LOS LOST, VIEW BLOCKED!" << endl;
 				return false;
 			}
 		}
-		//cout << "CAN SEE PLAYER!";
 		return true;
 	}
 
@@ -379,7 +376,6 @@ void CEnemy2D_Police::Update(const double dElapsedTime)
 {
 	UpdateDirection();
 	checkforLOS();
-	//cout << "DISTANCE: " << cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) << endl;
 	if (!bIsActive)
 		return;
 	if (Health <= 0)
@@ -428,7 +424,6 @@ void CEnemy2D_Police::Update(const double dElapsedTime)
 		{
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(PATROL);
 			iFSMCounter = 0;
-			//cout << "Switching to Patrol State" << endl;
 		}
 		iFSMCounter++;
 		//Animation
@@ -474,7 +469,6 @@ void CEnemy2D_Police::Update(const double dElapsedTime)
 		}
 		else if(checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) <= DetectionRadius)
 		{
-			std::cout << (idlecount);
 			idlecount++;
 			hasseenplayeronce = true;
 			if (idlecount >= 15)
@@ -534,7 +528,6 @@ void CEnemy2D_Police::Update(const double dElapsedTime)
 			{
 				sCurrentFSM = static_cast<CEnemyBase::FSM>(PATROL);
 				iFSMCounter = 0;
-				//cout << "ATTACK : Reset counter: " << iFSMCounter << endl;
 			}
 			iFSMCounter++;
 		}
@@ -564,7 +557,6 @@ void CEnemy2D_Police::Update(const double dElapsedTime)
 		}
 		else if (checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) <= DetectionRadius)
 		{
-			std::cout << (idlecount);
 			idlecount++;
 			hasseenplayeronce = true;
 			if (idlecount >= 15)

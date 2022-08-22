@@ -93,9 +93,13 @@ public:
 
 	float daylightTimer;
 	float hours, mins;
+	int days;
+	float spawnrate;
+
+	bool isNight;
 
 	void UpdateDaylightCycle(const double dElapsedTime);
-
+	void SpawnEnemies();
 
 protected:
 	//Handler containing the instance of 2D Map
