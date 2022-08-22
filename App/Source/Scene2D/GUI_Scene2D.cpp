@@ -134,6 +134,23 @@ void CGUI_Scene2D::DecreaseInventoryItemCount(std::string arrayindex, int decrem
 		inventory_item_quantity[ind] = 0;
 	}
 }
+
+int CGUI_Scene2D::checkifItemExists(std::string arrayindex)
+{
+	for (int i = 0; i < inventory_size; i++)
+	{
+		if (arrayindex == inventory_item_name_list[i])
+		{
+			cout << "ITEM EXISTS" << endl;
+			return inventory_item_quantity[i];
+		}
+
+	}
+	cout << "ITEM DOESNT EXISTS" << endl;
+	return 0;
+}
+
+
 void CGUI_Scene2D::checkforzero()
 {
 	for (int i = 0; i < inventory_size; i++)
@@ -399,6 +416,7 @@ bool CGUI_Scene2D::Init(void)
 	// Store the CFPSCounter singleton instance here
 	cFPSCounter = CFPSCounter::GetInstance();
 	actiontext = "...";
+	actiontext2 = "...";
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -721,6 +739,7 @@ void CGUI_Scene2D::clearmap()
 }
 void CGUI_Scene2D::Update(const double dElapsedTime)
 {
+	textalready = false;
 	hotbarlevel = 0;
 	float level = -1;
 	// Calculate the relative scale to our default windows width
@@ -729,6 +748,30 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 	float wspace = 0.075f;
 	float hspace = 0.15f;
 	// Start the Dear ImGui frame
+
+	if (inventory_item_name_list[hotbarselection - 1] == "Medkit" && healing == false)
+	{
+		if (textalready == false)
+		{
+			actiontext = "Press E to use " + inventory_item_name_list[hotbarselection - 1];
+			textalready = true;
+		}
+		if (cKeyboardController->IsKeyPressed('E'))
+		{
+			if (inventory_item_name_list[hotbarselection - 1] == "Medkit")
+			{
+				healing = true;
+				healamt = 100;
+				healtime = 150;
+			}
+			else if (inventory_item_name_list[hotbarselection - 1] == "Bandage")
+			{
+				healing = true;
+				healamt = 15;
+				healtime = 75;
+			}
+		}
+	}
 
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
@@ -908,7 +951,12 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 			}
 			else if (darkenmap == true)
 			{
-			actiontext = "Its getting late...";
+			if (textalready == false)
+				if (textalready == false)
+				{
+					actiontext = "Its getting late...";
+					textalready = true;
+				}
 				if (transparency <= 0.6f)
 				{
 					transparency = transparency + 0.002f;
@@ -942,7 +990,11 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				
 				if (transparency >= 0)
 				{
-					actiontext = "The sun is rising...";
+					if (textalready == false)
+					{
+						actiontext = "The sun is rising...";
+						textalready = true;
+					}
 					transparency = transparency - 0.002f;
 				}
 				
@@ -1607,6 +1659,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 			ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
 			ImGui::SetWindowFontScale(1.5f * relativeScale_y);
 			ImGui::TextColored(ImVec4(1, 1, 0, 1), actiontext.c_str(), cFPSCounter->GetFrameRate());
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), actiontext2.c_str(), cFPSCounter->GetFrameRate());
 			ImGui::PopStyleColor();
 		}
 		ImGui::End();

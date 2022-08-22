@@ -300,10 +300,34 @@ bool CPlayer2D_V2::Reset()
  */
 void CPlayer2D_V2::Update(const double dElapsedTime)
 {
+
+	if (cGUI_Scene2D->healing == true)
+	{
+		cGUI_Scene2D->actiontext2 = "Using...";
+
+		cout << "USING!" << endl;
+		healtimer++;
+		if (healtimer >= cGUI_Scene2D->healtime)
+		{
+			cGUI_Scene2D->DecreaseInventoryItemCount(cGUI_Scene2D->inventory_item_name_list[cGUI_Scene2D->hotbarselection - 1], 1);
+			Health += cGUI_Scene2D->healamt;
+			cGUI_Scene2D->healing = false;
+			cGUI_Scene2D->actiontext2 = "...";
+			healtimer = 0;
+		}
+	}
+
+	CInventoryItem HeldItem = *(cInventoryManager->GetItem(cGUI_Scene2D->GetCurrentHotbarItem()));
 	// Store the old position
 	vec2OldIndex = vec2Index;
 	motion = false;
-
+	if (cGUI_Scene2D->GetCurrentHotbarItem() == "Rifle" || cGUI_Scene2D->GetCurrentHotbarItem() == "Pistol")
+	{
+		if(HeldItem.WData->ReloadTimer > 0)
+			cGUI_Scene2D->actiontext2 = HeldItem.sName + ": RELOADING...";
+		else
+			cGUI_Scene2D->actiontext2 = HeldItem.sName + ":"+ std::to_string(HeldItem.GData->CurrentAmmoSize) +"/"+ std::to_string(HeldItem.GData->MaxAmmoSize);
+	}
 	// Get keyboard updates
 	if (cKeyboardController->IsKeyDown(GLFW_KEY_A))
 	{
@@ -409,9 +433,6 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		Direction = 3;
 	}
 
-
-	CInventoryItem HeldItem = *(cInventoryManager->GetItem(cGUI_Scene2D->GetCurrentHotbarItem()));
-
 	//Player Use Item
 	if (cGUI_Scene2D->checkinginventory == false && cGUI_Scene2D->crafting == false && cGUI_Scene2D->chestactive == false)
 	{
@@ -428,11 +449,11 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 				cSoundController->PlaySoundByID(15);
 				cProjectileManager->SpawnProjectile(vec2Index, vec2NumMicroSteps, Rotation, 0, CProjectile2D::FRIENDLY, CProjectile2D::KNIFE, 30);
 			}
-			else if (HeldItem.itemtype == ITEM_TYPE::GUN 
-				&& HeldItem.GData->firingtype == FIRING_TYPE::SEMIAUTO 
-				&& HeldItem.GData->CurrentAmmoSize > 0 
+			else if (HeldItem.itemtype == ITEM_TYPE::GUN
+				&& HeldItem.GData->firingtype == FIRING_TYPE::SEMIAUTO
+				&& HeldItem.GData->CurrentAmmoSize > 0
 				&& HeldItem.GData->FiringCooldown == 0
-				&& HeldItem.WData->ReloadTimer == 0) //Semi-Auto
+				&& HeldItem.WData->ReloadTimer == 0)
 			{
 				//Attack with Semi Auto Gun
 				AnimationTimer = 0.1f;
@@ -453,7 +474,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 				&& HeldItem.GData->firingtype == FIRING_TYPE::FULLAUTO 
 				&& HeldItem.GData->CurrentAmmoSize > 0 
 				&& HeldItem.GData->FiringCooldown == 0
-				&& HeldItem.WData->ReloadTimer == 0) //Full-Auto
+				&& HeldItem.WData->ReloadTimer == 0)
 			{
 				//Attack with Full Auto Gun
 				AnimationTimer = 0.1f;
@@ -473,15 +494,17 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 				{
 					HeldItem.WData->ReloadTimer = HeldItem.WData->ReloadTime;
 					AnimationTimer = HeldItem.WData->ReloadTime;
-					if (HeldItem.GData->firingtype == FIRING_TYPE::FULLAUTO) 
+					if (HeldItem.GData->firingtype == FIRING_TYPE::FULLAUTO && cGUI_Scene2D->checkifItemExists("Rifle Bullets") >= 30)
 					{
 						animatedSprites->PlayAnimation("rifleReload",-1, HeldItem.WData->ReloadTime);
 						cSoundController->PlaySoundByID(25);
+						cGUI_Scene2D->DecreaseInventoryItemCount("Rifle Bullets", 30);
 					}
-					else if (HeldItem.GData->firingtype == FIRING_TYPE::SEMIAUTO)
+					else if (HeldItem.GData->firingtype == FIRING_TYPE::SEMIAUTO && cGUI_Scene2D->checkifItemExists("Pistol Bullets") >= 17)
 					{
 						animatedSprites->PlayAnimation("pistolReload",-1, HeldItem.WData->ReloadTime);
 						cSoundController->PlaySoundByID(24);
+						cGUI_Scene2D->DecreaseInventoryItemCount("Pistol Bullets", 30);
 					}
 					HeldItem.GData->CurrentAmmoSize = HeldItem.GData->MaxAmmoSize;
 				}
@@ -586,6 +609,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 
 	//CS: Update the animated sprite
 	animatedSprites->Update(dElapsedTime);
+	std::cout << "x: " << vec2Index.x <<" y:"<< vec2Index.y << std::endl;
 	//Calculate Position of Entity on Screen
 	glm::vec2 ScreenPos = glm::vec2(0, 0);
 	// Update the UV Coordinates

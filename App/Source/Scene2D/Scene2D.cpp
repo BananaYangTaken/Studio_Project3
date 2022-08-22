@@ -106,8 +106,8 @@ bool CScene2D::Init(void)
 	BarbwireUpgrade = 0;
 
 	daylightTimer = 0;
-	hours = 8;
-	mins = 0;
+	hours = 21;
+	mins = 50;
 	days = 1;
 	spawnrate = 1;
 	isNight = false;

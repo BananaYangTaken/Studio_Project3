@@ -148,7 +148,7 @@ protected:
 	unsigned int Direction;
 	bool motion;
 	float AnimationTimer;
-
+	float healtimer = 0;
 	//If player interact with map and creates a new object
 	bool LoadObject;
 

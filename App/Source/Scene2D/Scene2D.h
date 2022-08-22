@@ -94,6 +94,7 @@ public:
 	float daylightTimer;
 	float hours, mins;
 	int days;
+	float healtimer = 0;
 	float spawnrate;
 	int numSpawned;
 	float spawnTimer;

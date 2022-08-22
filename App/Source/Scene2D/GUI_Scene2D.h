@@ -55,6 +55,10 @@ public:
 	float redness = 0;
 	float blueness = 0;
 	std::string DayNightIcon = "Day";
+	bool healing = false;
+	float healamt = 0;
+	float healtime = 0;
+	bool textalready = false;
 	std::string timestring;
 	float greenness = 0;
 	float transparency = 0;
@@ -69,6 +73,7 @@ public:
 	float searchtimer = 0;
 	int chestactive = false;
 	std::string actiontext;
+	std::string actiontext2;
 	int Crafting_list_size = 5;
 	std::string Crafting_item_name_list[5] = { "Rifle Bullets", "Pistol Bullets", "Scrap Metal","Bandage","Medkit" };
 	int Crafting_item_Quantity[5] = {25,50,30,5,1};
@@ -107,6 +112,7 @@ public:
 	void setInventoryItem(int arrayVal, std::string item, int quantity, int maxQuantity);
 	int IncreaseInventoryItemCount(std::string arrayindex, int incrementValue);
 	void DecreaseInventoryItemCount(std::string arrayindex, int decrementvalue);
+	int checkifItemExists(std::string arrayindex);
 	bool CheckCrafting(int recipeIngredientCount, std::string Ingredients[4], int IngredientRequiredCount[4], std::string ResultantCraft, int CraftedQuantity);
 	void InventoryItemSetZero(std::string arrayindex);
 	void ChestItemSetZero(std::string arrayindex);
