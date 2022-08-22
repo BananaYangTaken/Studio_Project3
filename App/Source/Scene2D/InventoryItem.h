@@ -77,6 +77,6 @@ public:
 
 	// The amount of this item
 	int iItemCount;
-	// The total amount of this item
+	//The total amount of this item
 	int iItemMaxCount;
 };
