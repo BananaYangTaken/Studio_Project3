@@ -517,11 +517,11 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		CGameManager::GetInstance()->bPlayerLost = true;
 	}
 	//Animation
-	if (AnimationTimer == 0 && HeldItem.WData && HeldItem.WData->ReloadTimer == 0)
+	if (AnimationTimer == 0)
 	{
 		if (motion == false)
 		{
-			if (HeldItem.itemtype == ITEM_TYPE::GUN)
+			if (HeldItem.itemtype == ITEM_TYPE::GUN && HeldItem.WData->ReloadTimer == 0)
 			{
 				if (HeldItem.GData->firingtype == FIRING_TYPE::SEMIAUTO)
 				{
@@ -539,18 +539,15 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		}
 		else if (motion == true)
 		{
-			if (HeldItem.itemtype == ITEM_TYPE::GUN)
+			if (HeldItem.itemtype == ITEM_TYPE::GUN && HeldItem.WData->ReloadTimer == 0)
 			{
-				if (HeldItem.itemtype == ITEM_TYPE::GUN)
+				if (HeldItem.GData->firingtype == FIRING_TYPE::SEMIAUTO)
 				{
-					if (HeldItem.GData->firingtype == FIRING_TYPE::SEMIAUTO)
-					{
-						animatedSprites->PlayAnimation("pistolMove", -1, 10.0f);
-					}
-					else if (HeldItem.GData->firingtype == FIRING_TYPE::FULLAUTO)
-					{
-						animatedSprites->PlayAnimation("rifleMove", -1, 10.0f);
-					}
+					animatedSprites->PlayAnimation("pistolMove", -1, 10.0f);
+				}
+				else if (HeldItem.GData->firingtype == FIRING_TYPE::FULLAUTO)
+				{
+					animatedSprites->PlayAnimation("rifleMove", -1, 10.0f);
 				}
 			}
 			else
@@ -580,7 +577,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 
 	//CS: Update the animated sprite
 	animatedSprites->Update(dElapsedTime);
-
+	std::cout << "x: " << vec2Index.x <<" y:"<< vec2Index.y << std::endl;
 	//Calculate Position of Entity on Screen
 	glm::vec2 ScreenPos = glm::vec2(0, 0);
 	// Update the UV Coordinates
