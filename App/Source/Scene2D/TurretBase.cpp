@@ -226,11 +226,15 @@ void CTurretBase::Update(const double dElapsedTime)
 					animatedSprites->PlayAnimation("L1Attack", 1, 0.7f);
 					dynamic_cast<CEnemyBase*>((*cEnemyList)[i])->SetHealth(dynamic_cast<CEnemyBase*>((*cEnemyList)[i])->GetHealth() - 10);
 					damageTimer = 1;
+					CSoundController::GetInstance()->PlaySoundByID(27);
+
 					break;
 				case 1:
 					animatedSprites->PlayAnimation("L2Attack", 1, 0.7f);
 					dynamic_cast<CEnemyBase*>((*cEnemyList)[i])->SetHealth(dynamic_cast<CEnemyBase*>((*cEnemyList)[i])->GetHealth() - 10);
 					damageTimer = 0.5;
+					CSoundController::GetInstance()->PlaySoundByID(29);
+
 					break;
 				case 2:
 					animatedSprites->PlayAnimation("L3Attack", 1, 0.3f);
@@ -245,9 +249,10 @@ void CTurretBase::Update(const double dElapsedTime)
 					}
 					dynamic_cast<CEnemyBase*>((*cEnemyList)[i])->SetHealth(dynamic_cast<CEnemyBase*>((*cEnemyList)[i])->GetHealth() - 40);
 					damageTimer = 0.5;
+					CSoundController::GetInstance()->PlaySoundByID(31);
+
 					break;
 				}
-				CSoundController::GetInstance()->PlaySoundByID(15);
 			}
 		}
 

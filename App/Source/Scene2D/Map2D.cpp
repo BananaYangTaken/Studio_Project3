@@ -766,6 +766,67 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,const unsigned int uiNumRows,c
 		}
 	}
 
+
+	//Ver Wall Top
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Ver_Wall_Top.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Iteme/Ver_Wall_Top.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(123, iTextureID));
+		}
+	}
+
+	//Hor Wall Right
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Hor_Wall_Right.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Iteme/Hor_Wall_Right.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(122, iTextureID));
+		}
+	}
+
+	//Ver Wall Bot
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Ver_Wall_Bot.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Iteme/Ver_Wall_Bot.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(124, iTextureID));
+		}
+	}
+
+	//Hor Wall Left
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Hor_Wall_Left.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Iteme/Hor_Wall_Left.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(121, iTextureID));
+		}
+	}
+
 	
 
 
