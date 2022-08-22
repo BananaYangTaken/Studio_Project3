@@ -321,7 +321,7 @@ void CEnemy2D_Police::droploot()
 
 	for (int i = 0; i < lootcount; i++)
 	{
-		float recvey = vec2Index.x, recvex = vec2Index.y;
+		float recvey = vec2Index.y, recvex = vec2Index.x;
 		if (cMap2D->GetMapInfo(recvey, recvex) == 0 || cMap2D->GetMapInfo(recvey, recvey) == 22)
 		{
 			spawnloot(recvey, recvex);

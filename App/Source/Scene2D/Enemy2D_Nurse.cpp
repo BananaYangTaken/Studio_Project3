@@ -320,7 +320,7 @@ void CEnemy2D_Nurse::droploot()
 
 	for (int i = 0; i < lootcount; i++)
 	{
-		float recvex = vec2Index.x, recvey = vec2Index.y;
+		float recvex = vec2Index.y, recvey = vec2Index.x;
 		if (cMap2D->GetMapInfo(recvex, recvey) == 0 || cMap2D->GetMapInfo(recvex, recvey) == 22)
 		{
 			spawnloot(recvex, recvey);

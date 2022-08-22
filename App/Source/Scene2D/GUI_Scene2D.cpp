@@ -963,6 +963,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				//window_flags |= ImGuiWindowFlags_NoMove;
 				window_flags_bg |= ImGuiWindowFlags_NoCollapse;
 				window_flags_bg |= ImGuiWindowFlags_NoNav;
+				window_flags_bg |= ImGuiWindowFlags_NoMouseInputs;
 				window_flags_bg |= ImGuiWindowFlags_NoResize;
 				ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(redness, greenness, blueness, transparency));  // Set a background color
 				{
@@ -995,6 +996,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				//window_flags |= ImGuiWindowFlags_NoMove;
 				window_flags_bg |= ImGuiWindowFlags_NoCollapse;
 				window_flags_bg |= ImGuiWindowFlags_NoNav;
+				window_flags_bg |= ImGuiWindowFlags_NoMouseInputs;
 				window_flags_bg |= ImGuiWindowFlags_NoResize;
 				ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(redness, greenness, blueness, transparency));  // Set a background color
 				{
