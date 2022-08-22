@@ -32,7 +32,7 @@ CEnemy2D_Zombie::CEnemy2D_Zombie(void)
 	sCurrentFSM = static_cast<CEnemyBase::FSM>(FSM::IDLE);
 	iFSMCounter = 0;
 	animatedSprites = NULL;
-	AStarCalculate = true;
+	AStarCalculate = false;
 	Health = prevHP = 60;
 	Death = 0;
 	InvulnerabilityFrame = 0;
@@ -235,6 +235,7 @@ bool  CEnemy2D_Zombie::checkforLOS()
 
 bool CEnemy2D_Zombie::Init(int x, int y)
 {
+	cout << "INIT INSTANCE ZOMBIE NORMAL " << endl;
 	// Get the handler to the CSettings instance
 	cSettings = CSettings::GetInstance();
 	// Get the handler to the CMap2D instance
@@ -248,7 +249,7 @@ bool CEnemy2D_Zombie::Init(int x, int y)
 	}
 	// Erase the value of the enemy in the arrMapInfo
 	cMap2D->SetMapInfo(uiRow, uiCol, 0);
-
+	cout << "ZOMBIE SET ON MAP" << endl;
 	// Set the start position of the enemy to iRow and iCol
 	vec2Index = glm::vec2(x, y);
 
@@ -258,35 +259,30 @@ bool CEnemy2D_Zombie::Init(int x, int y)
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
-
+	cout << "Loading textureID" << endl;
 	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/regularZombie.png", true);
 	if (iTextureID == 0)
 	{
 		cout << "Unable to load Image/regularZombie.png" << endl;
 		return false;
 	}
-
 	//CS:Create Animated Sprites and setup animation
-
 
 	animatedSprites = CMeshBuilder::GenerateSpriteAnimation(4, 17, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
 	animatedSprites->AddAnimation("idle", 0, 16);
 	animatedSprites->AddAnimation("move", 17, 33);
 	animatedSprites->AddAnimation("attack", 34, 42);
 	animatedSprites->AddAnimation("death", 51, 56);
-
 	deathTimer = 0;
 
 	runtimeColour = glm::vec4(1, 1, 1, 1.0);
 
 	// Set the Physics to fall status by default
 	cPhysics2D.Init();
-
 	// If this class is initialised properly, then set the bIsActive to true
 	bIsActive = true;
 
 	UpdateDirection();
-
 	return true;
 }
 void CEnemy2D_Zombie::UpdateToLastLOS()

@@ -32,7 +32,7 @@ CEnemy2D_Mutant::CEnemy2D_Mutant(void)
 	sCurrentFSM = static_cast<CEnemyBase::FSM>(FSM::IDLE);
 	iFSMCounter = 0;
 	animatedSprites = NULL;
-	AStarCalculate = true;
+	AStarCalculate = false;
 	Health = prevHP = 250;
 	Death = 0;
 	InvulnerabilityFrame = 0;

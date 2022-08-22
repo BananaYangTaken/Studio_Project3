@@ -106,8 +106,8 @@ bool CScene2D::Init(void)
 	BarbwireUpgrade = 0;
 
 	daylightTimer = 0;
-	hours = 19;
-	mins = 0;
+	hours = 21;
+	mins = 57;
 	days = 1;
 	spawnrate = 1;
 	isNight = false;
@@ -423,7 +423,6 @@ bool CScene2D::Update(const double dElapsedTime)
 		cGUI_Scene2D->DayNightIcon = "Night";
 	if (hours >= 22 && cGUI_Scene2D->darkenmap == true && calledonce == false)
 	{
-		cSoundController->PlaySoundByID(39);
 		cSoundController->PlaySoundByID(39);
 		cSoundController->PlaySoundByID(39);
 		cout << "HORDE SPAWNED!";
