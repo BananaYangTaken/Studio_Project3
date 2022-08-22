@@ -455,8 +455,6 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 				HeldItem.GData->FiringCooldown = HeldItem.GData->FireRate;
 			}
 		}
-		if(HeldItem.GData)
-			std::cout << "Ammo:" << HeldItem.GData->CurrentAmmoSize << HeldItem.GData->MaxAmmoSize << std::endl;
 		if(HeldItem.itemtype == ITEM_TYPE::GUN)
 		{ 
 			//Reload
