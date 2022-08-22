@@ -81,7 +81,7 @@ void CEnemyBase::SetInvulnerabilityFrame(float InvulnerabilityFrame)
 	this->InvulnerabilityFrame = InvulnerabilityFrame;
 }
 
-unsigned int CEnemyBase::GetHealth(void)
+int CEnemyBase::GetHealth(void)
 {
 	return this->Health;
 }

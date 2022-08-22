@@ -31,7 +31,6 @@ CTurretBase::CTurretBase(void)
 	iFSMCounter = 0;
 	animatedSprites = NULL;
 	AStarCalculate = true;
-	Ammo = 100;
 	Level = 0;
 	damageTimer = 0;
 	changedBase = 0;

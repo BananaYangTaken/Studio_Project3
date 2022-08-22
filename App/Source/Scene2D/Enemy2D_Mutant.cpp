@@ -464,12 +464,6 @@ void CEnemy2D_Mutant::Update(const double dElapsedTime)
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(CHASE);
 			iFSMCounter = 0;
 		}
-		else if (Health <= 30)
-		{
-			sCurrentFSM = static_cast<CEnemyBase::FSM>(RETREAT);
-			CSoundController::GetInstance()->PlaySoundByID(35);
-			iFSMCounter = 0;
-		}
 		else
 		{
 			// Patrol around

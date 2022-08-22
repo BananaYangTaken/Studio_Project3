@@ -59,7 +59,7 @@ public:
 	virtual void SetHealth(unsigned int);
 	virtual void SetDeathState(unsigned int);
 	virtual void SetInvulnerabilityFrame(float);
-	virtual unsigned int GetHealth(void);
+	virtual int GetHealth(void);
 	virtual unsigned int GetDeathState(void);
 	virtual float GetInvulnerabilityFrame(void);
 	virtual void SetPlayer(CEntity2D*);
