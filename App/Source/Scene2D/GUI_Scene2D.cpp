@@ -457,6 +457,9 @@ bool CGUI_Scene2D::Init(void)
 
 	AddAllButton.fileName = "Image\\GUI\\Minus1.png";
 	AddAllButton.textureID = il->LoadTextureGetID(AddAllButton.fileName.c_str(), false);
+
+	DayNight.fileName = "Image\\GUI\\Day.png";
+	DayNight.textureID = il->LoadTextureGetID(AddAllButton.fileName.c_str(), false);
 	//KnightIcon.fileName = "Image\\HumanKnightIcon.png";
 	//.textureID = il->LoadTextureGetID(KnightIcon.fileName.c_str(), true);
 
@@ -1686,8 +1689,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.8f, cSettings->iWindowHeight * 0.03f));
 				ImGui::SetWindowSize(ImVec2(100.0f * relativeScale_x, 25.0f * relativeScale_y));
 				cInventoryItem = cInventoryManager->GetItem("Health");
-				ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(cInventoryItem->vec2Size.x * relativeScale_x, cInventoryItem->vec2Size.y * relativeScale_y), ImVec2(0, 1), ImVec2(1, 0));
-
+				ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(cInventoryItem->vec2Size.x* relativeScale_x, cInventoryItem->vec2Size.y* relativeScale_y), ImVec2(0, 1), ImVec2(1, 0));
 			}
 			ImGui::End();
 			ImGui::Begin("HealthText", NULL, topRightWindowFlags);
@@ -1696,6 +1698,48 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				ImGui::SetWindowSize(ImVec2(100.0f * relativeScale_x, 25.0f * relativeScale_y));
 				ImGui::SetWindowFontScale(1.5f * relativeScale_y);
 				ImGui::TextColored(ImVec4(1, 1, 1, 1), "%d / %d", CPlayer2D_V2::GetInstance()->GetHealth(), CPlayer2D_V2::GetInstance()->GetMaxHealth());
+			}
+			ImGui::End();
+			ImGui::PopStyleColor();
+			ImGui::PopStyleColor();
+		}
+		ImGui::End();
+
+		ImGui::Begin("DayNight", NULL, window_flags);
+		{
+			ImGui::SetWindowPos(ImVec2((float)cSettings->iWindowWidth - 320.0f, 20.0f));
+			ImGui::SetWindowSize(ImVec2(300.0f, 60.0f));
+			ImVec4 col = ImVec4(0.f, 1.f, 0.f, 1.f);
+			ImGui::PushStyleColor(ImGuiCol_PlotHistogram, col);
+			col = ImVec4(1.f, 0.f, 0.f, 1.f);
+			ImGui::PushStyleColor(ImGuiCol_FrameBg, col);
+			m_fProgressBar = float(CPlayer2D_V2::GetInstance()->GetHealth()) / float(CPlayer2D_V2::GetInstance()->GetMaxHealth());
+			const char* empty = " ";
+			ImGui::ProgressBar(m_fProgressBar, ImVec2(300.0f, 60.0f), empty);
+			// Render the Health
+			ImGuiWindowFlags topLeft = 
+				ImGuiWindowFlags_AlwaysAutoResize |
+				ImGuiWindowFlags_NoTitleBar |
+				ImGuiWindowFlags_NoMove |
+				ImGuiWindowFlags_NoResize |
+				ImGuiWindowFlags_NoCollapse |
+				ImGuiWindowFlags_NoBackground |
+				ImGuiWindowFlags_NoScrollbar;
+
+			ImGui::Begin("daynighticon", NULL, topLeft);
+			{
+				ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.1f, cSettings->iWindowHeight * 0.03f));
+				ImGui::SetWindowSize(ImVec2(25.0f * relativeScale_x, 25.0f * relativeScale_y));
+				cInventoryItem = cInventoryManager->GetItem(DayNightIcon);
+				ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(75,75), ImVec2(0, 1), ImVec2(1, 0));
+			}
+			ImGui::End();
+			ImGui::Begin("timer", NULL, topLeft);
+			{
+				ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.2f, cSettings->iWindowHeight * 0.03f));
+				ImGui::SetWindowSize(ImVec2(100.0f * relativeScale_x, 25.0f * relativeScale_y));
+				ImGui::SetWindowFontScale(1.0f * relativeScale_y);
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), timestring.c_str(), cFPSCounter->GetFrameRate());
 			}
 			ImGui::End();
 			ImGui::PopStyleColor();

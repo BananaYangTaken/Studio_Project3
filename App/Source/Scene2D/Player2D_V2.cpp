@@ -189,6 +189,15 @@ bool CPlayer2D_V2::Init(void)
 		cInventoryItem = cInventoryManager->Add("Health", "Image/Health.tga", 1, 0);
 		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
+		cInventoryItem = cInventoryManager->Add("Day", "Image/Day.png", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+		cInventoryItem = cInventoryManager->Add("Night", "Image/Night.png", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+		cInventoryItem = cInventoryManager->Add("Sunrise", "Image/Sunrise.png", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
+
 		cInventoryItem = cInventoryManager->Add("Hard wood", "Image/Iteme/Hard wood.tga", 1, 0);
 		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
