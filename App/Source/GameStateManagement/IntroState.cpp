@@ -92,11 +92,11 @@ CIntroState::CIntroState(void)
 		//Turret3 Fire
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Turret3_Fire.ogg"), 31, true, false, CSoundInfo::SOUNDGROUP::Player);
 		//Zombie Attack
-		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Zombie_Attack.ogg"), 32, true, false, CSoundInfo::SOUNDGROUP::Player);
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Zombie_Attack2.ogg"), 32, true, false, CSoundInfo::SOUNDGROUP::Player);
 		//Zombie Chase
-		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Zombie_Chase.ogg"), 33, true, false, CSoundInfo::SOUNDGROUP::Player);
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Zombie_Chase2.ogg"), 33, true, false, CSoundInfo::SOUNDGROUP::Player);
 		//Zombie_Idle
-		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Zombie_Idle.ogg"), 35, true, false, CSoundInfo::SOUNDGROUP::Player);
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Zombie_Idle2.ogg"), 35, true, false, CSoundInfo::SOUNDGROUP::Player);
 		//Footsteps
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\FootSteps.ogg"), 36, true, false, CSoundInfo::SOUNDGROUP::Player);
 		//Keycard Accept
