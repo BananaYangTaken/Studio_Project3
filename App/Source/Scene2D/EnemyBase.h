@@ -8,6 +8,7 @@
 #include <includes/gtc/matrix_transform.hpp>
 #include <includes/gtc/type_ptr.hpp>
 
+
 // Include CEntity2D
 #include "Primitives/Entity2D.h"
 
@@ -64,6 +65,7 @@ public:
 	virtual void SetPlayer(CEntity2D*);
 
 	virtual void SetStun(bool);
+	virtual void SetWindowLevel(unsigned int newLevel);
 
 protected:
 	enum DIRECTION
@@ -115,9 +117,12 @@ protected:
 	glm::vec2 vec2Destination;
 	// The vec2 which stores the direction for enemy2D movement in the Map2D
 	glm::vec2 vec2Direction;
+	//Level
+	unsigned int Level;
 
 	// Settings
 	CSettings* cSettings;
+
 
 	// Keyboard Controller 
 	CKeyboardController* cKeyboardController;

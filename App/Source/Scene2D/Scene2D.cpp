@@ -327,6 +327,7 @@ bool CScene2D::Update(const double dElapsedTime)
 		}
 		else {
 			(*it)->Update(dElapsedTime);
+			Temp->SetWindowLevel(WindowUpgradeLvl);
 			++it; 
 		}
 	}

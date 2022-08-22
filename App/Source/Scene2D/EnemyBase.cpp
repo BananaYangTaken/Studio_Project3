@@ -7,7 +7,6 @@
 #include "RenderControl\ShaderManager.h"
 // Include Mesh Builder
 #include "Primitives/MeshBuilder.h"
-
 // Include GLEW
 #include <GL/glew.h>
 
@@ -24,6 +23,7 @@
  */
 CEnemyBase::CEnemyBase(void)
 {
+	
 
 }
 
@@ -59,6 +59,10 @@ void CEnemyBase::Update(const double dElapsedTime)
 		animatedSprites->PlayAnimation("idle", -1, 1.0f);
 	}
 	animatedSprites->Update(dElapsedTime);
+
+
+	
+		
 }
 
 
@@ -100,6 +104,11 @@ void CEnemyBase::SetPlayer(CEntity2D* newPlayer)
 void CEnemyBase::SetStun(bool stun)
 {
 	Stunned = stun;
+}
+
+void CEnemyBase::SetWindowLevel(unsigned int newLevel)
+{
+	Level = newLevel;
 }
 
 
