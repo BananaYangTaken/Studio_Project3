@@ -509,7 +509,7 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,const unsigned int uiNumRows,c
 		else
 		{
 			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(51, iTextureID));
+			MapOfTextureIDs.insert(pair<int, int>(119, iTextureID));
 		}
 	}
 	//Load lvl3 window
@@ -523,7 +523,7 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,const unsigned int uiNumRows,c
 		else
 		{
 			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(53, iTextureID));
+			MapOfTextureIDs.insert(pair<int, int>(120, iTextureID));
 		}
 	}
 

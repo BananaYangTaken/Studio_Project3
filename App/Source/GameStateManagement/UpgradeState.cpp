@@ -168,7 +168,6 @@ bool CUpgradeState::SearchForRequirements(std::string list[3], int listcount[3])
 				}
 			}
 		}
-
 	}
 	return true;
 }
@@ -286,11 +285,10 @@ bool CUpgradeState::Update(const double dElapsedTime)
 								// Reset the CKeyboardController
 								CKeyboardController::GetInstance()->Reset();
 							}
-							cMap2D->SetMapInfo(50, 9, 51);
-							cMap2D->SetMapInfo(50, 17, 51);
-							cMap2D->SetMapInfo(36, 9, 51);
-							cMap2D->SetMapInfo(36, 17, 51);
-
+							cMap2D->SetMapInfo(50, 9, 119);
+							cMap2D->SetMapInfo(50, 17, 119);
+							cMap2D->SetMapInfo(36, 9, 119);
+							cMap2D->SetMapInfo(36, 17, 119);
 						}
 						if (CurrentWindowLv == 2)
 						{
@@ -300,10 +298,10 @@ bool CUpgradeState::Update(const double dElapsedTime)
 								// Reset the CKeyboardController
 								CKeyboardController::GetInstance()->Reset();
 							}
-							cMap2D->SetMapInfo(50, 9, 53);
-							cMap2D->SetMapInfo(50, 17, 53);
-							cMap2D->SetMapInfo(36, 9, 53);
-							cMap2D->SetMapInfo(36, 17, 53);
+							cMap2D->SetMapInfo(50, 9, 120);
+							cMap2D->SetMapInfo(50, 17, 120);
+							cMap2D->SetMapInfo(36, 9, 120);
+							cMap2D->SetMapInfo(36, 17, 120);
 						}
 					}
 				}

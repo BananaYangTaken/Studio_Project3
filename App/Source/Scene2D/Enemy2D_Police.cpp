@@ -17,6 +17,7 @@
 #include "Map2D.h"
 // Include math.h
 #include <math.h>
+#include "../MyMath.h"
 #include "Player2D_V2.h"
 
 /**
@@ -605,6 +606,56 @@ void CEnemy2D_Police::Update(const double dElapsedTime)
 	prevHP = Health;
 	++iFSMCounter;
 	animatedSprites->Update(dElapsedTime);
+	//wood baricase checker
+	int chance = Math::RandIntMinMax(1, 600);
+	if (Level == 1)
+	{
+		//Top window if outside
+		if (vec2Index.y >= 50 && vec2Index.y <= 51)
+		{
+			if (vec2Index.x == 9 || vec2Index.x == 17)
+			{
+				if (chance == 1)
+				{
+					vec2Index.y = 48;
+				}
+			}
+		}
+		//Top window if inside
+		if (vec2Index.y <= 50 && vec2Index.y >= 49)
+		{
+			if (vec2Index.x == 9 || vec2Index.x == 17)
+			{
+				if (chance == 1)
+				{
+					vec2Index.y = 52;
+				}
+			}
+		}
+
+		//Bot window if inside
+		if (vec2Index.y >= 36 && vec2Index.y <= 37)
+		{
+			if (vec2Index.x == 9 || vec2Index.x == 17)
+			{
+				if (chance == 1)
+				{
+					vec2Index.y = 34;
+				}
+			}
+		}
+		////Bot window if outside
+		if (vec2Index.y <= 36 && vec2Index.y >= 35)
+		{
+			if (vec2Index.x == 9 || vec2Index.x == 17)
+			{
+				if (chance == 1)
+				{
+					vec2Index.y = 38;
+				}
+			}
+		}
+	}
 
 	// Update the UV Coordinates
 	{
@@ -653,5 +704,6 @@ void CEnemy2D_Police::Update(const double dElapsedTime)
 			vec2UVCoordinate = glm::vec2(2, 2);
 		}
 	}
+
 }
 
