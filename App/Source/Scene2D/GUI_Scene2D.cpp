@@ -791,6 +791,45 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 			// Render the inventory items
 			if (checkinginventory == true)
 			{
+
+				if (darkenmap == true)
+				{
+					if (textalready == false)
+						if (textalready == false)
+						{
+							actiontext = "Its getting late...";
+							textalready = true;
+						}
+					if (transparency <= 0.6f)
+					{
+						transparency = transparency + 0.002f;
+					}
+					ImGuiWindowFlags window_flags_bg = 0;
+					window_flags_bg |= ImGuiWindowFlags_NoTitleBar;
+					window_flags_bg |= ImGuiWindowFlags_NoScrollbar;
+					//window_flags |= ImGuiWindowFlags_MenuBar;
+					//window_flags |= ImGuiWindowFlags_NoMove;
+					window_flags_bg |= ImGuiWindowFlags_NoCollapse;
+					window_flags_bg |= ImGuiWindowFlags_NoNav;
+					//window_flags_bg |= ImGuiWindowFlags_NoMouseInputs;
+					window_flags_bg |= ImGuiWindowFlags_NoResize;
+					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(redness, greenness, blueness, transparency));  // Set a background color
+					{
+						ImGui::Begin("darkwindow", NULL, window_flags_bg);
+						{
+
+
+							ImGui::SetWindowPos(ImVec2(0, 0));				// Set the top-left of the window at (10,10)
+							ImGui::SetWindowSize(ImVec2(CSettings::GetInstance()->iWindowWidth, CSettings::GetInstance()->iWindowHeight));
+
+							//Added rounding for nicer effect
+						}
+						ImGui::End();
+					}
+					ImGui::PopStyleColor();
+				}
+
+
 				ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, 1));
 				ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
 				ImGui::SetWindowFontScale(2.5f * relativeScale_y);
@@ -968,7 +1007,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				//window_flags |= ImGuiWindowFlags_NoMove;
 				window_flags_bg |= ImGuiWindowFlags_NoCollapse;
 				window_flags_bg |= ImGuiWindowFlags_NoNav;
-				window_flags_bg |= ImGuiWindowFlags_NoMouseInputs;
+				//window_flags_bg |= ImGuiWindowFlags_NoMouseInputs;
 				window_flags_bg |= ImGuiWindowFlags_NoResize;
 				ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(redness, greenness, blueness, transparency));  // Set a background color
 				{
