@@ -32,12 +32,15 @@ struct GunData
 {
 	unsigned int MaxAmmoSize;
 	unsigned int CurrentAmmoSize;
+	float FireRate; //How many seconds for 1 bullet to be fired again
+	float FiringCooldown;
 	FIRING_TYPE firingtype;
 };
 struct WeaponData
 {
 	float Damage;
 	float ReloadTime;
+	float ReloadTimer;
 };
 
 class CInventoryItem : public CEntity2D

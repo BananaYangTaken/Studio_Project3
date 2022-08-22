@@ -65,7 +65,7 @@ void CProjectileManager::Update(const double dElapsedTime)
 						if (dynamic_cast<CPlayer2D_V2*>(Player)->GetInvulnerabilityFrame() >= 0)
 						{
 							dynamic_cast<CPlayer2D_V2*>(Player)->SetHealth(dynamic_cast<CPlayer2D_V2*>(Player)->GetHealth() - (*it)->GetDamage());
-							dynamic_cast<CPlayer2D_V2*>(Player)->SetInvulnerabilityFrame(0.5);
+							dynamic_cast<CPlayer2D_V2*>(Player)->SetInvulnerabilityFrame(0.3);
 						
 						}
 						CollisionDetected = !CollisionDetected;
@@ -85,7 +85,7 @@ void CProjectileManager::Update(const double dElapsedTime)
 							if (dynamic_cast<CEnemyBase*>(cEnemyList->at(i))->GetInvulnerabilityFrame() <= 0)
 							{
 								dynamic_cast<CEnemyBase*>(cEnemyList->at(i))->SetHealth(dynamic_cast<CEnemyBase*>(cEnemyList->at(i))->GetHealth() - (*it)->GetDamage());
-								dynamic_cast<CEnemyBase*>(cEnemyList->at(i))->SetInvulnerabilityFrame(0.5);
+								dynamic_cast<CEnemyBase*>(cEnemyList->at(i))->SetInvulnerabilityFrame(0.2);
 								dynamic_cast<CEnemyBase*>(cEnemyList->at(i))->SetStun(true);
 							}
 							CollisionDetected = !CollisionDetected;
