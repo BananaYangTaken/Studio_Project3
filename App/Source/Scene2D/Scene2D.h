@@ -100,9 +100,11 @@ public:
 	float spawnTimer;
 
 	bool isNight;
+	bool SolarEclipse, BloodMoon;
 
 	void UpdateDaylightCycle(const double dElapsedTime);
 	void SpawnEnemies();
+	void BloodMoonOrSolarEclipse();
 
 protected:
 	//Handler containing the instance of 2D Map

@@ -106,13 +106,15 @@ bool CScene2D::Init(void)
 	BarbwireUpgrade = 0;
 
 	daylightTimer = 0;
-	hours = 21;
-	mins = 50;
+	hours = 19;
+	mins = 0;
 	days = 1;
 	spawnrate = 1;
 	isNight = false;
 	numSpawned = 0;
 	spawnTimer = 0;
+	SolarEclipse = false;
+	BloodMoon = false;
 
 	//Initialse this instance
 	if (cMap2D->Init(5, CSettings::GetInstance()->NUM_TILES_YAXIS, CSettings::GetInstance()->NUM_TILES_XAXIS) == false)
@@ -219,28 +221,98 @@ void CScene2D::SpawnEnemies()
 	// 305 Mutant Zombie
 
 	int EnemyRand = Math::RandIntMinMax(1, 20);
-	int randx = Math::RandIntMinMax(10, 90);
-	int randy = Math::RandIntMinMax(10, 90);
-	while (cMap2D->GetMapInfo(randy, randx) != 0)
-	{
-		randx = Math::RandIntMinMax(10, 90);
-		randy = Math::RandIntMinMax(10, 90);
-	}
+	int randx = 0;
+	int randy = 0;
+
+
+	
+	//mutant zombie
 	if (EnemyRand == 20)
 	{
+		// EVERYWHERE
+		randx = Math::RandIntMinMax(25, 90);
+		randy = Math::RandIntMinMax(10, 90);
+		while (cMap2D->GetMapInfo(randy, randx) != 0)
+		{
+			randx = Math::RandIntMinMax(25, 90);
+			randy = Math::RandIntMinMax(10, 90);
+		}
 		cMap2D->SetMapInfo(randy, randx, 305);
 	}
+	//police zombie
 	else if (EnemyRand >= 16 && EnemyRand <= 19)
 	{
+		int MilOrStn = Math::RandIntMinMax(1, 2);
+
+		if (MilOrStn == 1)
+		{
+			// POLICE STATION
+			randx = Math::RandIntMinMax(5, 24);
+			randy = Math::RandIntMinMax(85, 95);
+			while (cMap2D->GetMapInfo(randy, randx) != 0)
+			{
+				randx = Math::RandIntMinMax(5, 24);
+				randy = Math::RandIntMinMax(85, 95);
+			}
+		}
+		else if (MilOrStn == 2)
+		{
+			// MILITARY BASE
+			randx = Math::RandIntMinMax(45, 98);
+			randy = Math::RandIntMinMax(3, 10);
+			while (cMap2D->GetMapInfo(randy, randx) != 0)
+			{
+				randx = Math::RandIntMinMax(45, 98);
+				randy = Math::RandIntMinMax(3, 10);
+			}
+		}
 		cMap2D->SetMapInfo(randy, randx, 304);
 	}
+	//nurse zombie
 	else if (EnemyRand >= 11 && EnemyRand <= 15)
 	{
+		// HOSPITAL
+		randx = Math::RandIntMinMax(80, 98);
+		randy = Math::RandIntMinMax(60, 98);
+		while (cMap2D->GetMapInfo(randy, randx) != 0)
+		{
+			randx = Math::RandIntMinMax(80, 98);
+			randy = Math::RandIntMinMax(60, 98);
+		}
 		cMap2D->SetMapInfo(randy, randx, 303);
 	}
+	//regular zombie
 	else if (EnemyRand >= 1 && EnemyRand <= 10)
 	{
+		// EVERYWHERE
+		randx = Math::RandIntMinMax(25, 90);
+		randy = Math::RandIntMinMax(10, 90);
+		while (cMap2D->GetMapInfo(randy, randx) != 0)
+		{
+			randx = Math::RandIntMinMax(25, 90);
+			randy = Math::RandIntMinMax(10, 90);
+		}
 		cMap2D->SetMapInfo(randy, randx, 302);
+	}
+}
+
+void CScene2D::BloodMoonOrSolarEclipse()
+{
+	int EventBaseChance = Math::RandIntMinMax(1, 100);
+	int TotalChance = 1 + days;
+
+	if (EventBaseChance >= 1 && EventBaseChance <= TotalChance)
+	{
+		if (hours > 19)
+		{
+			BloodMoon = true;
+			cout << "BLOOD MOON" << endl;
+		}
+		else if (hours >= 5 && hours < 19)
+		{
+			SolarEclipse = true;
+			cout << "SOLAR ECLIPSE" << endl;
+		}
 	}
 }
 
@@ -249,7 +321,20 @@ void CScene2D::SpawnEnemies()
 */
 bool CScene2D::Update(const double dElapsedTime)
 {
-	spawnrate = 1 + (0.1 * days);
+	if (cKeyboardController->IsKeyPressed('='))
+	{
+		hours++;
+	}
+	BloodMoonOrSolarEclipse();
+	if (BloodMoon == true || SolarEclipse == true)
+	{
+		spawnrate = 2 + (0.2 * days);
+		numSpawned = 0;
+	}
+	else
+	{
+		spawnrate = 1 + (0.1 * days);
+	}
 	int spawncount = 20 * spawnrate;
 	UpdateDaylightCycle(dElapsedTime);
 
@@ -258,9 +343,27 @@ bool CScene2D::Update(const double dElapsedTime)
 		spawnTimer += dElapsedTime;
 	}
 
-	if (hours >= 22)
+	if (hours >= 22 && BloodMoon == false)
 	{
 		if (numSpawned < spawncount && spawnTimer >= 2)
+		{
+			SpawnEnemies();
+			numSpawned++;
+			spawnTimer = 0;
+		}
+	}
+	else if (SolarEclipse == true && hours > 5 && hours < 19)
+	{
+		if (numSpawned < spawncount && spawnTimer >= 1)
+		{
+			SpawnEnemies();
+			numSpawned++;
+			spawnTimer = 0;
+		}
+	}
+	else if (hours >= 20 && BloodMoon == true)
+	{
+		if (numSpawned < spawncount && spawnTimer >= 1)
 		{
 			SpawnEnemies();
 			numSpawned++;
@@ -270,8 +373,17 @@ bool CScene2D::Update(const double dElapsedTime)
 	else if (hours >= 5 && hours < 19)
 	{
 		numSpawned = 0;
+		if (BloodMoon == true)
+		{
+			BloodMoon = false;
+		}
 	}
 
+	if (hours >= 19 && SolarEclipse == true)
+	{
+		numSpawned = 0;
+		SolarEclipse = false;
+	}
 
 
 

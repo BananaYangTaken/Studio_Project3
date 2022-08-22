@@ -842,14 +842,9 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 				cGUI_Scene2D->looting = false;
 				cGUI_Scene2D->checkinginventory = false;
 				cGUI_Scene2D->crafting = false;
-				if(cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x) == 110)
-					cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 0);
-				else if (cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x) == 110)
-					cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 0);
-				else if (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1) == 110)
-					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 0);
-				else if (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1) == 110)
-					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 0);
+				if(cMap2D->GetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement) == 110)
+					cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
+			
 			}
 		}
 		break;
@@ -909,7 +904,7 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 		{
 			if (cGUI_Scene2D->IncreaseInventoryItemCount("Bandage", 1) == 1)
 			{
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+				cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
 			}
 			else
 			{
@@ -925,7 +920,7 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 		{
 			if (cGUI_Scene2D->IncreaseInventoryItemCount("Blueprint", 1) == 1)
 			{
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+				cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
 			}
 			else
 			{
@@ -941,7 +936,7 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 		{
 			if (cGUI_Scene2D->IncreaseInventoryItemCount("Fabric", 1) == 1)
 			{
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+				cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
 			}
 			else
 			{
@@ -958,7 +953,7 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 
 			if (cGUI_Scene2D->IncreaseInventoryItemCount("Hard wood", 1) == 1)
 			{
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+				cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
 			}
 			else
 			{
@@ -974,7 +969,7 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 		{
 			if (cGUI_Scene2D->IncreaseInventoryItemCount("Medkit", 1) == 1)
 			{
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+				cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
 			}
 			else
 			{
@@ -990,7 +985,7 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 		{
 			if (cGUI_Scene2D->IncreaseInventoryItemCount("Pistol Bullet", 5) == 1)
 			{
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+				cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
 			}
 			else
 			{
@@ -1006,7 +1001,7 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 		{
 			if (cGUI_Scene2D->IncreaseInventoryItemCount("Pistol", 1) == 1)
 			{
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+				cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
 			}
 			else
 			{
@@ -1022,7 +1017,7 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 		{
 			if (cGUI_Scene2D->IncreaseInventoryItemCount("Rifle Bullet", 1) == 1)
 			{
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+				cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
 			}
 			else
 			{
@@ -1038,7 +1033,7 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 		{
 			if (cGUI_Scene2D->IncreaseInventoryItemCount("Rifle", 1) == 1)
 			{
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+				cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
 			}
 			else
 			{
@@ -1054,7 +1049,7 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 		{
 			if (cGUI_Scene2D->IncreaseInventoryItemCount("Scrap Metal", 1) == 1)
 			{
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+				cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
 			}
 			else
 			{
@@ -1070,7 +1065,23 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 		{
 			if(cGUI_Scene2D->IncreaseInventoryItemCount("Stone Ore", 1) == 1)
 			{
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+				cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
+			}
+			else
+			{
+				cGUI_Scene2D->actiontext = "Inventory full!";
+			}
+			cSoundController->PlaySoundByID(22);
+
+		}
+		break;
+	case 42:
+		cGUI_Scene2D->actiontext = "Press F to pickup Yellow Card";
+		if (cKeyboardController->IsKeyPressed('F'))
+		{
+			if (cGUI_Scene2D->IncreaseInventoryItemCount("Yellow Keycard", 1) == 1)
+			{
+				cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
 			}
 			else
 			{
