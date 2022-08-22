@@ -106,7 +106,7 @@ bool CScene2D::Init(void)
 	BarbwireUpgrade = 0;
 
 	daylightTimer = 0;
-	hours = 19;
+	hours = 8;
 	mins = 0;
 	days = 1;
 	spawnrate = 1;
@@ -299,16 +299,16 @@ void CScene2D::SpawnEnemies()
 void CScene2D::BloodMoonOrSolarEclipse()
 {
 	int EventBaseChance = Math::RandIntMinMax(1, 100);
-	int TotalChance = 1 + days;
+	int TotalChance = 100 + days;
 
 	if (EventBaseChance >= 1 && EventBaseChance <= TotalChance)
 	{
-		if (hours > 19)
+		if (hours == 19 && mins == 1)
 		{
 			BloodMoon = true;
 			cout << "BLOOD MOON" << endl;
 		}
-		else if (hours >= 5 && hours < 19)
+		else if (hours == 5 && mins == 1)
 		{
 			SolarEclipse = true;
 			cout << "SOLAR ECLIPSE" << endl;
@@ -413,12 +413,10 @@ bool CScene2D::Update(const double dElapsedTime)
 		cGUI_Scene2D->darkenmap = false;
 		cGUI_Scene2D->DayNightIcon = "Sunrise";
 	}
-	//Call Map2D's update method
- 	cMap2D->Update(dElapsedTime);
-
-	//Call Players's update method
- 	Player->Update(dElapsedTime);
 	
+	//Call Map2D's update method
+	cMap2D->Update(dElapsedTime);
+
 	
 	LoadObjects();
 	for (int i = 0; i < cObjectList.size(); i++)
@@ -452,12 +450,16 @@ bool CScene2D::Update(const double dElapsedTime)
 	LoadTurret();
 	cProjectileManager->Update(dElapsedTime);
 
+	//Call Players's update method
+	Player->Update(dElapsedTime);
+
 	//Call cGUI's update method
 	cGUI_Scene2D->Update(dElapsedTime);
 	//Call Sound Controller's update method
  	cSoundController->Update(dElapsedTime);
 
 	cMap2D->vec2Index = Player->vec2Index;
+	cMap2D->vec2NumMicroSteps = Player->vec2NumMicroSteps;
 
 	// Get keyboard updates
 	if (cKeyboardController->IsKeyDown(GLFW_KEY_F10))

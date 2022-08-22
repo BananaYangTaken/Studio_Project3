@@ -889,31 +889,35 @@ void CMap2D::Render(void)
 	if (Displacement.x < 0)
 	{
 		Displacement.x = 0;
+		vec2NumMicroSteps.x = 0;
 	}
-	else if (Displacement.x > cSettings->NUM_TILES_XAXIS - cSettings->VIEW_TILES_XAXIS)
+	else if (Displacement.x > cSettings->NUM_TILES_XAXIS - cSettings->VIEW_TILES_XAXIS - 1)
 	{
 		Displacement.x = cSettings->NUM_TILES_XAXIS - cSettings->VIEW_TILES_XAXIS;
+		vec2NumMicroSteps.x = 0;
 	}
 	
 	Displacement.y = cSettings->NUM_TILES_YAXIS - vec2Index.y - cSettings->VIEW_TILES_YAXIS * 0.5;
-	if (Displacement.y < 0)
+	if (Displacement.y < 1)
 	{
 		Displacement.y = 0;
+		vec2NumMicroSteps.y = 0;
 	}
-	else if (Displacement.y > cSettings->NUM_TILES_YAXIS - cSettings->VIEW_TILES_YAXIS)
+	else if (Displacement.y > cSettings->NUM_TILES_YAXIS - cSettings->VIEW_TILES_YAXIS - 1)
 	{
 		Displacement.y = cSettings->NUM_TILES_YAXIS - cSettings->VIEW_TILES_YAXIS;
+		vec2NumMicroSteps.y = 0;
 	}
 	
 	// Render
-	for (unsigned int uiRow = Displacement.y; uiRow < Displacement.y + cSettings->VIEW_TILES_YAXIS; uiRow++)
+	for (unsigned int uiRow = (Displacement.y - 1) < 0? Displacement.y: Displacement.y-1; uiRow < Displacement.y + cSettings->VIEW_TILES_YAXIS; uiRow++)
 	{
-		for (unsigned int uiCol = Displacement.x; uiCol < Displacement.x + cSettings->VIEW_TILES_XAXIS; uiCol++)
+		for (unsigned int uiCol = Displacement.x; uiCol < Displacement.x + cSettings->VIEW_TILES_XAXIS+1; uiCol++)
 		{
 			transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-			transform = glm::translate(transform, glm::vec3(cSettings->ConvertIndexToUVSpace(cSettings->x, uiCol - Displacement.x, false, cSettings->MICRO_STEP_XAXIS * vec2NumMicroSteps.x * -1),
-															cSettings->ConvertIndexToUVSpace(cSettings->y, uiRow - Displacement.y, true, cSettings->MICRO_STEP_YAXIS * vec2NumMicroSteps.y * -1),
-															0.0f));
+			transform = glm::translate(transform, glm::vec3(cSettings->ConvertIndexToUVSpace(cSettings->x, uiCol - Displacement.x, false, -cSettings->MICRO_STEP_XAXIS * vec2NumMicroSteps.x),
+				cSettings->ConvertIndexToUVSpace(cSettings->y, uiRow - Displacement.y, true, -cSettings->MICRO_STEP_YAXIS * vec2NumMicroSteps.y),
+				0.0f));
 
 			//transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
 
