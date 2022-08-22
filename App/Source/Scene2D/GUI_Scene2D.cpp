@@ -1740,11 +1740,10 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.875f, cSettings->iWindowHeight * 0.03f));
 				ImGui::SetWindowSize(ImVec2(100.0f * relativeScale_x, 25.0f * relativeScale_y));
 				ImGui::SetWindowFontScale(1.5f * relativeScale_y);
-				ImGui::TextColored(ImVec4(1, 1, 1, 1), "GOUAUfuiafui", CPlayer2D_V2::GetInstance()->GetHealth(), CPlayer2D_V2::GetInstance()->GetMaxHealth());
+				ImGui::TextColored(ImVec4(0, 0, 0, 1), "%d / %d", CPlayer2D_V2::GetInstance()->GetHealth(), CPlayer2D_V2::GetInstance()->GetMaxHealth());
 			}
 			ImGui::End();
-			ImGui::PopStyleColor();
-			ImGui::PopStyleColor();
+			ImGui::PopStyleColor(2);
 		}
 		ImGui::End();
 

@@ -80,10 +80,10 @@ public:
 	bool GetLoadObject(void);
 
 	//Getter and Setter for Health and InvulnerabilityFrames
-	void SetHealth(unsigned int);
+	void SetHealth(float);
 	void SetInvulnerabilityFrame(float);
-	unsigned int GetHealth(void);
-	unsigned int GetMaxHealth(void);
+	float GetHealth(void);
+	float GetMaxHealth(void);
 	float GetInvulnerabilityFrame(void);
 	bool unlockedYellow = false;
 	unsigned int GetDirection(void);

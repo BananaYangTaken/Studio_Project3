@@ -304,6 +304,9 @@ bool CPlayer2D_V2::Reset()
 void CPlayer2D_V2::Update(const double dElapsedTime)
 {
 
+	motion = false;
+	// Store the old position
+	vec2OldIndex = vec2Index;
 	if (cGUI_Scene2D->healing == true)
 	{
 		cGUI_Scene2D->actiontext2 = "Using...";
@@ -321,9 +324,6 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 	}
 
 	CInventoryItem HeldItem = *(cInventoryManager->GetItem(cGUI_Scene2D->GetCurrentHotbarItem()));
-	// Store the old position
-	vec2OldIndex = vec2Index;
-	motion = false;
 	if (cGUI_Scene2D->GetCurrentHotbarItem() == "Rifle" || cGUI_Scene2D->GetCurrentHotbarItem() == "Pistol")
 	{
 		if(HeldItem.WData->ReloadTimer > 0)
@@ -550,6 +550,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 	if (Health <= 0 && InvulnerabilityFrame <= 0)
 	{
 		CGameManager::GetInstance()->bPlayerLost = true;
+		Health = 0;
 	}
 	//Animation
 	if (AnimationTimer == 0)
@@ -745,7 +746,7 @@ void CPlayer2D_V2::PostRender(void)
 	glDisable(GL_BLEND);
 }
 
-void CPlayer2D_V2::SetHealth(unsigned int Health)
+void CPlayer2D_V2::SetHealth(float Health)
 {
 	this->Health = Health;
 }
@@ -755,11 +756,11 @@ void CPlayer2D_V2::SetInvulnerabilityFrame(float InvulnerabilityFrame)
 	this->InvulnerabilityFrame = InvulnerabilityFrame;
 }
 
-unsigned int CPlayer2D_V2::GetHealth(void)
+float CPlayer2D_V2::GetHealth(void)
 {
 	return this->Health;
 }
-unsigned int CPlayer2D_V2::GetMaxHealth(void)
+float CPlayer2D_V2::GetMaxHealth(void)
 {
 	return this->MaxHealth;
 }
