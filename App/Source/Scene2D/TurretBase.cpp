@@ -34,6 +34,7 @@ CTurretBase::CTurretBase(void)
 	Ammo = 100;
 	Level = 0;
 	damageTimer = 0;
+	changedBase = 0;
 
 	transform = glm::mat4(1.0f);	// make sure to initialize matrix to identity matrix first
 
@@ -144,7 +145,21 @@ void CTurretBase::Update(const double dElapsedTime)
 	{
 		damageTimer -= dElapsedTime;
 	}
-
+	if (Level == 0 && changedBase == 0)
+	{
+		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 116);
+		changedBase++;
+	}
+	else if (Level == 1 && changedBase == 1)
+	{
+		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 117);
+		changedBase++;
+	}
+	else if (Level == 2 && changedBase == 2)
+	{
+		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 118);
+		changedBase++;
+	}
 	switch (sCurrentFSM)
 	{
 	case IDLE:
@@ -221,7 +236,7 @@ void CTurretBase::Update(const double dElapsedTime)
 					animatedSprites->PlayAnimation("L3Attack", 1, 0.3f);
 					for (int j = 0; j < cEnemyList->size(); j++)
 					{
-						if (cPhysics2D.CalculateDistance(dynamic_cast<CEnemyBase*>((*cEnemyList)[j])->vec2Index, dynamic_cast<CEnemyBase*>((*cEnemyList)[j])->vec2Index) < 2.0f
+						if (cPhysics2D.CalculateDistance(dynamic_cast<CEnemyBase*>((*cEnemyList)[i])->vec2Index, dynamic_cast<CEnemyBase*>((*cEnemyList)[j])->vec2Index) < 2.0f
 							&& dynamic_cast<CEnemyBase*>((*cEnemyList)[j])->bIsActive == true
 							&& dynamic_cast<CEnemyBase*>((*cEnemyList)[j]) != (*cEnemyList)[i])
 						{

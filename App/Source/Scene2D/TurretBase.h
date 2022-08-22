@@ -83,6 +83,8 @@ protected:
 	unsigned int Level;
 	float damageTimer;
 
+	int changedBase;
+
 	// Handler to the CMap2D instance
 	CMap2D* cMap2D;
 

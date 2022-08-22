@@ -555,7 +555,46 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,const unsigned int uiNumRows,c
 	}
 
 
-
+	//Turret's bases
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Lv1TurretBase.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Lv1TurretBase.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(116, iTextureID));
+		}
+	}
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Lv2TurretBase.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Lv2TurretBase.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(117, iTextureID));
+		}
+	}
+	{
+		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Lv3TurretBase.tga", true);
+		if (iTextureID == 0)
+		{
+			cout << "Unable to load Image/Lv3TurretBase.tga" << endl;
+			return false;
+		}
+		else
+		{
+			// Store the texture ID into MapOfTextureIDs
+			MapOfTextureIDs.insert(pair<int, int>(118, iTextureID));
+		}
+	}
 
 	//Items
 	//bandages
