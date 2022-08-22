@@ -108,6 +108,9 @@ bool CScene2D::Init(void)
 	daylightTimer = 0;
 	hours = 8;
 	mins = 0;
+	days = 1;
+	spawnrate = 1;
+	isNight = false;
 
 	//Initialse this instance
 	if (cMap2D->Init(5, CSettings::GetInstance()->NUM_TILES_YAXIS, CSettings::GetInstance()->NUM_TILES_XAXIS) == false)
@@ -179,6 +182,7 @@ void CScene2D::UpdateDaylightCycle(const double dElapsedTime)
 	if (hours >= 24)
 	{
 		hours = 0;
+		days++;
 	}
 
 	if (hours < 10)
@@ -203,8 +207,60 @@ void CScene2D::UpdateDaylightCycle(const double dElapsedTime)
 			std::cout << hours << " : " << mins << std::endl;
 		}
 	}
+	if (hours >= 22)
+	{
+		if (isNight == false)
+		{
+			SpawnEnemies();
+			isNight = true;
+		}
+	}
+	else if (hours >= 5 && hours < 19 && isNight == true)
+	{
+		isNight = false;
+	}
 }
 
+void CScene2D::SpawnEnemies()
+{
+	// 302 Regular Zombie
+	// 303 Nurse Zombie
+	// 304 Police Zombie
+	// 305 Mutant Zombie
+
+	spawnrate = 1 + (0.1 * days);
+	int spawnCount = 20 * spawnrate;
+	
+	for (int i = 0; i < spawnCount; i++)
+	{
+		int EnemyRand = Math::RandIntMinMax(1, 20);
+		int randx = Math::RandIntMinMax(10, 90);
+		int randy = Math::RandIntMinMax(10, 90);
+		while (cMap2D->GetMapInfo(randy, randx) != 0)
+		{
+			randx = Math::RandIntMinMax(10, 90);
+			randy = Math::RandIntMinMax(10, 90);
+		}
+		if (EnemyRand == 20)
+		{
+			cMap2D->SetMapInfo(randy, randx, 305);
+		}
+		else if (EnemyRand >= 16 && EnemyRand <= 19)
+		{
+			cMap2D->SetMapInfo(randy, randx, 304);
+		}
+		else if (EnemyRand >= 11 && EnemyRand <= 15)
+		{
+			cMap2D->SetMapInfo(randy, randx, 303);
+		}
+		else if (EnemyRand >= 1 && EnemyRand <= 10)
+		{
+			cMap2D->SetMapInfo(randy, randx, 302);
+		}
+		LoadEnemies();
+	}
+
+}
 
 /**
 @brief Update Update this instance
@@ -213,18 +269,30 @@ bool CScene2D::Update(const double dElapsedTime)
 {
 	UpdateDaylightCycle(dElapsedTime);
 
-	if (hours >= 18 && cGUI_Scene2D->darkenmap == false) cGUI_Scene2D->darkenmap = true;
-	if (hours >= 21 && cGUI_Scene2D->darkenmap == true && calledonce == false)
+	if (hours >= 17 && cGUI_Scene2D->darkenmap == false)
 	{
+		cGUI_Scene2D->darkenmap = true;
+		cGUI_Scene2D->DayNightIcon = "Sunrise";
+	}
+	else if(hours >= 21 && cGUI_Scene2D->darkenmap == true && calledonce == false)
+		cGUI_Scene2D->DayNightIcon = "Night";
+	if (hours >= 22 && cGUI_Scene2D->darkenmap == true && calledonce == false)
+	{
+		cSoundController->PlaySoundByID(39);
 		cSoundController->PlaySoundByID(39);
 		cSoundController->PlaySoundByID(39);
 		cout << "HORDE SPAWNED!";
 		calledonce = true;
 	}
-	if (hours >= 7 && hours <= 18 && cGUI_Scene2D->darkenmap == true)
+	if (hours >= 7 && hours <= 12 && cGUI_Scene2D->darkenmap == true)
+	{
+		cGUI_Scene2D->DayNightIcon = "Day";
+		calledonce = false;
+	}
+	else if (hours >= 6 && hours <= 12 && cGUI_Scene2D->darkenmap == true)
 	{
 		cGUI_Scene2D->darkenmap = false;
-		calledonce = false;
+		cGUI_Scene2D->DayNightIcon = "Sunrise";
 	}
 	//Call Map2D's update method
  	cMap2D->Update(dElapsedTime);
@@ -240,8 +308,8 @@ bool CScene2D::Update(const double dElapsedTime)
 		cObjectList[i]->Update(dElapsedTime);
 		cObjectList[i]->SetruntimeColour(glm::vec4(1, 1, 1, 1));
 	}
-	vector<CEntity2D*>::iterator it = cEnemyList.begin();
 	LoadEnemies();
+	vector<CEntity2D*>::iterator it = cEnemyList.begin();
 	while (it != cEnemyList.end())
 	{
 		CEnemyBase* Temp = static_cast<CEnemyBase*>(*it);

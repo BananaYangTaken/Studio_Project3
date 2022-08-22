@@ -320,46 +320,50 @@ void CEnemy2D_Mutant::UpdateToLastLOS()
 
 void CEnemy2D_Mutant::droploot()
 {
-	int lootcount = rand() % 2 + 1;
-
-	for (int i = 0; i < lootcount; i++)
+	int lootrand = rand() % 3 + 1;
+	if (lootrand == 3)
 	{
-		float recvex = vec2Index.y, recvey = vec2Index.x;
-		if (cMap2D->GetMapInfo(recvey, recvex) == 0 || cMap2D->GetMapInfo(recvey, recvey) == 22)
+		int lootcount = rand() % 2 + 1;
+
+		for (int i = 0; i < lootcount; i++)
 		{
-			spawnloot(recvey, recvex);
-		}
-		else if (cMap2D->GetMapInfo(recvey + 1, recvex) == 0 || cMap2D->GetMapInfo(recvey + 1, recvey) == 22)
-		{
-			spawnloot(recvey + 1, recvex);
-		}
-		else if (cMap2D->GetMapInfo(recvey - 1, recvex) == 0 || cMap2D->GetMapInfo(recvey - 1, recvey) == 22)
-		{
-			spawnloot(recvey - 1, recvex);
-		}
-		else if (cMap2D->GetMapInfo(recvey, recvex + 1) == 0 || cMap2D->GetMapInfo(recvey, recvey + 1) == 22)
-		{
-			spawnloot(recvey, recvex + 1);
-		}
-		else if (cMap2D->GetMapInfo(recvey, recvex - 1) == 0 || cMap2D->GetMapInfo(recvey, recvey - 1) == 22)
-		{
-			spawnloot(recvey, recvex - 1);
-		}
-		else if (cMap2D->GetMapInfo(recvey + 1, recvex + 1) == 0 || cMap2D->GetMapInfo(recvey + 1, recvey + 1) == 22)
-		{
-			spawnloot(recvey + 1, recvex + 1);
-		}
-		else if (cMap2D->GetMapInfo(recvey - 1, recvex - 1) == 0 || cMap2D->GetMapInfo(recvey - 1, recvey - 1) == 22)
-		{
-			spawnloot(recvey - 1, recvex - 1);
-		}
-		else if (cMap2D->GetMapInfo(recvey + 1, recvex - 1) == 0 || cMap2D->GetMapInfo(recvey + 1, recvey - 1) == 22)
-		{
-			spawnloot(recvey + 1, recvex - 1);
-		}
-		else if (cMap2D->GetMapInfo(recvey - 1, recvex + 1) == 0 || cMap2D->GetMapInfo(recvey - 1, recvey + 1) == 22)
-		{
-			spawnloot(recvey - 1, recvex + 1);
+			float recvex = vec2Index.y, recvey = vec2Index.x;
+			if (cMap2D->GetMapInfo(recvey, recvex) == 0 || cMap2D->GetMapInfo(recvey, recvey) == 22)
+			{
+				spawnloot(recvey, recvex);
+			}
+			else if (cMap2D->GetMapInfo(recvey + 1, recvex) == 0 || cMap2D->GetMapInfo(recvey + 1, recvey) == 22)
+			{
+				spawnloot(recvey + 1, recvex);
+			}
+			else if (cMap2D->GetMapInfo(recvey - 1, recvex) == 0 || cMap2D->GetMapInfo(recvey - 1, recvey) == 22)
+			{
+				spawnloot(recvey - 1, recvex);
+			}
+			else if (cMap2D->GetMapInfo(recvey, recvex + 1) == 0 || cMap2D->GetMapInfo(recvey, recvey + 1) == 22)
+			{
+				spawnloot(recvey, recvex + 1);
+			}
+			else if (cMap2D->GetMapInfo(recvey, recvex - 1) == 0 || cMap2D->GetMapInfo(recvey, recvey - 1) == 22)
+			{
+				spawnloot(recvey, recvex - 1);
+			}
+			else if (cMap2D->GetMapInfo(recvey + 1, recvex + 1) == 0 || cMap2D->GetMapInfo(recvey + 1, recvey + 1) == 22)
+			{
+				spawnloot(recvey + 1, recvex + 1);
+			}
+			else if (cMap2D->GetMapInfo(recvey - 1, recvex - 1) == 0 || cMap2D->GetMapInfo(recvey - 1, recvey - 1) == 22)
+			{
+				spawnloot(recvey - 1, recvex - 1);
+			}
+			else if (cMap2D->GetMapInfo(recvey + 1, recvex - 1) == 0 || cMap2D->GetMapInfo(recvey + 1, recvey - 1) == 22)
+			{
+				spawnloot(recvey + 1, recvex - 1);
+			}
+			else if (cMap2D->GetMapInfo(recvey - 1, recvex + 1) == 0 || cMap2D->GetMapInfo(recvey - 1, recvey + 1) == 22)
+			{
+				spawnloot(recvey - 1, recvex + 1);
+			}
 		}
 	}
 }
@@ -378,7 +382,6 @@ void CEnemy2D_Mutant::Update(const double dElapsedTime)
 {
 	UpdateDirection();
 	checkforLOS();
-	//cout << "DISTANCE: " << cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) << endl;
 	if (!bIsActive)
 		return;
 	if (Health <= 0)
@@ -438,7 +441,6 @@ void CEnemy2D_Mutant::Update(const double dElapsedTime)
 		{
 			sCurrentFSM = static_cast<CEnemyBase::FSM>(PATROL);
 			iFSMCounter = 0;
-			//cout << "Switching to Patrol State" << endl;
 		}
 		iFSMCounter++;
 		//Animation
@@ -494,7 +496,6 @@ void CEnemy2D_Mutant::Update(const double dElapsedTime)
 		}
 		else if(checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) <= DetectionRadius)
 		{
-			std::cout << (idlecount);
 			idlecount++;
 			hasseenplayeronce = true;
 			if (idlecount >= 15)
@@ -554,7 +555,6 @@ void CEnemy2D_Mutant::Update(const double dElapsedTime)
 			{
 				sCurrentFSM = static_cast<CEnemyBase::FSM>(PATROL);
 				iFSMCounter = 0;
-				//cout << "ATTACK : Reset counter: " << iFSMCounter << endl;
 			}
 			iFSMCounter++;
 		}
@@ -584,7 +584,6 @@ void CEnemy2D_Mutant::Update(const double dElapsedTime)
 		}
 		else if (checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) <= DetectionRadius)
 		{
-			std::cout << (idlecount);
 			idlecount++;
 			hasseenplayeronce = true;
 			if (idlecount >= 15)
@@ -627,7 +626,6 @@ void CEnemy2D_Mutant::Update(const double dElapsedTime)
 		}
 		else if (checkforLOS() == true && cPhysics2D.CalculateDistance(vec2Index, dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index) <= DetectionRadius)
 		{
-			std::cout << (idlecount);
 			idlecount++;
 			hasseenplayeronce = true;
 			if (idlecount >= 15)

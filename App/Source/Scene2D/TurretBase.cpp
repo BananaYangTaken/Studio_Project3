@@ -491,7 +491,6 @@ bool CTurretBase::InteractWithEnemy(void)
 		((vec2Index.y >= i32vec2PlayerPos.y - 0.5) &&
 			(vec2Index.y <= i32vec2PlayerPos.y + 0.5)))
 	{
-		cout << "Gotcha!" << endl;
 		// Since the player has been caught, then reset the FSM
 		sCurrentFSM = IDLE;
 		iFSMCounter = 0;

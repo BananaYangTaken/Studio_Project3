@@ -54,7 +54,7 @@ public:
 	
 	// boolean flag to indicate if this enemy is active
 	bool bIsActive;
-
+	float droprate = 4;
 	//Getter and Setter for Health and InvulnerabilityFrames
 	virtual void SetHealth(unsigned int);
 	virtual void SetDeathState(unsigned int);

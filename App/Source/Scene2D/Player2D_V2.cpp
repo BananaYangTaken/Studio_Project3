@@ -166,13 +166,13 @@ bool CPlayer2D_V2::Init(void)
 	animatedSprites->AddAnimation("pistolIdle", 60, 79);
 	animatedSprites->AddAnimation("pistolMove", 80, 99);
 	animatedSprites->AddAnimation("pistolAttack", 100, 114);
-	animatedSprites->AddAnimation("pistolReload", 120, 134);
+	animatedSprites->AddAnimation("pistolReload", 120, 125);
 	animatedSprites->AddAnimation("pistolFire", 140, 142);
 
 	animatedSprites->AddAnimation("rifleIdle", 160, 179);
 	animatedSprites->AddAnimation("rifleAttack", 180, 194);
 	animatedSprites->AddAnimation("rifleMove", 200, 219);
-	animatedSprites->AddAnimation("rifleReload", 220, 239);
+	animatedSprites->AddAnimation("rifleReload", 220, 234);
 	animatedSprites->AddAnimation("rifleFire", 240, 242);
 
 	AnimationTimer = 0;
@@ -187,6 +187,15 @@ bool CPlayer2D_V2::Init(void)
 	{
 		// Add a Health as one of the inventory items
 		cInventoryItem = cInventoryManager->Add("Health", "Image/Health.tga", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+		cInventoryItem = cInventoryManager->Add("Day", "Image/Day.png", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+		cInventoryItem = cInventoryManager->Add("Night", "Image/Night.png", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+		cInventoryItem = cInventoryManager->Add("Sunrise", "Image/Sunrise.png", 1, 0);
 		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
 		cInventoryItem = cInventoryManager->Add("Hard wood", "Image/Iteme/Hard wood.tga", 1, 0);
@@ -294,26 +303,6 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 	// Store the old position
 	vec2OldIndex = vec2Index;
 	motion = false;
-	if (InvulnerabilityFrame > 0)
-	{
-		InvulnerabilityFrame -= dElapsedTime;
-	}
-	else
-	{
-		InvulnerabilityFrame = 0;
-	}
-	if (AnimationTimer > 0)
-	{
-		AnimationTimer -= dElapsedTime;
-	}
-	else
-	{
-		AnimationTimer = 0;
-	}
-	if (Health <= 0 && InvulnerabilityFrame <= 0)
-	{
-		CGameManager::GetInstance()->bPlayerLost = true;
-	}
 
 	// Get keyboard updates
 	if (cKeyboardController->IsKeyDown(GLFW_KEY_A))
@@ -426,6 +415,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 	//Player Use Item
 	if (cGUI_Scene2D->checkinginventory == false && cGUI_Scene2D->crafting == false && cGUI_Scene2D->chestactive == false)
 	{
+		//Shooting/Knifing
 		if (cMouseController->IsButtonDown(0) && !LButtonState)
 		{
 			LButtonState = true;
@@ -438,14 +428,19 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 				cSoundController->PlaySoundByID(15);
 				cProjectileManager->SpawnProjectile(vec2Index, vec2NumMicroSteps, Rotation, 0, CProjectile2D::FRIENDLY, CProjectile2D::KNIFE, 30);
 			}
-			else if (HeldItem.itemtype == ITEM_TYPE::GUN && HeldItem.GData->firingtype == FIRING_TYPE::SEMIAUTO) //Semi-Auto
+			else if (HeldItem.itemtype == ITEM_TYPE::GUN 
+				&& HeldItem.GData->firingtype == FIRING_TYPE::SEMIAUTO 
+				&& HeldItem.GData->CurrentAmmoSize > 0 
+				&& HeldItem.GData->FiringCooldown == 0
+				&& HeldItem.WData->ReloadTimer == 0) //Semi-Auto
 			{
-
 				//Attack with Semi Auto Gun
 				AnimationTimer = 0.1f;
 				animatedSprites->PlayAnimation("pistolFire", -1, AnimationTimer);
 				cSoundController->PlaySoundByID(23);
 				cProjectileManager->SpawnProjectile(vec2Index, vec2NumMicroSteps, Rotation, 400, CProjectile2D::FRIENDLY, CProjectile2D::BULLET, HeldItem.WData->Damage);
+				--HeldItem.GData->CurrentAmmoSize;
+				HeldItem.GData->FiringCooldown = HeldItem.GData->FireRate;
 			}
 		}
 		else if (cMouseController->IsButtonUp(0) && LButtonState)
@@ -454,41 +449,106 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		}
 		if (LButtonState)
 		{
-			if (HeldItem.itemtype == ITEM_TYPE::GUN && HeldItem.GData->firingtype == FIRING_TYPE::FULLAUTO) //Full-Auto
+			if (HeldItem.itemtype == ITEM_TYPE::GUN 
+				&& HeldItem.GData->firingtype == FIRING_TYPE::FULLAUTO 
+				&& HeldItem.GData->CurrentAmmoSize > 0 
+				&& HeldItem.GData->FiringCooldown == 0
+				&& HeldItem.WData->ReloadTimer == 0) //Full-Auto
 			{
-
 				//Attack with Full Auto Gun
 				AnimationTimer = 0.1f;
 				animatedSprites->PlayAnimation("rifleFire", -1, AnimationTimer);
 				cSoundController->PlaySoundByID(19);
 				cProjectileManager->SpawnProjectile(vec2Index, vec2NumMicroSteps, Rotation, 400, CProjectile2D::FRIENDLY, CProjectile2D::BULLET, HeldItem.WData->Damage);
+				--HeldItem.GData->CurrentAmmoSize;
+				HeldItem.GData->FiringCooldown = HeldItem.GData->FireRate;
 			}
 		}
+		if(HeldItem.itemtype == ITEM_TYPE::GUN)
+		{ 
+			//Reload
+			if (cKeyboardController->IsKeyPressed(GLFW_KEY_R) && AnimationTimer == 0)
+			{
+				if (HeldItem.GData->CurrentAmmoSize < HeldItem.GData->MaxAmmoSize)
+				{
+					HeldItem.WData->ReloadTimer = HeldItem.WData->ReloadTime;
+					AnimationTimer = HeldItem.WData->ReloadTime;
+					if (HeldItem.GData->firingtype == FIRING_TYPE::FULLAUTO) 
+					{
+						animatedSprites->PlayAnimation("rifleReload",-1, HeldItem.WData->ReloadTime);
+						cSoundController->PlaySoundByID(25);
+					}
+					else if (HeldItem.GData->firingtype == FIRING_TYPE::SEMIAUTO)
+					{
+						animatedSprites->PlayAnimation("pistolReload",-1, HeldItem.WData->ReloadTime);
+						cSoundController->PlaySoundByID(24);
+					}
+					HeldItem.GData->CurrentAmmoSize = HeldItem.GData->MaxAmmoSize;
+				}
+			}
+			//Cooldowns 
+			if (HeldItem.GData->FiringCooldown > 0)
+			{
+				HeldItem.GData->FiringCooldown -= dElapsedTime;
+			}
+			else
+			{
+				HeldItem.GData->FiringCooldown = 0;
+			}
+			if (HeldItem.WData->ReloadTimer > 0)
+			{
+				HeldItem.WData->ReloadTimer -= dElapsedTime;
+			}
+			else
+			{
+				HeldItem.WData->ReloadTimer = 0;
+			}
+		}
+	}
+	if (InvulnerabilityFrame > 0)
+	{
+		InvulnerabilityFrame -= dElapsedTime;
+	}
+	else
+	{
+		InvulnerabilityFrame = 0;
+	}
+	if (AnimationTimer > 0)
+	{
+		AnimationTimer -= dElapsedTime;
+	}
+	else
+	{
+		AnimationTimer = 0;
+	}
+	if (Health <= 0 && InvulnerabilityFrame <= 0)
+	{
+		CGameManager::GetInstance()->bPlayerLost = true;
 	}
 	//Animation
-	if (motion == false && AnimationTimer == 0)
+	if (AnimationTimer == 0)
 	{
-		if (HeldItem.itemtype == ITEM_TYPE::GUN)
+		if (motion == false)
 		{
-			if (HeldItem.GData->firingtype == FIRING_TYPE::SEMIAUTO)
+			if (HeldItem.itemtype == ITEM_TYPE::GUN && HeldItem.WData->ReloadTimer == 0)
 			{
-				animatedSprites->PlayAnimation("pistolIdle", -1, 10.0f);
+				if (HeldItem.GData->firingtype == FIRING_TYPE::SEMIAUTO)
+				{
+					animatedSprites->PlayAnimation("pistolIdle", -1, 10.0f);
+				}
+				else if (HeldItem.GData->firingtype == FIRING_TYPE::FULLAUTO)
+				{
+					animatedSprites->PlayAnimation("rifleIdle", -1, 10.0f);
+				}
 			}
-			else if (HeldItem.GData->firingtype == FIRING_TYPE::FULLAUTO)
+			else
 			{
-				animatedSprites->PlayAnimation("rifleIdle", -1, 10.0f);
+				animatedSprites->PlayAnimation("meleeIdle", -1, 10.0f);
 			}
 		}
-		else
+		else if (motion == true)
 		{
-			animatedSprites->PlayAnimation("meleeIdle", -1, 10.0f);
-		}
-	}
-	else if (motion == true && AnimationTimer == 0)
-	{
-		if (HeldItem.itemtype == ITEM_TYPE::GUN)
-		{
-			if (HeldItem.itemtype == ITEM_TYPE::GUN)
+			if (HeldItem.itemtype == ITEM_TYPE::GUN && HeldItem.WData->ReloadTimer == 0)
 			{
 				if (HeldItem.GData->firingtype == FIRING_TYPE::SEMIAUTO)
 				{
@@ -499,10 +559,11 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 					animatedSprites->PlayAnimation("rifleMove", -1, 10.0f);
 				}
 			}
-		}
-		else
-		{
-			animatedSprites->PlayAnimation("meleeMove", -1, 1.0f);
+			else
+			{
+				animatedSprites->PlayAnimation("meleeMove", -1, 1.0f);
+			}
+			cSoundController->PlaySoundByID(36);
 		}
 	}
 
@@ -525,7 +586,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 
 	//CS: Update the animated sprite
 	animatedSprites->Update(dElapsedTime);
-
+	std::cout << "x: " << vec2Index.x <<" y:"<< vec2Index.y << std::endl;
 	//Calculate Position of Entity on Screen
 	glm::vec2 ScreenPos = glm::vec2(0, 0);
 	// Update the UV Coordinates

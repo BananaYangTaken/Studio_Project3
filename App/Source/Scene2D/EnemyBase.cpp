@@ -41,117 +41,6 @@ CEnemyBase::~CEnemyBase(void)
  */
 void CEnemyBase::Update(const double dElapsedTime)
 {
-	//if (!bIsActive)
-	//	return;
-
-	///*if (PlayerCloser() == Player1)
-	//	std::cout << "Player1" << std::endl;
-	//else
-	//	std::cout << "Player2" << std::endl;*/
-	//switch (sCurrentFSM)
-	//{
-	//case IDLE:
-	//	if (iFSMCounter > iMaxFSMCounter)
-	//	{
-	//		sCurrentFSM = PATROL;
-	//		iFSMCounter = 0;
-	//		//cout << "Switching to Patrol State" << endl;
-	//	}
-	//	iFSMCounter++;
-	//	break;
-	//case PATROL:
-	//	cout << "patrol" << endl;
-	//	if (iFSMCounter > iMaxFSMCounter)
-	//	{
-	//		sCurrentFSM = IDLE;
-	//		iFSMCounter = 0;
-	//		//cout << "Switching to Idle State" << endl;
-	//	}
-	//	else if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 5.0f)
-	//	{
-	//		sCurrentFSM = ATTACK;
-	//		iFSMCounter = 0;
-	//	}
-	//	else
-	//	{
-	//		// Patrol around
-	//		// Update the Enemy2D's position for patrol
-	//		UpdatePosition();
-	//	}
-	//	iFSMCounter++;
-	//	break;
-	//case ATTACK:
-	//	cout << "attack" <<  endl;
-	//	if (cPhysics2D.CalculateDistance(vec2Index, Player->vec2Index) < 5.0f)
-	//	{
-	//		// Attack
-	//		// Update direction to move towards for attack
-	//		//Calculate a path to the player
-	//		//cMap2D->PrintSelf();
-	//		//std::cout << "StartPos: " << vec2Index.x << ", " << vec2Index.y << std::endl;
-	//		//std::cout << "StartPos: " << DecideTarget()->vec2Index.x << ", " << DecideTarget()->vec2Index.y << std::endl;
-	//		if (AStarCalculate == true)
-	//		{
-	//			auto path = cMap2D->PathFind(vec2Index, Player->vec2Index, heuristic::euclidean, 10);
-	//			//Calculate New Destination
-	//			bool bFirstPosition = true;
-	//			for (const auto& coord : path)
-	//			{
-	//				//std::cout << coord.x << "," << coord.y << "\n";
-	//				if (bFirstPosition == true)
-	//				{
-	//					//Set a destination
-	//					vec2Destination = coord;
-	//					//Calculate the direction between enemy2D and this destination
-	//					vec2Direction = vec2Destination - vec2Index;
-	//					bFirstPosition = false;
-	//				}
-	//				else
-	//				{
-	//					if ((coord - vec2Destination) == vec2Direction)
-	//					{
-	//						//Set a destination
-	//						vec2Destination = coord;
-	//					}
-	//					else
-	//						break;
-	//				}
-	//			}
-	//		}
-	//		else if (cKeyboardController->IsKeyDown(GLFW_KEY_A) ||
-	//				cKeyboardController->IsKeyDown(GLFW_KEY_S) ||
-	//				cKeyboardController->IsKeyDown(GLFW_KEY_D) || 
-	//				cKeyboardController->IsKeyDown(GLFW_KEY_W) || 
-	//				cKeyboardController->IsKeyDown(GLFW_KEY_LEFT) || 
-	//				cKeyboardController->IsKeyDown(GLFW_KEY_RIGHT) || 
-	//				cKeyboardController->IsKeyDown(GLFW_KEY_UP) || 
-	//				cKeyboardController->IsKeyDown(GLFW_KEY_DOWN) )
-	//		{
-	//			AStarCalculate = false;
-	//		}
-	//		//std::cout << "--- Printing out the path ---" << std::endl;
-	//		// Update the Enemy2D's position for attack
-	//		UpdatePosition();
-	//		//cout << "i32vec2Destination : " << i32vec2Destination.x 
-	//		//		<< ", " << i32vec2Destination.y << endl;
-	//		//cout << "i32vec2Direction : " << i32vec2Direction.x 
-	//		//		<< ", " << i32vec2Direction.y << endl;
-	//		//system("pause");
-	//	}
-	//	else
-	//	{
-	//		if (iFSMCounter > iMaxFSMCounter)
-	//		{
-	//			sCurrentFSM = PATROL;
-	//			iFSMCounter = 0;
-	//			//cout << "ATTACK : Reset counter: " << iFSMCounter << endl;
-	//		}
-	//		iFSMCounter++;
-	//	}
-	//	break;
-	//default:
-	//	break;
-	//}
 
 	// Update the UV Coordinates
 	vec2UVCoordinate.x = cSettings->ConvertIndexToUVSpace(cSettings->x, vec2Index.x, false, vec2NumMicroSteps.x * cSettings->MICRO_STEP_XAXIS);
@@ -230,35 +119,36 @@ void CEnemyBase::SetWindowLevel(unsigned int newLevel)
  */
 void CEnemyBase::Constraint(DIRECTION eDirection)
 {
+	cout << "running constraint" << endl;
 	if (eDirection == LEFT)
 	{
-		if (vec2Index.x < 0)
+		if (vec2Index.x < 1)
 		{
-			vec2Index.x = 0;
+			vec2Index.x = 1;
 			vec2NumMicroSteps.x = 0;
 		}
 	}
 	else if (eDirection == RIGHT)
 	{
-		if (vec2Index.x >= (int)cSettings->NUM_TILES_XAXIS - 1)
+		if (vec2Index.x >= (int)cSettings->NUM_TILES_XAXIS - 2)
 		{
-			vec2Index.x = ((int)cSettings->NUM_TILES_XAXIS) - 1;
+			vec2Index.x = ((int)cSettings->NUM_TILES_XAXIS) - 2;
 			vec2NumMicroSteps.x = 0;
 		}
 	}
 	else if (eDirection == UP)
 	{
-		if (vec2Index.y >= (int)cSettings->NUM_TILES_YAXIS - 1)
+		if (vec2Index.y >= (int)cSettings->NUM_TILES_YAXIS - 2)
 		{
-			vec2Index.y = ((int)cSettings->NUM_TILES_YAXIS) - 1;
+			vec2Index.y = ((int)cSettings->NUM_TILES_YAXIS) - 2;
 			vec2NumMicroSteps.y = 0;
 		}
 	}
 	else if (eDirection == DOWN)
 	{
-		if (vec2Index.y < 0)
+		if (vec2Index.y < 1)
 		{
-			vec2Index.y = 0;
+			vec2Index.y = 1;
 			vec2NumMicroSteps.y = 0;
 		}
 	}
@@ -324,7 +214,6 @@ bool CEnemyBase::CheckPosition(DIRECTION eDirection)
 				return false;
 			}
 		}
-
 	}
 	else if (eDirection == UP)
 	{
@@ -400,7 +289,6 @@ bool CEnemyBase::InteractWithPlayer(void)
 		((vec2Index.y >= i32vec2PlayerPos.y - 0.5) &&
 		(vec2Index.y <= i32vec2PlayerPos.y + 0.5)))
 	{
-		cout << "Gotcha!" << endl;
 		// Since the player has been caught, then reset the FSM
 		iFSMCounter = 0;
 		return true;

@@ -54,6 +54,8 @@ public:
 	void clearmap();
 	float redness = 0;
 	float blueness = 0;
+	std::string DayNightIcon = "Day";
+	std::string timestring;
 	float greenness = 0;
 	float transparency = 0;
 	bool selectinventory = true;
@@ -97,6 +99,7 @@ public:
 	bool checkinginventory = false;
 	bool crafting = false;
 	bool recipeactive = false;
+
 	int hotbarselection = 1;
 	bool descactive = false;
 	// Update
@@ -161,6 +164,7 @@ protected:
 	ButtonData Add1Button;
 	ButtonData Add10Button;
 	ButtonData AddAllButton;
+	ButtonData DayNight;
 	ButtonData newInventorybutton;
 	ButtonData newDropbutton;
 	ButtonData newChestbutton;
