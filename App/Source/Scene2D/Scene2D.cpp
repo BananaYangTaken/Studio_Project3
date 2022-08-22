@@ -439,12 +439,10 @@ bool CScene2D::Update(const double dElapsedTime)
 		cGUI_Scene2D->darkenmap = false;
 		cGUI_Scene2D->DayNightIcon = "Sunrise";
 	}
-	//Call Map2D's update method
- 	cMap2D->Update(dElapsedTime);
-
-	//Call Players's update method
- 	Player->Update(dElapsedTime);
 	
+	//Call Map2D's update method
+	cMap2D->Update(dElapsedTime);
+
 	
 	LoadObjects();
 	for (int i = 0; i < cObjectList.size(); i++)
@@ -477,6 +475,9 @@ bool CScene2D::Update(const double dElapsedTime)
 	}
 	LoadTurret();
 	cProjectileManager->Update(dElapsedTime);
+
+	//Call Players's update method
+	Player->Update(dElapsedTime);
 
 	//Call cGUI's update method
 	cGUI_Scene2D->Update(dElapsedTime);
