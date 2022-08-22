@@ -143,6 +143,7 @@ protected:
 	float Health;
 	float MaxHealth;
 	float InvulnerabilityFrame;
+	float Speed;
 
 	// Player's Current Direction
 	unsigned int Direction;

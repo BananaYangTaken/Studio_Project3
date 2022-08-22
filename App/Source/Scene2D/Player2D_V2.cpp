@@ -36,6 +36,7 @@ CPlayer2D_V2::CPlayer2D_V2(void)
 	, MaxHealth(NULL)
 	, InvulnerabilityFrame(NULL)
 	, LButtonState(NULL)
+	, Speed(NULL)
 {
 	transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 
@@ -125,6 +126,8 @@ bool CPlayer2D_V2::Init(void)
 	InvulnerabilityFrame = 0;
 
 	Rotation = 0;
+
+	Speed = 1;
 
 	// Find the indices for the player in arrMapInfo, and assign it to cPlayer2D
 	unsigned int uiRow;
@@ -334,7 +337,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		// Calculate the new position to the left
 		if (vec2Index.x >= 0)
 		{
-			vec2NumMicroSteps.x -= 1;
+			vec2NumMicroSteps.x -= Speed;
 			if (vec2NumMicroSteps.x < 0)
 			{
 				vec2NumMicroSteps.x = ((int)cSettings->NUM_STEPS_PER_TILE_XAXIS) - 1;
@@ -359,7 +362,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		// Calculate the new position to the right
 		if (vec2Index.x < (int)cSettings->NUM_TILES_XAXIS)
 		{
-			vec2NumMicroSteps.x += 1;
+			vec2NumMicroSteps.x += Speed;
 
 			if (vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
 			{
@@ -385,7 +388,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		// Calculate the new position up
 		if (vec2Index.y < (int)cSettings->NUM_TILES_YAXIS)
 		{
-			vec2NumMicroSteps.y += 1;
+			vec2NumMicroSteps.y += Speed;
 			if (vec2NumMicroSteps.y > cSettings->NUM_STEPS_PER_TILE_YAXIS)
 			{
 				vec2NumMicroSteps.y = 0;
@@ -411,7 +414,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		// Calculate the new position down
 		if (vec2Index.y >= 0)
 		{
-			vec2NumMicroSteps.y -= 1;
+			vec2NumMicroSteps.y -= Speed;
 			if (vec2NumMicroSteps.y < 0)
 			{
 				vec2NumMicroSteps.y = ((int)cSettings->NUM_STEPS_PER_TILE_YAXIS) - 1;
@@ -590,64 +593,87 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		}
 	}
 
+	
 	//Interact with Map
+	
 	InteractWithMap(0,0);
 	InteractWithMap(0, 1);
-	InteractWithMap(1, 0);
-	InteractWithMap(1,1);
-	InteractWithMap(-1, 0);
 	InteractWithMap(0, -1);
+	InteractWithMap(1, 0);
+	InteractWithMap(-1, 0);
+	InteractWithMap(1,1);
 	InteractWithMap(-1, -1);
-	if (vec2Index.y - 1 > 0)
-	{
-		InteractWithMap(0, 0);
-	}
-	if (vec2Index.x + 1 < cSettings->NUM_TILES_XAXIS)
-	{
-		InteractWithMap(0, 0);
-	}
+	InteractWithMap(-1, 1);
+	InteractWithMap(1, -1);
+	
 
 	//CS: Update the animated sprite
 	animatedSprites->Update(dElapsedTime);
-	std::cout << "x: " << vec2Index.x <<" y:"<< vec2Index.y << std::endl;
 	//Calculate Position of Entity on Screen
 	glm::vec2 ScreenPos = glm::vec2(0, 0);
 	// Update the UV Coordinates
 	{
-
+		unsigned int AtBorderY = 0; // Top 1, Bottom 2,
+		unsigned int AtBorderX = 0; // Left 1, Right 2
 		//Check if Map View/Camera at Borders
-		if (vec2Index.x < cSettings->VIEW_TILES_XAXIS * 0.5) // Left Side Border
+		if (vec2Index.x > (cSettings->NUM_TILES_XAXIS - (cSettings->VIEW_TILES_XAXIS * 0.5) - 1)) //Right Side Border
 		{
-			ScreenPos.x = vec2Index.x + 1;
+			ScreenPos.x = cSettings->VIEW_TILES_XAXIS - (cSettings->NUM_TILES_XAXIS - vec2Index.x);
+			AtBorderX = 2;
 		}
-		else if (vec2Index.x > (cSettings->NUM_TILES_XAXIS - (cSettings->VIEW_TILES_XAXIS * 0.5))) //Right Side Border
+		else if (vec2Index.x < cSettings->VIEW_TILES_XAXIS * 0.5 ) // Left Side Border
 		{
-			ScreenPos.x = cSettings->VIEW_TILES_XAXIS - (cSettings->NUM_TILES_XAXIS - vec2Index.x) + 1;
+			ScreenPos.x = vec2Index.x;
+			AtBorderX = 1;
 		}
 
-		if (vec2Index.y > (cSettings->NUM_TILES_YAXIS - (cSettings->VIEW_TILES_YAXIS * 0.5))) //Top Side Border
+		if (vec2Index.y > (cSettings->NUM_TILES_YAXIS - (cSettings->VIEW_TILES_YAXIS * 0.5) - 1)) //Top Side Border
 		{
-			ScreenPos.y = cSettings->VIEW_TILES_YAXIS - (cSettings->NUM_TILES_YAXIS - vec2Index.y) + 1;
+			ScreenPos.y = cSettings->VIEW_TILES_YAXIS - (cSettings->NUM_TILES_YAXIS - vec2Index.y);
+			AtBorderY = 1;
 		}
-		else if (vec2Index.y < cSettings->VIEW_TILES_YAXIS * 0.5) //Bottom Side Border
+		else if (vec2Index.y < cSettings->VIEW_TILES_YAXIS * 0.5 + 1) //Bottom Side Border
 		{
-			ScreenPos.y = vec2Index.y + 1;
+			ScreenPos.y = vec2Index.y;
+			AtBorderY = 2;
 		}
 
 
 		//If not at Border, Entity at Center of Screen displaced by x:1 y:1
-		if (ScreenPos.x == 0)
+		if (ScreenPos.x == 0 && AtBorderX == 0)
 		{
-			ScreenPos.x = cSettings->VIEW_TILES_XAXIS * 0.5 + 1;
+			ScreenPos.x = cSettings->VIEW_TILES_XAXIS * 0.5;
 		}
-		if (ScreenPos.y == 0)
+		if (ScreenPos.y == 0 && AtBorderY == 0)
 		{
-			ScreenPos.y = cSettings->VIEW_TILES_YAXIS * 0.5 + 1;
+			ScreenPos.y = cSettings->VIEW_TILES_YAXIS * 0.5;
 		}
 
 		//Convert position to UV Coords
-		vec2UVCoordinate.x = cSettings->ConvertIndexToUVSpace(cSettings->x, ScreenPos.x - 1, false, vec2NumMicroSteps.x * cSettings->MICRO_STEP_XAXIS);
-		vec2UVCoordinate.y = cSettings->ConvertIndexToUVSpace(cSettings->y, ScreenPos.y - 1, false, vec2NumMicroSteps.y * cSettings->MICRO_STEP_YAXIS);
+		if (AtBorderX == 0)
+		{
+			vec2UVCoordinate.x = cSettings->ConvertIndexToUVSpace(cSettings->x, ScreenPos.x, false, 0);
+		}
+		else if (AtBorderX == 1)
+		{
+			vec2UVCoordinate.x = cSettings->ConvertIndexToUVSpace(cSettings->x, ScreenPos.x, false, cSettings->MICRO_STEP_XAXIS * vec2NumMicroSteps.x);
+		}
+		else if (AtBorderX == 2)
+		{
+			vec2UVCoordinate.x = cSettings->ConvertIndexToUVSpace(cSettings->x, ScreenPos.x, false, cSettings->MICRO_STEP_XAXIS * vec2NumMicroSteps.x);
+		}
+		if (AtBorderY == 0)
+		{
+			vec2UVCoordinate.y = cSettings->ConvertIndexToUVSpace(cSettings->y, ScreenPos.y, false, 0);
+		}
+		else if (AtBorderY == 1)
+		{
+			vec2UVCoordinate.y = cSettings->ConvertIndexToUVSpace(cSettings->y, ScreenPos.y, false, cSettings->MICRO_STEP_YAXIS * vec2NumMicroSteps.y);
+		}
+		else if (AtBorderY == 2)
+		{
+			vec2UVCoordinate.y = cSettings->ConvertIndexToUVSpace(cSettings->y, ScreenPos.y-1, false, cSettings->MICRO_STEP_YAXIS * vec2NumMicroSteps.y);
+		}
 	}
 	//Update Rotation
 	{
@@ -819,304 +845,308 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 {
 	unsigned int IRow;
 	unsigned int ICol;
-	switch (cMap2D->GetMapInfo(vec2Index.y + ydisplacement,vec2Index.x + xdisplacement))
+	if ((vec2Index.x + xdisplacement) >= 0 && (vec2Index.x + xdisplacement) <= cSettings->NUM_TILES_XAXIS && (vec2Index.y + ydisplacement) >= 0 && (vec2Index.y + ydisplacement + 1) <= cSettings->NUM_TILES_YAXIS)
 	{
-	case 110:
-		cGUI_Scene2D->actiontext = "Press F to search crate";
-		if (cKeyboardController->IsKeyPressed('F'))
+		switch (cMap2D->GetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement))
 		{
-			cout << "CASE 110 " << endl;
-			if (cGUI_Scene2D->looting == false)
+		case 110:
+			cGUI_Scene2D->actiontext = "Press F to search crate";
+			if (cKeyboardController->IsKeyPressed('F'))
 			{
-				cGUI_Scene2D->searchtxt = "SEARCHING...";
-				cGUI_Scene2D->issearched = false;
-				cGUI_Scene2D->searchtimer = 0;
-				cSoundController->PlaySoundByID(18);
-				cGUI_Scene2D->checkinginventory = true;
-				cGUI_Scene2D->OpenCrate("Large");
-				cGUI_Scene2D->looting = true;
-				cGUI_Scene2D->crafting = false;
+				cout << "CASE 110 " << endl;
+				if (cGUI_Scene2D->looting == false)
+				{
+					cGUI_Scene2D->searchtxt = "SEARCHING...";
+					cGUI_Scene2D->issearched = false;
+					cGUI_Scene2D->searchtimer = 0;
+					cSoundController->PlaySoundByID(18);
+					cGUI_Scene2D->checkinginventory = true;
+					cGUI_Scene2D->OpenCrate("Large");
+					cGUI_Scene2D->looting = true;
+					cGUI_Scene2D->crafting = false;
+				}
+				else
+				{
+					cout << "get rid of box";
+					cGUI_Scene2D->looting = false;
+					cGUI_Scene2D->checkinginventory = false;
+					cGUI_Scene2D->crafting = false;
+					if (cMap2D->GetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement) == 110)
+						cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
+
+				}
 			}
-			else
+			break;
+		case 27:
+			if (cKeyboardController->IsKeyPressed('F'))
 			{
-				cout << "get rid of box";
-				cGUI_Scene2D->looting = false;
-				cGUI_Scene2D->checkinginventory = false;
-				cGUI_Scene2D->crafting = false;
-				if(cMap2D->GetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement) == 110)
+				cout << "CASE 114 " << endl;
+				if (cGUI_Scene2D->checkinginventory == false)
+				{
+					cGUI_Scene2D->checkinginventory = true;
+					cGUI_Scene2D->chestactive = true;
+					cGUI_Scene2D->crafting = false;
+				}
+				else
+				{
+					cGUI_Scene2D->checkinginventory = false;
+					cGUI_Scene2D->chestactive = false;
+					cGUI_Scene2D->crafting = false;
+				}
+
+			}
+			break;
+			/*	30 - bandages
+				32 - Blueprint
+				35 - medkit
+				36 - pistol bullets
+				37 - pistol
+				38 - rifle bullets
+				39 - rifle
+
+
+				40 - Scrap
+				41 - Stone ore
+				33 - Fabric
+				34 - hard wood*/
+
+		case 26:
+			cGUI_Scene2D->actiontext = "Press F to open crafting menu";
+			if (cKeyboardController->IsKeyPressed('F'))
+			{
+				cout << "CASE 113 " << endl;
+				if (cGUI_Scene2D->crafting == false)
+				{
+					cGUI_Scene2D->crafting = true;
+					cGUI_Scene2D->checkinginventory = true;
+				}
+				else
+				{
+					cGUI_Scene2D->crafting = false;
+					cGUI_Scene2D->checkinginventory = false;
+				}
+			}
+			break;
+		case 30:
+			cGUI_Scene2D->actiontext = "Press F to pickup bandages";
+			if (cKeyboardController->IsKeyPressed('F'))
+			{
+				if (cGUI_Scene2D->IncreaseInventoryItemCount("Bandage", 1) == 1)
+				{
 					cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
-			
+				}
+				else
+				{
+					cGUI_Scene2D->actiontext = "Inventory full!";
+				}
+				cSoundController->PlaySoundByID(22);
+
 			}
+			break;
+		case 32:
+			cGUI_Scene2D->actiontext = "Press F to pickup blueprints";
+			if (cKeyboardController->IsKeyPressed('F'))
+			{
+				if (cGUI_Scene2D->IncreaseInventoryItemCount("Blueprint", 1) == 1)
+				{
+					cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
+				}
+				else
+				{
+					cGUI_Scene2D->actiontext = "Inventory full!";
+				}
+				cSoundController->PlaySoundByID(22);
+
+			}
+			break;
+		case 33:
+			cGUI_Scene2D->actiontext = "Press F to pickup fabric";
+			if (cKeyboardController->IsKeyPressed('F'))
+			{
+				if (cGUI_Scene2D->IncreaseInventoryItemCount("Fabric", 1) == 1)
+				{
+					cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
+				}
+				else
+				{
+					cGUI_Scene2D->actiontext = "Inventory full!";
+				}
+				cSoundController->PlaySoundByID(22);
+
+			}
+			break;
+		case 34:
+			cGUI_Scene2D->actiontext = "Press F to pickup wood";
+			if (cKeyboardController->IsKeyPressed('F'))
+			{
+
+				if (cGUI_Scene2D->IncreaseInventoryItemCount("Hard wood", 1) == 1)
+				{
+					cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
+				}
+				else
+				{
+					cGUI_Scene2D->actiontext = "Inventory full!";
+				}
+				cSoundController->PlaySoundByID(22);
+
+			}
+			break;
+		case 35:
+			cGUI_Scene2D->actiontext = "Press F to pickup medkit";
+			if (cKeyboardController->IsKeyPressed('F'))
+			{
+				if (cGUI_Scene2D->IncreaseInventoryItemCount("Medkit", 1) == 1)
+				{
+					cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
+				}
+				else
+				{
+					cGUI_Scene2D->actiontext = "Inventory full!";
+				}
+				cSoundController->PlaySoundByID(22);
+
+			}
+			break;
+		case 36:
+			cGUI_Scene2D->actiontext = "Press F to pickup pistol bullets";
+			if (cKeyboardController->IsKeyPressed('F'))
+			{
+				if (cGUI_Scene2D->IncreaseInventoryItemCount("Pistol Bullet", 5) == 1)
+				{
+					cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
+				}
+				else
+				{
+					cGUI_Scene2D->actiontext = "Inventory full!";
+				}
+				cSoundController->PlaySoundByID(22);
+
+			}
+			break;
+		case 37:
+			cGUI_Scene2D->actiontext = "Press F to pickup pistol";
+			if (cKeyboardController->IsKeyPressed('F'))
+			{
+				if (cGUI_Scene2D->IncreaseInventoryItemCount("Pistol", 1) == 1)
+				{
+					cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
+				}
+				else
+				{
+					cGUI_Scene2D->actiontext = "Inventory full!";
+				}
+				cSoundController->PlaySoundByID(22);
+
+			}
+			break;
+		case 38:
+			cGUI_Scene2D->actiontext = "Press F to pickup rifle bullets";
+			if (cKeyboardController->IsKeyPressed('F'))
+			{
+				if (cGUI_Scene2D->IncreaseInventoryItemCount("Rifle Bullet", 1) == 1)
+				{
+					cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
+				}
+				else
+				{
+					cGUI_Scene2D->actiontext = "Inventory full!";
+				}
+				cSoundController->PlaySoundByID(22);
+
+			}
+			break;
+		case 39:
+			cGUI_Scene2D->actiontext = "Press F to pickup rifle";
+			if (cKeyboardController->IsKeyPressed('F'))
+			{
+				if (cGUI_Scene2D->IncreaseInventoryItemCount("Rifle", 1) == 1)
+				{
+					cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
+				}
+				else
+				{
+					cGUI_Scene2D->actiontext = "Inventory full!";
+				}
+				cSoundController->PlaySoundByID(22);
+
+			}
+			break;
+		case 40:
+			cGUI_Scene2D->actiontext = "Press F to pickup scrap metal";
+			if (cKeyboardController->IsKeyPressed('F'))
+			{
+				if (cGUI_Scene2D->IncreaseInventoryItemCount("Scrap Metal", 1) == 1)
+				{
+					cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
+				}
+				else
+				{
+					cGUI_Scene2D->actiontext = "Inventory full!";
+				}
+				cSoundController->PlaySoundByID(22);
+
+			}
+			break;
+		case 41:
+			cGUI_Scene2D->actiontext = "Press F to pickup stone";
+			if (cKeyboardController->IsKeyPressed('F'))
+			{
+				if (cGUI_Scene2D->IncreaseInventoryItemCount("Stone Ore", 1) == 1)
+				{
+					cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
+				}
+				else
+				{
+					cGUI_Scene2D->actiontext = "Inventory full!";
+				}
+				cSoundController->PlaySoundByID(22);
+
+			}
+			break;
+		case 42:
+			cGUI_Scene2D->actiontext = "Press F to pickup Yellow Card";
+			if (cKeyboardController->IsKeyPressed('F'))
+			{
+				if (cGUI_Scene2D->IncreaseInventoryItemCount("Yellow Keycard", 1) == 1)
+				{
+					cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
+				}
+				else
+				{
+					cGUI_Scene2D->actiontext = "Inventory full!";
+				}
+				cSoundController->PlaySoundByID(22);
+
+			}
+			break;
+		case 115:
+			cGUI_Scene2D->actiontext = "Press F to unlock door";
+			if (cKeyboardController->IsKeyPressed('F'))
+			{
+				cout << "HOTBARITEM: " + (cGUI_Scene2D->GetCurrentHotbarItem()) << endl;
+				if (cGUI_Scene2D->GetCurrentHotbarItem() == "Yellow Keycard")
+				{
+					cout << "HOTBARLEVEL: " + cGUI_Scene2D->hotbarlevel << endl;
+					unlockedYellow = true;
+					cMap2D->SetMapInfo(80, 71, 0);
+					cMap2D->SetMapInfo(80, 72, 0);
+					cSoundController->PlaySoundByID(37);
+					break;
+				}
+
+				if (unlockedYellow == false)
+				{
+					cSoundController->PlaySoundByID(38);
+				}
+			}
+			break;
+		default:
+			cGUI_Scene2D->actiontext = "...";
+			break;
 		}
-		break;
-	case 27:
-		if (cKeyboardController->IsKeyPressed('F'))
-		{
-			cout << "CASE 114 " << endl;
-			if (cGUI_Scene2D->checkinginventory == false)
-			{
-				cGUI_Scene2D->checkinginventory = true;
-				cGUI_Scene2D->chestactive = true;
-				cGUI_Scene2D->crafting = false;
-			}
-			else
-			{
-				cGUI_Scene2D->checkinginventory = false;
-				cGUI_Scene2D->chestactive = false;
-				cGUI_Scene2D->crafting = false;
-			}
-
-		}
-		break;
-	/*	30 - bandages
-		32 - Blueprint
-		35 - medkit
-		36 - pistol bullets
-		37 - pistol
-		38 - rifle bullets
-		39 - rifle
-
-
-		40 - Scrap
-		41 - Stone ore
-		33 - Fabric
-		34 - hard wood*/
-
-	case 26:
-		cGUI_Scene2D->actiontext = "Press F to open crafting menu";
-		if (cKeyboardController->IsKeyPressed('F'))
-		{
-			cout << "CASE 113 " << endl;
-			if (cGUI_Scene2D->crafting == false)
-			{
-				cGUI_Scene2D->crafting = true;
-				cGUI_Scene2D->checkinginventory = true;
-			}
-			else
-			{
-				cGUI_Scene2D->crafting = false;
-				cGUI_Scene2D->checkinginventory = false;
-			}
-		}
-		break;
-	case 30:
-		cGUI_Scene2D->actiontext = "Press F to pickup bandages";
-		if (cKeyboardController->IsKeyPressed('F'))
-		{
-			if (cGUI_Scene2D->IncreaseInventoryItemCount("Bandage", 1) == 1)
-			{
-				cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
-			}
-			else
-			{
-				cGUI_Scene2D->actiontext = "Inventory full!";
-			}
-			cSoundController->PlaySoundByID(22);
-
-		}
-		break;
-	case 32:
-		cGUI_Scene2D->actiontext = "Press F to pickup blueprints";
-		if (cKeyboardController->IsKeyPressed('F'))
-		{
-			if (cGUI_Scene2D->IncreaseInventoryItemCount("Blueprint", 1) == 1)
-			{
-				cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
-			}
-			else
-			{
-				cGUI_Scene2D->actiontext = "Inventory full!";
-			}
-			cSoundController->PlaySoundByID(22);
-
-		}
-		break;
-	case 33:
-		cGUI_Scene2D->actiontext = "Press F to pickup fabric";
-		if (cKeyboardController->IsKeyPressed('F'))
-		{
-			if (cGUI_Scene2D->IncreaseInventoryItemCount("Fabric", 1) == 1)
-			{
-				cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
-			}
-			else
-			{
-				cGUI_Scene2D->actiontext = "Inventory full!";
-			}
-			cSoundController->PlaySoundByID(22);
-
-		}
-		break;
-	case 34:
-		cGUI_Scene2D->actiontext = "Press F to pickup wood";
-		if (cKeyboardController->IsKeyPressed('F'))
-		{
-
-			if (cGUI_Scene2D->IncreaseInventoryItemCount("Hard wood", 1) == 1)
-			{
-				cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
-			}
-			else
-			{
-				cGUI_Scene2D->actiontext = "Inventory full!";
-			}
-			cSoundController->PlaySoundByID(22);
-
-		}
-		break;
-	case 35:
-		cGUI_Scene2D->actiontext = "Press F to pickup medkit";
-		if (cKeyboardController->IsKeyPressed('F'))
-		{
-			if (cGUI_Scene2D->IncreaseInventoryItemCount("Medkit", 1) == 1)
-			{
-				cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
-			}
-			else
-			{
-				cGUI_Scene2D->actiontext = "Inventory full!";
-			}
-			cSoundController->PlaySoundByID(22);
-
-		}
-		break;
-	case 36:
-		cGUI_Scene2D->actiontext = "Press F to pickup pistol bullets";
-		if (cKeyboardController->IsKeyPressed('F'))
-		{
-			if (cGUI_Scene2D->IncreaseInventoryItemCount("Pistol Bullet", 5) == 1)
-			{
-				cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
-			}
-			else
-			{
-				cGUI_Scene2D->actiontext = "Inventory full!";
-			}
-			cSoundController->PlaySoundByID(22);
-
-		}
-		break;
-	case 37:
-		cGUI_Scene2D->actiontext = "Press F to pickup pistol";
-		if (cKeyboardController->IsKeyPressed('F'))
-		{
-			if (cGUI_Scene2D->IncreaseInventoryItemCount("Pistol", 1) == 1)
-			{
-				cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
-			}
-			else
-			{
-				cGUI_Scene2D->actiontext = "Inventory full!";
-			}
-			cSoundController->PlaySoundByID(22);
-
-		}
-		break;
-	case 38:
-		cGUI_Scene2D->actiontext = "Press F to pickup rifle bullets";
-		if (cKeyboardController->IsKeyPressed('F'))
-		{
-			if (cGUI_Scene2D->IncreaseInventoryItemCount("Rifle Bullet", 1) == 1)
-			{
-				cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
-			}
-			else
-			{
-				cGUI_Scene2D->actiontext = "Inventory full!";
-			}
-			cSoundController->PlaySoundByID(22);
-
-		}
-		break;
-	case 39:
-		cGUI_Scene2D->actiontext = "Press F to pickup rifle";
-		if (cKeyboardController->IsKeyPressed('F'))
-		{
-			if (cGUI_Scene2D->IncreaseInventoryItemCount("Rifle", 1) == 1)
-			{
-				cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
-			}
-			else
-			{
-				cGUI_Scene2D->actiontext = "Inventory full!";
-			}
-			cSoundController->PlaySoundByID(22);
-
-		}
-		break;
-	case 40:
-		cGUI_Scene2D->actiontext = "Press F to pickup scrap metal";
-		if (cKeyboardController->IsKeyPressed('F'))
-		{
-			if (cGUI_Scene2D->IncreaseInventoryItemCount("Scrap Metal", 1) == 1)
-			{
-				cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
-			}
-			else
-			{
-				cGUI_Scene2D->actiontext = "Inventory full!";
-			}
-			cSoundController->PlaySoundByID(22);
-
-		}
-		break;
-	case 41:
-		cGUI_Scene2D->actiontext = "Press F to pickup stone";
-		if (cKeyboardController->IsKeyPressed('F'))
-		{
-			if(cGUI_Scene2D->IncreaseInventoryItemCount("Stone Ore", 1) == 1)
-			{
-				cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
-			}
-			else
-			{
-				cGUI_Scene2D->actiontext = "Inventory full!";
-			}
-			cSoundController->PlaySoundByID(22);
-
-		}
-		break;
-	case 42:
-		cGUI_Scene2D->actiontext = "Press F to pickup Yellow Card";
-		if (cKeyboardController->IsKeyPressed('F'))
-		{
-			if (cGUI_Scene2D->IncreaseInventoryItemCount("Yellow Keycard", 1) == 1)
-			{
-				cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
-			}
-			else
-			{
-				cGUI_Scene2D->actiontext = "Inventory full!";
-			}
-			cSoundController->PlaySoundByID(22);
-
-		}
-		break;
-	case 115:
-		cGUI_Scene2D->actiontext = "Press F to unlock door";
-		if (cKeyboardController->IsKeyPressed('F'))
-		{
-			cout << "HOTBARITEM: " + (cGUI_Scene2D->GetCurrentHotbarItem()) << endl;
-			if (cGUI_Scene2D->GetCurrentHotbarItem() == "Yellow Keycard")
-			{
-				cout << "HOTBARLEVEL: " + cGUI_Scene2D->hotbarlevel << endl;
-				unlockedYellow = true;
-				cMap2D->SetMapInfo(80, 71, 0);
-				cMap2D->SetMapInfo(80, 72, 0);
-				cSoundController->PlaySoundByID(37);
-				break;
-			}
-			
-			if (unlockedYellow == false)
-			{
-				cSoundController->PlaySoundByID(38);
-			}
-		}
-		break;
-	default:
-		cGUI_Scene2D->actiontext = "...";
-		break;
 	}
+
 }
 
 bool CPlayer2D_V2::CheckPosition(DIRECTION eDirection)

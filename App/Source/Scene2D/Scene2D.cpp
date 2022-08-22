@@ -106,7 +106,7 @@ bool CScene2D::Init(void)
 	BarbwireUpgrade = 0;
 
 	daylightTimer = 0;
-	hours = 19;
+	hours = 8;
 	mins = 0;
 	days = 1;
 	spawnrate = 1;
@@ -458,6 +458,7 @@ bool CScene2D::Update(const double dElapsedTime)
  	cSoundController->Update(dElapsedTime);
 
 	cMap2D->vec2Index = Player->vec2Index;
+	cMap2D->vec2NumMicroSteps = Player->vec2NumMicroSteps;
 
 	// Get keyboard updates
 	if (cKeyboardController->IsKeyDown(GLFW_KEY_F10))
