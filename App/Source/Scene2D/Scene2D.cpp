@@ -111,10 +111,9 @@ bool CScene2D::Init(void)
 	days = 1;
 	spawnrate = 1;
 	isNight = false;
-	numSpawned = 0;
-	spawnTimer = 0;
 	SolarEclipse = false;
 	BloodMoon = false;
+	numSpawned = 0;
 
 	//Initialse this instance
 	if (cMap2D->Init(5, CSettings::GetInstance()->NUM_TILES_YAXIS, CSettings::GetInstance()->NUM_TILES_XAXIS) == false)
@@ -355,7 +354,6 @@ bool CScene2D::Update(const double dElapsedTime)
 	if (BloodMoon == true || SolarEclipse == true)
 	{
 		spawnrate = 2 + (0.2 * days);
-		numSpawned = 0;
 	}
 	else
 	{
@@ -363,40 +361,31 @@ bool CScene2D::Update(const double dElapsedTime)
 	}
 	int spawncount = 20 * spawnrate;
 	UpdateDaylightCycle(dElapsedTime);
-
-	if (spawnTimer < 2)
+	if (hours >= 22 && BloodMoon == false && numSpawned == 0)
 	{
-		spawnTimer += dElapsedTime;
-	}
-
-	if (hours >= 22 && BloodMoon == false)
-	{
-		if (numSpawned < spawncount && spawnTimer >= 2)
+		for (int i = 0; i < spawncount; i++)
 		{
 			SpawnEnemies();
-			numSpawned++;
-			spawnTimer = 0;
 		}
+		numSpawned = 1;
 	}
-	else if (SolarEclipse == true && hours > 5 && hours < 19)
+	else if (SolarEclipse == true && hours > 5 && hours < 19 && numSpawned == 0)
 	{
-		if (numSpawned < spawncount && spawnTimer >= 1)
+		for (int i = 0; i < spawncount; i++)
 		{
 			SpawnEnemies();
-			numSpawned++;
-			spawnTimer = 0;
 		}
+		numSpawned = 1;
 	}
-	else if (hours >= 20 && BloodMoon == true)
+	else if (hours >= 20 && BloodMoon == true && numSpawned == 0)
 	{
-		if (numSpawned < spawncount && spawnTimer >= 1)
+		for (int i = 0; i < spawncount; i++)
 		{
 			SpawnEnemies();
-			numSpawned++;
-			spawnTimer = 0;
 		}
+		numSpawned = 1;
 	}
-	else if (hours >= 5 && hours < 19)
+	else if (hours >= 5 && hours < 19 && SolarEclipse == false)
 	{
 		numSpawned = 0;
 		if (BloodMoon == true)
@@ -404,7 +393,6 @@ bool CScene2D::Update(const double dElapsedTime)
 			BloodMoon = false;
 		}
 	}
-
 	if (hours >= 19 && SolarEclipse == true)
 	{
 		numSpawned = 0;
