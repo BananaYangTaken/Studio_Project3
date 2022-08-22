@@ -589,7 +589,6 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 			{
 				animatedSprites->PlayAnimation("meleeMove", -1, 1.0f);
 			}
-			cSoundController->PlaySoundByID(36);
 		}
 	}
 
