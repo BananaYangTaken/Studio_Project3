@@ -586,7 +586,6 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 
 	//CS: Update the animated sprite
 	animatedSprites->Update(dElapsedTime);
-	std::cout << "x: " << vec2Index.x <<" y:"<< vec2Index.y << std::endl;
 	//Calculate Position of Entity on Screen
 	glm::vec2 ScreenPos = glm::vec2(0, 0);
 	// Update the UV Coordinates

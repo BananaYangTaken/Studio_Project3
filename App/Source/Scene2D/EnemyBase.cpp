@@ -110,7 +110,6 @@ void CEnemyBase::SetStun(bool stun)
  */
 void CEnemyBase::Constraint(DIRECTION eDirection)
 {
-	cout << "running constraint" << endl;
 	if (eDirection == LEFT)
 	{
 		if (vec2Index.x < 1)

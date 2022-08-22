@@ -106,11 +106,13 @@ bool CScene2D::Init(void)
 	BarbwireUpgrade = 0;
 
 	daylightTimer = 0;
-	hours = 8;
-	mins = 0;
+	hours = 21;
+	mins = 40;
 	days = 1;
 	spawnrate = 1;
 	isNight = false;
+	numSpawned = 0;
+	spawnTimer = 0;
 
 	//Initialse this instance
 	if (cMap2D->Init(5, CSettings::GetInstance()->NUM_TILES_YAXIS, CSettings::GetInstance()->NUM_TILES_XAXIS) == false)
@@ -171,7 +173,7 @@ void CScene2D::UpdateDaylightCycle(const double dElapsedTime)
 	daylightTimer += dElapsedTime;
 	if (daylightTimer >= 0.5)
 	{
-		mins += 30;
+		mins += 1;
 		daylightTimer = 0;
 	}
 	if (mins >= 60)
@@ -207,18 +209,6 @@ void CScene2D::UpdateDaylightCycle(const double dElapsedTime)
 			std::cout << hours << " : " << mins << std::endl;
 		}
 	}
-	if (hours >= 22)
-	{
-		if (isNight == false)
-		{
-			SpawnEnemies();
-			isNight = true;
-		}
-	}
-	else if (hours >= 5 && hours < 19 && isNight == true)
-	{
-		isNight = false;
-	}
 }
 
 void CScene2D::SpawnEnemies()
@@ -228,38 +218,30 @@ void CScene2D::SpawnEnemies()
 	// 304 Police Zombie
 	// 305 Mutant Zombie
 
-	spawnrate = 1 + (0.1 * days);
-	int spawnCount = 20 * spawnrate;
-	
-	for (int i = 0; i < spawnCount; i++)
+	int EnemyRand = Math::RandIntMinMax(1, 20);
+	int randx = Math::RandIntMinMax(10, 90);
+	int randy = Math::RandIntMinMax(10, 90);
+	while (cMap2D->GetMapInfo(randy, randx) != 0)
 	{
-		int EnemyRand = Math::RandIntMinMax(1, 20);
-		int randx = Math::RandIntMinMax(10, 90);
-		int randy = Math::RandIntMinMax(10, 90);
-		while (cMap2D->GetMapInfo(randy, randx) != 0)
-		{
-			randx = Math::RandIntMinMax(10, 90);
-			randy = Math::RandIntMinMax(10, 90);
-		}
-		if (EnemyRand == 20)
-		{
-			cMap2D->SetMapInfo(randy, randx, 305);
-		}
-		else if (EnemyRand >= 16 && EnemyRand <= 19)
-		{
-			cMap2D->SetMapInfo(randy, randx, 304);
-		}
-		else if (EnemyRand >= 11 && EnemyRand <= 15)
-		{
-			cMap2D->SetMapInfo(randy, randx, 303);
-		}
-		else if (EnemyRand >= 1 && EnemyRand <= 10)
-		{
-			cMap2D->SetMapInfo(randy, randx, 302);
-		}
-		LoadEnemies();
+		randx = Math::RandIntMinMax(10, 90);
+		randy = Math::RandIntMinMax(10, 90);
 	}
-
+	if (EnemyRand == 20)
+	{
+		cMap2D->SetMapInfo(randy, randx, 305);
+	}
+	else if (EnemyRand >= 16 && EnemyRand <= 19)
+	{
+		cMap2D->SetMapInfo(randy, randx, 304);
+	}
+	else if (EnemyRand >= 11 && EnemyRand <= 15)
+	{
+		cMap2D->SetMapInfo(randy, randx, 303);
+	}
+	else if (EnemyRand >= 1 && EnemyRand <= 10)
+	{
+		cMap2D->SetMapInfo(randy, randx, 302);
+	}
 }
 
 /**
@@ -267,7 +249,32 @@ void CScene2D::SpawnEnemies()
 */
 bool CScene2D::Update(const double dElapsedTime)
 {
+	spawnrate = 1 + (0.1 * days);
+	int spawncount = 20 * spawnrate;
 	UpdateDaylightCycle(dElapsedTime);
+
+	if (spawnTimer < 2)
+	{
+		spawnTimer += dElapsedTime;
+	}
+
+	if (hours >= 22)
+	{
+		if (numSpawned < spawncount && spawnTimer >= 2)
+		{
+			SpawnEnemies();
+			numSpawned++;
+			spawnTimer = 0;
+		}
+	}
+	else if (hours >= 5 && hours < 19)
+	{
+		numSpawned = 0;
+	}
+
+
+
+
 
 	if (hours >= 17 && cGUI_Scene2D->darkenmap == false)
 	{

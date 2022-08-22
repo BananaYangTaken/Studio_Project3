@@ -95,6 +95,8 @@ public:
 	float hours, mins;
 	int days;
 	float spawnrate;
+	int numSpawned;
+	float spawnTimer;
 
 	bool isNight;
 
