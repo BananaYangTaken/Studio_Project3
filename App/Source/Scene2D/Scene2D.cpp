@@ -106,8 +106,8 @@ bool CScene2D::Init(void)
 	BarbwireUpgrade = 0;
 
 	daylightTimer = 0;
-	hours = 21;
-	mins = 40;
+	hours = 8;
+	mins = 0;
 	days = 1;
 	spawnrate = 1;
 	isNight = false;
@@ -327,7 +327,6 @@ bool CScene2D::Update(const double dElapsedTime)
 		}
 		else {
 			(*it)->Update(dElapsedTime);
-			Temp->SetWindowLevel(WindowUpgradeLvl);
 			++it; 
 		}
 	}
