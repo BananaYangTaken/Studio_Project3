@@ -114,7 +114,7 @@ bool CTurretBase::Init(int x, int y)
 	//CS:Create Animated Sprites and setup animation
 
 
-	animatedSprites = CMeshBuilder::GenerateSpriteAnimation(1, 9, cSettings->TILE_WIDTH*3, cSettings->TILE_HEIGHT*3);
+	animatedSprites = CMeshBuilder::GenerateSpriteAnimation(1, 9, (cSettings->TILE_WIDTH + cSettings->TILE_HEIGHT) * 1.5, (cSettings->TILE_WIDTH + cSettings->TILE_HEIGHT) * 1.5);
 	animatedSprites->AddAnimation("L1idle", 0, 0);
 	animatedSprites->AddAnimation("L1Attack", 0, 2);
 	animatedSprites->AddAnimation("L2idle", 3, 3);
@@ -129,6 +129,8 @@ bool CTurretBase::Init(int x, int y)
 
 	// If this class is initialised properly, then set the bIsActive to true
 	bIsActive = true;
+
+	Rotation = 0;
 
 	UpdateDirection();
 
@@ -252,6 +254,11 @@ void CTurretBase::Update(const double dElapsedTime)
 
 					break;
 				}
+
+				//Calculate Rotation
+				//Rotates based on last fired target
+				Rotation = cPhysics2D.CalculateRotation(vec2Index, vec2Index + glm::vec2(1, 0), dynamic_cast<CEnemyBase*>((*cEnemyList)[i])->vec2Index);
+				std::cout << "BAMMMMMMMMMMM		" << Rotation << "		BAMMMMMMMMM" << std::endl;
 			}
 		}
 
@@ -713,6 +720,7 @@ void CTurretBase::Render(void)
 	transform = glm::translate(transform, glm::vec3(vec2UVCoordinate.x,
 		vec2UVCoordinate.y,
 		0.0f));
+	transform = glm::rotate(transform, Rotation, glm::vec3(0, 0, 1));
 	// Update the shaders with the latest transform
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
 	glUniform4fv(colorLoc, 1, glm::value_ptr(runtimeColour));

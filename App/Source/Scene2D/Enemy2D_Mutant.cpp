@@ -276,6 +276,7 @@ bool CEnemy2D_Mutant::Init(int x, int y)
 
 	//CS:Create Animated Sprites and setup animation
 
+	Rotation = 0;
 
 	animatedSprites = CMeshBuilder::GenerateSpriteAnimation(5, 17, cSettings->TILE_WIDTH*2, cSettings->TILE_HEIGHT*2);
 	animatedSprites->AddAnimation("idle", 0, 16);

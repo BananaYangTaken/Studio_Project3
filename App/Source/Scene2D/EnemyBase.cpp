@@ -701,6 +701,7 @@ void CEnemyBase::Render(void)
 	transform = glm::translate(transform, glm::vec3(vec2UVCoordinate.x,
 		vec2UVCoordinate.y,
 		0.0f));
+	transform = glm::rotate(transform, Rotation, glm::vec3(0, 0, 1));
 	// Update the shaders with the latest transform
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
 	glUniform4fv(colorLoc, 1, glm::value_ptr(runtimeColour));

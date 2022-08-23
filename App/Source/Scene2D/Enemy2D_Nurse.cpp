@@ -264,6 +264,7 @@ bool CEnemy2D_Nurse::Init(int x, int y)
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
+	Rotation = 0;
 
 	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/NurseZombie.png", true);
 	if (iTextureID == 0)

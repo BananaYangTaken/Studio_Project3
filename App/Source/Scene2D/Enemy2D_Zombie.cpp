@@ -269,6 +269,7 @@ bool CEnemy2D_Zombie::Init(int x, int y)
 		cout << "Unable to load Image/regularZombie.png" << endl;
 		return false;
 	}
+	Rotation = 0;
 	//CS:Create Animated Sprites and setup animation
 
 	animatedSprites = CMeshBuilder::GenerateSpriteAnimation(4, 17, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);

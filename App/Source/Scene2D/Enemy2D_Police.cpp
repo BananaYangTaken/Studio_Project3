@@ -260,6 +260,7 @@ bool CEnemy2D_Police::Init(int x, int y)
 
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
+	Rotation = 0;
 
 
 	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/PoliceZombie.png", true);
