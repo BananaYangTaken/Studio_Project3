@@ -1707,6 +1707,13 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 		}
 		ImGui::End();
 		// Render Progress Bar
+		ImGuiWindowFlags topRightWindowFlags = ImGuiWindowFlags_AlwaysAutoResize |
+				ImGuiWindowFlags_NoTitleBar |
+				ImGuiWindowFlags_NoMove |
+				ImGuiWindowFlags_NoResize |
+				ImGuiWindowFlags_NoCollapse |
+				ImGuiWindowFlags_NoBackground |
+				ImGuiWindowFlags_NoScrollbar;
 		ImGui::Begin("ProgressBar", NULL, window_flags);
 		{
 			ImGui::SetWindowPos(ImVec2((float)cSettings->iWindowWidth - 320.0f, 20.0f));
@@ -1719,13 +1726,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 			const char* empty = " ";
 			ImGui::ProgressBar(m_fProgressBar, ImVec2(300.0f, 60.0f), empty);
 			// Render the Health
-			ImGuiWindowFlags topRightWindowFlags = ImGuiWindowFlags_AlwaysAutoResize |
-				ImGuiWindowFlags_NoTitleBar |
-				ImGuiWindowFlags_NoMove |
-				ImGuiWindowFlags_NoResize |
-				ImGuiWindowFlags_NoCollapse |
-				ImGuiWindowFlags_NoBackground |
-				ImGuiWindowFlags_NoScrollbar;
+			
 
 			ImGui::Begin("HealthIcon", NULL, topRightWindowFlags);
 			{
@@ -1740,7 +1741,8 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.875f, cSettings->iWindowHeight * 0.03f));
 				ImGui::SetWindowSize(ImVec2(100.0f * relativeScale_x, 25.0f * relativeScale_y));
 				ImGui::SetWindowFontScale(1.5f * relativeScale_y);
-				ImGui::TextColored(ImVec4(0, 0, 0, 1), "%d / %d", CPlayer2D_V2::GetInstance()->GetHealth(), CPlayer2D_V2::GetInstance()->GetMaxHealth());
+				ImGui::TextColored(ImVec4(0, 0, 0, 1), "%d / %d", int(CPlayer2D_V2::GetInstance()->GetHealth()), int(CPlayer2D_V2::GetInstance()->GetMaxHealth()));
+				std::cout << CPlayer2D_V2::GetInstance()->GetHealth() << CPlayer2D_V2::GetInstance()->GetMaxHealth() << std::endl;
 			}
 			ImGui::End();
 			ImGui::PopStyleColor(2);
@@ -1751,13 +1753,6 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 		{
 			ImGui::SetWindowPos(ImVec2((float)cSettings->iWindowWidth - 320.0f, 20.0f));
 			ImGui::SetWindowSize(ImVec2(300.0f, 60.0f));
-			ImVec4 col = ImVec4(0.f, 1.f, 0.f, 1.f);
-			ImGui::PushStyleColor(ImGuiCol_PlotHistogram, col);
-			col = ImVec4(1.f, 0.f, 0.f, 1.f);
-			ImGui::PushStyleColor(ImGuiCol_FrameBg, col);
-			m_fProgressBar = float(CPlayer2D_V2::GetInstance()->GetHealth()) / float(CPlayer2D_V2::GetInstance()->GetMaxHealth());
-			const char* empty = " ";
-			ImGui::ProgressBar(m_fProgressBar, ImVec2(300.0f, 60.0f), empty);
 			// Render the Health
 			ImGuiWindowFlags topLeft = 
 				ImGuiWindowFlags_AlwaysAutoResize |
@@ -1784,8 +1779,6 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				ImGui::TextColored(ImVec4(1, 1, 0, 1), timestring.c_str(), cFPSCounter->GetFrameRate());
 			}
 			ImGui::End();
-			ImGui::PopStyleColor();
-			ImGui::PopStyleColor();
 		}
 		ImGui::End();
 

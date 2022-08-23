@@ -331,6 +331,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		else
 			cGUI_Scene2D->actiontext2 = HeldItem.sName + ":"+ std::to_string(HeldItem.GData->CurrentAmmoSize) +"/"+ std::to_string(HeldItem.GData->MaxAmmoSize);
 	}
+	
 	// Get keyboard updates
 	if (cKeyboardController->IsKeyDown(GLFW_KEY_A))
 	{
@@ -402,7 +403,6 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		// If the new position is not feasible, then revert to old position
 		if (CheckPosition(UP) == false)
 		{
-			//vec2Index.y = vec2OldIndex.y;
 			vec2NumMicroSteps.y = 0;
 		}
 		motion = true;
@@ -593,7 +593,6 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		}
 	}
 
-	std::cout << "x: " << vec2NumMicroSteps.x << " y: " << vec2NumMicroSteps.y << std::endl;
 	
 	//Interact with Map
 	
