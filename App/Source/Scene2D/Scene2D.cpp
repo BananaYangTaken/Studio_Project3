@@ -268,12 +268,12 @@ void CScene2D::SpawnEnemies()
 		else if (MilOrStn == 3)
 		{
 			// GENERAL AREA
-			randx = Math::RandIntMinMax(30, 75);
-			randy = Math::RandIntMinMax(45, 80);
+			randx = Math::RandIntMinMax(37, 67);
+			randy = Math::RandIntMinMax(48, 74);
 			while (cMap2D->GetMapInfo(randy, randx) != 0)
 			{
-				randx = Math::RandIntMinMax(30, 75);
-				randy = Math::RandIntMinMax(45, 80);
+				randx = Math::RandIntMinMax(37, 67);
+				randy = Math::RandIntMinMax(48, 74);
 			}
 		}
 		cMap2D->SetMapInfo(randy, randx, 304);
@@ -296,12 +296,12 @@ void CScene2D::SpawnEnemies()
 		else if (SpawnWhere == 2)
 		{
 			// GENERAL AREA
-			randx = Math::RandIntMinMax(30, 75);
-			randy = Math::RandIntMinMax(45, 80);
+			randx = Math::RandIntMinMax(37, 67);
+			randy = Math::RandIntMinMax(48, 74);
 			while (cMap2D->GetMapInfo(randy, randx) != 0)
 			{
-				randx = Math::RandIntMinMax(30, 75);
-				randy = Math::RandIntMinMax(45, 80);
+				randx = Math::RandIntMinMax(37, 67);
+				randy = Math::RandIntMinMax(48, 74);
 			}
 		}
 		cMap2D->SetMapInfo(randy, randx, 303);

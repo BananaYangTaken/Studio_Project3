@@ -96,7 +96,10 @@ bool  CEnemy2D_Zombie::checkforLOS()
 	int blockscounted = 0, Xcount = 0, Ycount = 0;
 	//if the player is to the left or right of the enemy2D
 	// check LOS
-
+	if (distfromplayer >= DetectionRadius)
+	{
+		return false;
+	}
 	//TOP RIGHT VIEW
 	if (vec2Direction.x < 0 && vec2Direction.y < 0)
 	{
