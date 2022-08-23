@@ -1742,7 +1742,6 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				ImGui::SetWindowSize(ImVec2(100.0f * relativeScale_x, 25.0f * relativeScale_y));
 				ImGui::SetWindowFontScale(1.5f * relativeScale_y);
 				ImGui::TextColored(ImVec4(0, 0, 0, 1), "%d / %d", int(CPlayer2D_V2::GetInstance()->GetHealth()), int(CPlayer2D_V2::GetInstance()->GetMaxHealth()));
-				std::cout << CPlayer2D_V2::GetInstance()->GetHealth() << CPlayer2D_V2::GetInstance()->GetMaxHealth() << std::endl;
 			}
 			ImGui::End();
 			ImGui::PopStyleColor(2);
