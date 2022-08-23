@@ -87,8 +87,8 @@ bool CMenuState::Init(void)
 	play2DButtonData.fileName = "Image\\GUI\\PlayButton.png";
 	play2DButtonData.textureID = il->LoadTextureGetID(play2DButtonData.fileName.c_str(), false);
 
-	play3DButtonData.fileName = "Image\\GUI\\PlayButton_3D.png";
-	play3DButtonData.textureID = il->LoadTextureGetID(play3DButtonData.fileName.c_str(), false);
+	/*play3DButtonData.fileName = "Image\\GUI\\PlayButton_3D.png";
+	play3DButtonData.textureID = il->LoadTextureGetID(play3DButtonData.fileName.c_str(), false);*/
 
 	exitButtonData.fileName = "Image\\GUI\\ExitButton.png";
 	exitButtonData.textureID = il->LoadTextureGetID(exitButtonData.fileName.c_str(), false);
@@ -140,9 +140,9 @@ bool CMenuState::Update(const double dElapsedTime)
 			ImGuiStyle& style = ImGui::GetStyle();
 			style.FrameRounding = 200.0f;
 
-			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 0.2f));
-			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.f, 0.f, 0.f, 1.f));
-			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.2f, 0.2f, 1.f));
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.9f, 0.9f, 0.9f, 0.5f));
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.f, 1.f, 1.f, 0.5f));
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 1.f, 1.f, 1.f));
 			// Add codes for Start button here
 			if (ImGui::ImageButton((ImTextureID)play2DButtonData.textureID,
 				ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
@@ -155,19 +155,18 @@ bool CMenuState::Update(const double dElapsedTime)
 				CGameStateManager::GetInstance()->SetActiveGameState("PlayGameState");
 			}
 			// Add codes for Play3D button here
-			if (ImGui::ImageButton((ImTextureID)play3DButtonData.textureID,
-				ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
-			{
-				//// Reset the CKeyboardController
-				//CKeyboardController::GetInstance()->Reset();
+			//if (ImGui::ImageButton((ImTextureID)play3DButtonData.textureID,
+			//	ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
+			//{
+			//	//// Reset the CKeyboardController
+			//	//CKeyboardController::GetInstance()->Reset();
 
-				//// Load the menu state
-				//cout << "Loading Play3DGameState" << endl;
-				//CGameStateManager::GetInstance()->SetActiveGameState("Play3DGameState");
-			}
+			//	//// Load the menu state
+			//	//cout << "Loading Play3DGameState" << endl;
+			//	//CGameStateManager::GetInstance()->SetActiveGameState("Play3DGameState");
+			//}
 			// Add codes for Exit button here
-			if (ImGui::ImageButton((ImTextureID)exitButtonData.textureID,
-				ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
+			if (ImGui::ImageButton((ImTextureID)exitButtonData.textureID,ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
 			{
 				// Reset the CKeyboardController
 				CKeyboardController::GetInstance()->Reset();
