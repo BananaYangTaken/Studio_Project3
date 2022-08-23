@@ -127,7 +127,7 @@ bool CPlayer2D_V2::Init(void)
 
 	Rotation = 0;
 
-	Speed = 1;
+	Speed = 10;
 
 	// Find the indices for the player in arrMapInfo, and assign it to cPlayer2D
 	unsigned int uiRow;
@@ -627,7 +627,6 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 			AtBorderX = 1;
 		}
 
-		std::cout << "y:" << vec2Index.y << std::endl;
 		if (vec2Index.y > (cSettings->NUM_TILES_YAXIS - (cSettings->VIEW_TILES_YAXIS * 0.5) - 1)) //Top Side Border
 		{
 			ScreenPos.y = cSettings->VIEW_TILES_YAXIS - (cSettings->NUM_TILES_YAXIS - vec2Index.y);
@@ -680,12 +679,16 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		//Mouse Position
 		double x, y;
 		Application::GetCursorPos(&x, &y);
-		float mousexpos = ((x / cSettings->iWindowWidth) * cSettings->VIEW_TILES_XAXIS) - cSettings->VIEW_TILES_XAXIS * 0.5 - 0.5;
-		float mouseypos = (abs((y - cSettings->iWindowHeight) / cSettings->iWindowHeight) * cSettings->VIEW_TILES_YAXIS) - cSettings->VIEW_TILES_YAXIS * 0.5 - 0.5;
+		float mousexpos = ((x / cSettings->iWindowWidth) * cSettings->VIEW_TILES_XAXIS) - cSettings->VIEW_TILES_XAXIS * 0.5;
+		float mouseypos = (abs((y - cSettings->iWindowHeight) / cSettings->iWindowHeight) * cSettings->VIEW_TILES_YAXIS) - cSettings->VIEW_TILES_YAXIS * 0.5;\
 		//Calculate Origin
 		glm::vec2 Origin = ScreenPos - glm::vec2(cSettings->VIEW_TILES_XAXIS * 0.5 + 1, cSettings->VIEW_TILES_YAXIS * 0.5 + 1);
 		//Calculate Rotation
-		Rotation = cPhysics2D.CalculateRotation(Origin, glm::vec2(1, 0), glm::vec2(mousexpos, mouseypos));
+		Rotation = cPhysics2D.CalculateRotation(Origin , glm::vec2(1, 0), glm::vec2(mousexpos, mouseypos));
+		if (vec2Index.x > (cSettings->NUM_TILES_XAXIS - (cSettings->VIEW_TILES_XAXIS * 0.5) + 2)) //Right Side Border 
+		{
+			Rotation += Math::PI;
+		}
 	}
 }
 
