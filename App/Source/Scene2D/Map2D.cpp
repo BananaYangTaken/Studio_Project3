@@ -675,7 +675,7 @@ void CMap2D::Render(void)
 		Displacement.y = 0;
 		vec2NumMicroSteps.y = 0;
 	}
-	else if (Displacement.y > cSettings->NUM_TILES_YAXIS - cSettings->VIEW_TILES_YAXIS - 1)
+	else if (Displacement.y > cSettings->NUM_TILES_YAXIS - cSettings->VIEW_TILES_YAXIS )
 	{
 		Displacement.y = cSettings->NUM_TILES_YAXIS - cSettings->VIEW_TILES_YAXIS;
 		vec2NumMicroSteps.y = 0;

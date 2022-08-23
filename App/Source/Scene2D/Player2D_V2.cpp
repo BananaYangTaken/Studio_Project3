@@ -627,17 +627,17 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 			AtBorderX = 1;
 		}
 
+		std::cout << "y:" << vec2Index.y << std::endl;
 		if (vec2Index.y > (cSettings->NUM_TILES_YAXIS - (cSettings->VIEW_TILES_YAXIS * 0.5) - 1)) //Top Side Border
 		{
 			ScreenPos.y = cSettings->VIEW_TILES_YAXIS - (cSettings->NUM_TILES_YAXIS - vec2Index.y);
 			AtBorderY = 1;
 		}
-		else if (vec2Index.y < cSettings->VIEW_TILES_YAXIS * 0.5 + 1) //Bottom Side Border
+		else if (vec2Index.y < cSettings->VIEW_TILES_YAXIS * 0.5) //Bottom Side Border
 		{
 			ScreenPos.y = vec2Index.y;
 			AtBorderY = 2;
 		}
-
 
 		//If not at Border, Entity at Center of Screen displaced by x:1 y:1
 		if (ScreenPos.x == 0 && AtBorderX == 0)
@@ -672,7 +672,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		}
 		else if (AtBorderY == 2)
 		{
-			vec2UVCoordinate.y = cSettings->ConvertIndexToUVSpace(cSettings->y, ScreenPos.y-1, false, cSettings->MICRO_STEP_YAXIS * vec2NumMicroSteps.y);
+			vec2UVCoordinate.y = cSettings->ConvertIndexToUVSpace(cSettings->y, ScreenPos.y, false, cSettings->MICRO_STEP_YAXIS * vec2NumMicroSteps.y);
 		}
 	}
 	//Update Rotation
