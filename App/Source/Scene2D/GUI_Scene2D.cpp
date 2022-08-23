@@ -461,13 +461,11 @@ bool CGUI_Scene2D::Init(void)
 	DayNight.textureID = il->LoadTextureGetID(AddAllButton.fileName.c_str(), false);
 	//KnightIcon.fileName = "Image\\HumanKnightIcon.png";
 	//.textureID = il->LoadTextureGetID(KnightIcon.fileName.c_str(), true);
-
+	clearmap();
 	SpawnRandomPoliceStation();
 	SpawnRandomHospital();
 	SpawnRandomHomeDepot();
 	SpawnRandomMilBase();
-
-	clearmap();
 	SpawnRandomYellowRoom();
 	// Initialise the cInventoryManager
 	cInventoryManager = CInventoryManager::GetInstance();
@@ -582,6 +580,11 @@ void CGUI_Scene2D::SpawnRandomPoliceStation()
 				else if (loottype >= 6) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 36); // Pistol Ammo
 
 			}
+			rande = rand() % 70 + 1;
+			if (rande == 2 && cMap2D->GetMapInfo(PStopleft.y - u, PStopleft.x + i) == 0)
+			{
+				cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 110); // loot crates
+			}
 		}
 	}
 }
@@ -605,6 +608,11 @@ void CGUI_Scene2D::SpawnRandomHospital()
 
 				else if (loottype == 5) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 35); // medkit
 
+			}
+			rande = rand() % 120 + 1;
+			if (rande == 2 && cMap2D->GetMapInfo(PStopleft.y - u, PStopleft.x + i) == 0)
+			{
+				cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 110); // loot crates
 			}
 		}
 	}
@@ -630,6 +638,11 @@ void CGUI_Scene2D::SpawnRandomHomeDepot()
 				else if (loottype == 2) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 41); // stone
 				else if (loottype == 3) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 33); // fabric
 				else if (loottype == 4) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 34); // wood
+			}
+			rande = rand() % 70 + 1;
+			if (rande == 2 && cMap2D->GetMapInfo(PStopleft.y - u, PStopleft.x + i) == 0)
+			{
+				cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 110); // loot crates
 			}
 		}
 	}
@@ -660,6 +673,11 @@ void CGUI_Scene2D::SpawnRandomMilBase()
 				if (loottype == 2) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 39); // rifle
 				if (loottype == 3) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 32); // BP
 			}
+			rande = rand() % 70 + 1;
+			if (rande == 2 && cMap2D->GetMapInfo(PStopleft.y - u, PStopleft.x + i) == 0)
+			{
+				cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 110); // loot crates
+			}
 		}
 	}
 }
@@ -674,7 +692,7 @@ void CGUI_Scene2D::SpawnRandomYellowRoom()
 	{
 		for (int u = 0; u < PStopleft.y - PSbottomleft.y; u++)
 		{
-			int rande = rand() % 3 + 1;
+			int rande = rand() % 100 + 1;
 			if (rande == 2 && cMap2D->GetMapInfo(PStopleft.y - u, PStopleft.x + i) == 0)
 			{
 				spawnloot(PStopleft.y - u, PStopleft.x + i);
@@ -686,6 +704,7 @@ void CGUI_Scene2D::SpawnRandomYellowRoom()
 				if (loottype == 1) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 37); // pistol
 				if (loottype == 2) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 39); // rifle
 				if (loottype == 3) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 110); // BP
+				if (loottype == 4) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 42); // Yellow Card
 			}
 		}
 	}

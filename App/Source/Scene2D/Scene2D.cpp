@@ -418,11 +418,22 @@ bool CScene2D::Update(const double dElapsedTime)
 	}
 	if (hours >= 7 && hours <= 12 && cGUI_Scene2D->darkenmap == false)
 	{
+		if (spawnloot == false)
+		{
+			cGUI_Scene2D->clearmap();
+			cGUI_Scene2D->SpawnRandomHomeDepot();
+			cGUI_Scene2D->SpawnRandomHospital();
+			cGUI_Scene2D->SpawnRandomMilBase();
+			cGUI_Scene2D->SpawnRandomPoliceStation();
+			cGUI_Scene2D->SpawnRandomYellowRoom();
+			spawnloot = true;
+		}
 		cGUI_Scene2D->DayNightIcon = "Day";
 		calledonce = false;
 	}
 	else if (hours >= 6 && hours <= 12 && cGUI_Scene2D->darkenmap == true)
 	{
+		spawnloot = false;
 		cGUI_Scene2D->darkenmap = false;
 		cGUI_Scene2D->DayNightIcon = "Sunrise";
 	}
