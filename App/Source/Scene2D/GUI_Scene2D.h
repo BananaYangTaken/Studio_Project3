@@ -107,6 +107,8 @@ public:
 
 	int hotbarselection = 1;
 	bool descactive = false;
+	string days;
+
 	// Update
 	void Update(const double dElapsedTime);
 	void setInventoryItem(int arrayVal, std::string item, int quantity, int maxQuantity);

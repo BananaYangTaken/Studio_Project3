@@ -301,9 +301,9 @@ void CScene2D::SpawnEnemies()
 void CScene2D::BloodMoonOrSolarEclipse()
 {
 	int EventBaseChance = Math::RandIntMinMax(1, 100);
-	int TotalChance = 100 + days;
-
-	if (EventBaseChance >= 1 && EventBaseChance <= TotalChance)
+	int TotalChance = 1 + days;
+	cout << EventBaseChance << endl;
+	if (EventBaseChance <= TotalChance)
 	{
 		if (hours == 18 && mins == 1)
 		{
@@ -324,11 +324,14 @@ void CScene2D::BloodMoonOrSolarEclipse()
 bool CScene2D::Update(const double dElapsedTime)
 {
 	cout << hours << endl;
+	string temp = "Days : ";
+	cGUI_Scene2D->days = temp + std::to_string(days);
 	if (cKeyboardController->IsKeyPressed('='))
 	{
 		hours++;
 	}
 	BloodMoonOrSolarEclipse();
+	
 	if (BloodMoon == true || SolarEclipse == true)
 	{
 		spawnrate = 2 + (0.2 * days);

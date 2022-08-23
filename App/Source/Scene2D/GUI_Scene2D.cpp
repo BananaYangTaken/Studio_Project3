@@ -417,6 +417,7 @@ bool CGUI_Scene2D::Init(void)
 	cFPSCounter = CFPSCounter::GetInstance();
 	actiontext = "...";
 	actiontext2 = "...";
+	days = "...";
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -785,7 +786,6 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 			// Render the inventory items
 			if (checkinginventory == true)
 			{
-
 				if (darkenmap == true)
 				{
 					if (textalready == false)
@@ -1684,6 +1684,18 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 
 			}
 		}
+		// display days
+		ImGui::Begin("DaysCount", NULL, window_flags);
+		{
+			ImVec4 col = ImVec4(0.f, 1.f, 0.f, 1.f);
+			ImGui::PushStyleColor(ImGuiCol_Text, col);
+			ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.8f, cSettings->iWindowHeight * 0.85f));
+			ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
+			ImGui::SetWindowFontScale(1.5f * relativeScale_y);
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), days.c_str(), cFPSCounter->GetFrameRate());
+			ImGui::PopStyleColor();
+		}
+		ImGui::End();
 
 		ImGui::Begin("ActionTxt", NULL, window_flags);
 		{

@@ -41,6 +41,7 @@ using namespace std;
  */
 CLoseState::CLoseState(void)
 	: background(NULL)
+	, cGUI_Scene2D(NULL)
 {
 
 }
@@ -50,6 +51,7 @@ CLoseState::CLoseState(void)
  */
 CLoseState::~CLoseState(void)
 {
+	cGUI_Scene2D->Destroy();
 }
 
 /**
@@ -62,11 +64,22 @@ bool CLoseState::Init(void)
 	// Include Shader Manager
 	CShaderManager::GetInstance()->Use("Shader2D");
 	//CShaderManager::GetInstance()->activeShader->setInt("texture1", 0);
-
+	
+	//Create and initialse 2D GUI
+	cGUI_Scene2D = CGUI_Scene2D::GetInstance();
+	// Store the CFPSCounter singleton instance here
+	cFPSCounter = CFPSCounter::GetInstance();
 	//Create Background Entity
-	background = new CBackgroundEntity("Image/LoseBackground.png");
+	background = new CBackgroundEntity("Image/Lose.png");
 	background->SetShader("Shader2D");
 	background->Init();
+
+	// Setup Dear ImGui context
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+	DayNum = "...";
 
 	return true;
 }
@@ -76,6 +89,37 @@ bool CLoseState::Init(void)
  */
 bool CLoseState::Update(const double dElapsedTime)
 {
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
+	{
+		ImGuiWindowFlags window_flags = 0;
+		window_flags |= ImGuiWindowFlags_NoTitleBar;
+		window_flags |= ImGuiWindowFlags_NoScrollbar;
+		window_flags |= ImGuiWindowFlags_NoCollapse;
+		window_flags |= ImGuiWindowFlags_NoNav;
+		window_flags |= ImGuiWindowFlags_NoMouseInputs;
+		window_flags |= ImGuiWindowFlags_NoResize;
+
+		std::string temp = "Days Survived : ";
+		DayNum = temp + cGUI_Scene2D->days;
+		// display days
+		ImGui::Begin("DaysCount", NULL, window_flags);
+		{
+			ImVec4 col = ImVec4(0.f, 1.f, 0.f, 1.f);
+			ImGui::PushStyleColor(ImGuiCol_Text, col);
+			ImGui::SetWindowPos(ImVec2(100, 100));
+			ImGui::SetWindowSize(ImVec2(100, 100));
+			ImGui::SetWindowFontScale(1.5f);
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), DayNum.c_str(), cFPSCounter->GetFrameRate());
+			ImGui::PopStyleColor();
+		}
+	}
+	ImGui::End();
+	ImGui::EndFrame();
+
+
+
 	//cout << "CIntroState::Update()\n" << endl;
 	if (CKeyboardController::GetInstance()->IsKeyReleased(GLFW_KEY_SPACE))
 	{
