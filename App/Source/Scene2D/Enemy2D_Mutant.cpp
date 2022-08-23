@@ -90,11 +90,11 @@ bool  CEnemy2D_Mutant::checkforLOS()
 	// Store the old player position
 	Playervec2OldIndex = dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index;
 	int distfromplayer = cPhysics2D.CalculateDistance(dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index, vec2Index) + 1;
-	int distcorrection = (distfromplayer / 7) - 1;
+	int distcorrection = (distfromplayer / 5) - 1;
 	distfromplayer = distfromplayer - distcorrection;
 	float Xdiff = Playervec2OldIndex.x - vec2Index.x;
 	float Ydiff = Playervec2OldIndex.y - vec2Index.y;
-	float diffratio = Xdiff / Ydiff;
+	float diffratio = (Xdiff / Ydiff) - 1;
 	int blockscounted = 0, Xcount = 0, Ycount = 0;
 	//if the player is to the left or right of the enemy2D
 	// check LOS
@@ -114,6 +114,10 @@ bool  CEnemy2D_Mutant::checkforLOS()
 			if (blockscounted >= diffratio)
 			{
 				Ycount++;
+			}
+			if (Playervec2OldIndex.y + Ycount >= 100 || Playervec2OldIndex.x + Xcount >= 100)
+			{
+				return false;
 			}
 			if (cMap2D->GetMapInfo(Playervec2OldIndex.y + Ycount, Playervec2OldIndex.x + Xcount) >= 100)
 			{

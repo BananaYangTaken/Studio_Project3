@@ -541,32 +541,7 @@ void CGUI_Scene2D::PreloadInventoryTextures()
 }
 void CGUI_Scene2D::dropitem(int key)
 {
-	if (inventory_item_name_list[key] == "Bandage")
-		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.y, CPlayer2D_V2::GetInstance()->vec2Index.x, 30);
-	if (inventory_item_name_list[key] == "Blueprint")
-		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.y, CPlayer2D_V2::GetInstance()->vec2Index.x, 32);
-	if (inventory_item_name_list[key] == "Medkit")
-		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.y, CPlayer2D_V2::GetInstance()->vec2Index.x, 35);
-	if (inventory_item_name_list[key] == "Pistol Bullets")
-		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.y, CPlayer2D_V2::GetInstance()->vec2Index.x, 36);
-	if (inventory_item_name_list[key] == "Pistol")
-		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.y, CPlayer2D_V2::GetInstance()->vec2Index.x, 37);
-	if (inventory_item_name_list[key] == "Rifle Bullets")
-		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.y, CPlayer2D_V2::GetInstance()->vec2Index.x, 38);
-	if (inventory_item_name_list[key] == "Rifle")
-		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.y, CPlayer2D_V2::GetInstance()->vec2Index.x, 39);
-	if (inventory_item_name_list[key] == "Scrap Metal")
-		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.y, CPlayer2D_V2::GetInstance()->vec2Index.x, 40);
-	if (inventory_item_name_list[key] == "Stone Ore")
-		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.y, CPlayer2D_V2::GetInstance()->vec2Index.x, 41);
-	if (inventory_item_name_list[key] == "Fabric")
-		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.y, CPlayer2D_V2::GetInstance()->vec2Index.x, 33);
-	if (inventory_item_name_list[key] == "Hard wood")
-		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.y, CPlayer2D_V2::GetInstance()->vec2Index.x, 34);
-	if (inventory_item_name_list[key] == "Yellow Keycard")
-		cMap2D->SetMapInfo(CPlayer2D_V2::GetInstance()->vec2Index.y, CPlayer2D_V2::GetInstance()->vec2Index.x, 42);
 	inventory_item_quantity[key] = 0;
-
 }
 void CGUI_Scene2D::SwapItems(int itemindex, int swapindex)
 {
@@ -1406,7 +1381,6 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						if (ImGui::ImageButton((ImTextureID)newDropbutton.textureID,
 							ImVec2(128, buttonHeight), ImVec2(0.0, 0.0), ImVec2(0.0, 0.0)))
 						{
-							CKeyboardController::GetInstance()->Reset();
 							if (inventory_item_name_list[deskey].find("empty") == string::npos)
 							{
 								dropitem(deskey);

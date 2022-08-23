@@ -99,9 +99,9 @@ void CInventoryItem::Load(void)
 			GData->firingtype = SEMIAUTO;
 			GData->MaxAmmoSize = 17;
 			WData->Damage = 20;
-			WData->ReloadTime = 2;
+			WData->ReloadTime = 1;
 			GData->FireRate = 0.3;
-			WData->ReloadTime = 2;
+			WData->ReloadTime = 0.5f;
 		}
 		else if (sName == "Rifle")
 		{
@@ -110,7 +110,7 @@ void CInventoryItem::Load(void)
 			WData->Damage = 30;
 			WData->ReloadTime = 4;
 			GData->FireRate = 0.1;
-			WData->ReloadTime = 3;
+			WData->ReloadTime = 1;
 		}
 		GData->CurrentAmmoSize = GData->MaxAmmoSize;
 		WData->ReloadTimer = 0;

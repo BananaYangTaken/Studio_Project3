@@ -416,7 +416,7 @@ bool CScene2D::Update(const double dElapsedTime)
 		cout << "HORDE SPAWNED!";
 		calledonce = true;
 	}
-	if (hours >= 7 && hours <= 12 && cGUI_Scene2D->darkenmap == true)
+	if (hours >= 7 && hours <= 12 && cGUI_Scene2D->darkenmap == false)
 	{
 		cGUI_Scene2D->DayNightIcon = "Day";
 		calledonce = false;

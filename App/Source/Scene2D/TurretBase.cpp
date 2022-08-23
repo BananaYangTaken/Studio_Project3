@@ -245,11 +245,11 @@ void CTurretBase::Update(const double dElapsedTime)
 							&& dynamic_cast<CEnemyBase*>((*cEnemyList)[j])->bIsActive == true
 							&& dynamic_cast<CEnemyBase*>((*cEnemyList)[j]) != (*cEnemyList)[i])
 						{
-							dynamic_cast<CEnemyBase*>((*cEnemyList)[j])->SetHealth(dynamic_cast<CEnemyBase*>((*cEnemyList)[j])->GetHealth() - 40);
+							dynamic_cast<CEnemyBase*>((*cEnemyList)[j])->SetHealth(dynamic_cast<CEnemyBase*>((*cEnemyList)[j])->GetHealth() - 30);
 						}
 					}
-					dynamic_cast<CEnemyBase*>((*cEnemyList)[i])->SetHealth(dynamic_cast<CEnemyBase*>((*cEnemyList)[i])->GetHealth() - 40);
-					damageTimer = 0.5;
+					dynamic_cast<CEnemyBase*>((*cEnemyList)[i])->SetHealth(dynamic_cast<CEnemyBase*>((*cEnemyList)[i])->GetHealth() - 30);
+					damageTimer = 0.8;
 					CSoundController::GetInstance()->PlaySoundByID(31);
 
 					break;
