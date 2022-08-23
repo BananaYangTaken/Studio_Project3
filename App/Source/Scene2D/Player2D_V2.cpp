@@ -127,7 +127,7 @@ bool CPlayer2D_V2::Init(void)
 
 	Rotation = 0;
 
-	Speed = 10;
+	Speed = 1;
 
 	// Find the indices for the player in arrMapInfo, and assign it to cPlayer2D
 	unsigned int uiRow;

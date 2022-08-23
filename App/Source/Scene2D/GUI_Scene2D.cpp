@@ -789,11 +789,10 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				if (darkenmap == true)
 				{
 					if (textalready == false)
-						if (textalready == false)
-						{
-							actiontext = "Its getting late...";
-							textalready = true;
-						}
+					{
+						actiontext = "Its getting late...";
+						textalready = true;
+					}
 					if (transparency <= 0.6f)
 					{
 						transparency = transparency + 0.002f;
@@ -823,7 +822,6 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					}
 					ImGui::PopStyleColor();
 				}
-
 
 				ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 5, 1));
 				ImGui::SetWindowSize(ImVec2((float)cSettings->iWindowWidth, (float)cSettings->iWindowHeight));
