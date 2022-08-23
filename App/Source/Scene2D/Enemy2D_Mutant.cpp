@@ -278,7 +278,7 @@ bool CEnemy2D_Mutant::Init(int x, int y)
 
 	Rotation = 0;
 
-	animatedSprites = CMeshBuilder::GenerateSpriteAnimation(5, 17, cSettings->TILE_WIDTH*2, cSettings->TILE_HEIGHT*2);
+	animatedSprites = CMeshBuilder::GenerateSpriteAnimation(5, 17, (cSettings->TILE_WIDTH + cSettings->TILE_HEIGHT) * 0.5, (cSettings->TILE_WIDTH + cSettings->TILE_HEIGHT) * 0.5);
 	animatedSprites->AddAnimation("idle", 0, 16);
 	animatedSprites->AddAnimation("move", 17, 33);
 	animatedSprites->AddAnimation("attack", 34, 42);
@@ -384,6 +384,7 @@ void CEnemy2D_Mutant::spawnloot(float vecX, float vecY)
 }
 void CEnemy2D_Mutant::Update(const double dElapsedTime)
 {
+	vec2OldIndex = vec2Index;
 	UpdateDirection();
 	checkforLOS();
 	if (!bIsActive)
@@ -772,6 +773,11 @@ void CEnemy2D_Mutant::Update(const double dElapsedTime)
 		{
 			vec2UVCoordinate = glm::vec2(2, 2);
 		}
+	}
+	// Update the Rotation
+	{
+		if (vec2OldIndex != vec2Index)
+			Rotation = cPhysics2D.CalculateRotation(vec2OldIndex, vec2OldIndex + glm::vec2(1, 0), vec2Index);
 	}
 }
 

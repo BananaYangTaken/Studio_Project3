@@ -272,7 +272,7 @@ bool CEnemy2D_Zombie::Init(int x, int y)
 	Rotation = 0;
 	//CS:Create Animated Sprites and setup animation
 
-	animatedSprites = CMeshBuilder::GenerateSpriteAnimation(4, 17, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
+	animatedSprites = CMeshBuilder::GenerateSpriteAnimation(4, 17, (cSettings->TILE_WIDTH + cSettings->TILE_HEIGHT) * 0.5, (cSettings->TILE_WIDTH + cSettings->TILE_HEIGHT) * 0.5);
 	animatedSprites->AddAnimation("idle", 0, 16);
 	animatedSprites->AddAnimation("move", 17, 33);
 	animatedSprites->AddAnimation("attack", 34, 42);
@@ -375,6 +375,7 @@ void CEnemy2D_Zombie::spawnloot(float vecX, float vecY)
 }
 void CEnemy2D_Zombie::Update(const double dElapsedTime)
 {
+	vec2OldIndex = vec2Index;
 	UpdateDirection();
 	checkforLOS();
 	if (!bIsActive)
@@ -706,6 +707,11 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		{
 			vec2UVCoordinate = glm::vec2(2, 2);
 		}
+	}
+	// Update the Rotation
+	{
+		if (vec2OldIndex != vec2Index)
+			Rotation = cPhysics2D.CalculateRotation(vec2OldIndex, vec2OldIndex + glm::vec2(1, 0), vec2Index);
 	}
 }
 
