@@ -106,8 +106,8 @@ bool CScene2D::Init(void)
 	BarbwireUpgrade = 0;
 
 	daylightTimer = 0;
-	hours = 21;
-	mins = 57;
+	hours = 18;
+	mins = 0;
 	days = 1;
 	spawnrate = 1;
 	isNight = false;
@@ -186,29 +186,6 @@ void CScene2D::UpdateDaylightCycle(const double dElapsedTime)
 	{
 		hours = 0;
 		days++;
-	}
-
-	if (hours < 10)
-	{
-		if (mins < 10)
-		{
-			std::cout << "0" << hours << " : 0" << mins << std::endl;
-		}
-		else
-		{
-			std::cout << "0" << hours << " : " << mins << std::endl;
-		}
-	}
-	else
-	{
-		if (mins < 10)
-		{
-			std::cout << hours << " : 0" << mins << std::endl;
-		}
-		else
-		{
-			std::cout << hours << " : " << mins << std::endl;
-		}
 	}
 }
 
@@ -326,14 +303,14 @@ void CScene2D::BloodMoonOrSolarEclipse()
 	int EventBaseChance = Math::RandIntMinMax(1, 100);
 	int TotalChance = 100 + days;
 
-	if (EventBaseChance >= 100 && EventBaseChance <= TotalChance)
+	if (EventBaseChance >= 1 && EventBaseChance <= TotalChance)
 	{
-		if (hours == 19 && mins == 1)
+		if (hours == 18 && mins == 1)
 		{
 			BloodMoon = true;
 			cout << "BLOOD MOON" << endl;
 		}
-		else if (hours == 5 && mins == 1)
+		else if (hours == 6 && mins == 1)
 		{
 			SolarEclipse = true;
 			cout << "SOLAR ECLIPSE" << endl;
@@ -346,6 +323,7 @@ void CScene2D::BloodMoonOrSolarEclipse()
 */
 bool CScene2D::Update(const double dElapsedTime)
 {
+	cout << hours << endl;
 	if (cKeyboardController->IsKeyPressed('='))
 	{
 		hours++;
@@ -369,14 +347,6 @@ bool CScene2D::Update(const double dElapsedTime)
 		}
 		numSpawned = 1;
 	}
-	else if (SolarEclipse == true && hours > 5 && hours < 19 && numSpawned == 0)
-	{
-		for (int i = 0; i < spawncount; i++)
-		{
-			SpawnEnemies();
-		}
-		numSpawned = 1;
-	}
 	else if (hours >= 20 && BloodMoon == true && numSpawned == 0)
 	{
 		for (int i = 0; i < spawncount; i++)
@@ -385,7 +355,15 @@ bool CScene2D::Update(const double dElapsedTime)
 		}
 		numSpawned = 1;
 	}
-	else if (hours >= 5 && hours < 19 && SolarEclipse == false)
+	else if (SolarEclipse == true && hours > 6 && hours < 18 && numSpawned == 0)
+	{
+		for (int i = 0; i < spawncount; i++)
+		{
+			SpawnEnemies();
+		}
+		numSpawned = 1;
+	}
+	else if (hours >= 5 && hours < 18 && SolarEclipse == false)
 	{
 		numSpawned = 0;
 		if (BloodMoon == true)
@@ -393,22 +371,40 @@ bool CScene2D::Update(const double dElapsedTime)
 			BloodMoon = false;
 		}
 	}
-	if (hours >= 19 && SolarEclipse == true)
+	if (hours >= 18 && SolarEclipse == true)
 	{
 		numSpawned = 0;
 		SolarEclipse = false;
 	}
+	else if (SolarEclipse == true && hours > 5 && hours < 18)
+	{
+		if (BloodMoon == true)
+		{
+			BloodMoon = false;
+		}
+	}
 
 
 
 
-	if (hours >= 17 && cGUI_Scene2D->darkenmap == false)
+	if (hours >= 19 && cGUI_Scene2D->darkenmap == false && BloodMoon == false)
 	{
 		cGUI_Scene2D->darkenmap = true;
 		cGUI_Scene2D->DayNightIcon = "Sunrise";
 	}
+	else if (hours >= 19 && cGUI_Scene2D->darkenmap == false && BloodMoon == true)
+	{
+		cGUI_Scene2D->darkenmap = true;
+		cGUI_Scene2D->redness = 0.5;
+		cGUI_Scene2D->DayNightIcon = "Sunrise";
+
+	}
 	else if(hours >= 21 && cGUI_Scene2D->darkenmap == true && calledonce == false)
 		cGUI_Scene2D->DayNightIcon = "Night";
+
+
+
+
 	if (hours >= 22 && cGUI_Scene2D->darkenmap == true && calledonce == false)
 	{
 		cSoundController->PlaySoundByID(39);
@@ -431,10 +427,19 @@ bool CScene2D::Update(const double dElapsedTime)
 		cGUI_Scene2D->DayNightIcon = "Day";
 		calledonce = false;
 	}
-	else if (hours >= 6 && hours <= 12 && cGUI_Scene2D->darkenmap == true)
+	else if (hours >= 6 && hours <= 12 && cGUI_Scene2D->darkenmap == true && SolarEclipse == false)
+	{
+		cGUI_Scene2D->darkenmap = false;
+		cGUI_Scene2D->DayNightIcon = "Sunrise";
+	}
+
+
+
+	if (hours >= 6 && hours <= 12 && cGUI_Scene2D->darkenmap == false && SolarEclipse == true)
 	{
 		spawnloot = false;
 		cGUI_Scene2D->darkenmap = false;
+		cGUI_Scene2D->redness = 0.5;
 		cGUI_Scene2D->DayNightIcon = "Sunrise";
 	}
 	

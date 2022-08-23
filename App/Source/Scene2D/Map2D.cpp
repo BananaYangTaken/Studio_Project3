@@ -1110,7 +1110,6 @@ void CMap2D::SetDiagonalMovement(const bool bEnable)
  */
 void CMap2D::PrintSelf(void) const
 {
-	cout << endl << "AStar::PrintSelf()" << endl;
 
 	for (unsigned uiLevel = 0; uiLevel < uiNumLevels; uiLevel++)
 	{
