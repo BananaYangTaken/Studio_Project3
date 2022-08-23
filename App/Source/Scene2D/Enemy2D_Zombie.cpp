@@ -658,7 +658,7 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 		{
 			//Calculate Position of Entity on Screen
 			glm::vec2 ScreenPos = glm::vec2(0, 0);
-
+			glm::vec2 TotalMicroStep = vec2NumMicroSteps;
 			//Check if Map View/Camera at Borders
 			if (dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index.x < cSettings->VIEW_TILES_XAXIS * 0.5) // Left Side Border
 			{
@@ -668,6 +668,10 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 			{
 				ScreenPos.x = cSettings->VIEW_TILES_XAXIS - (cSettings->NUM_TILES_XAXIS - vec2Index.x) + 1;
 			}
+			else
+			{
+				TotalMicroStep.x -= dynamic_cast<CPlayer2D_V2*>(Player)->vec2NumMicroSteps.x;
+			}
 
 			if (dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index.y > (cSettings->NUM_TILES_YAXIS - (cSettings->VIEW_TILES_YAXIS * 0.5))) //Top Side Border
 			{
@@ -676,6 +680,10 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 			else if (dynamic_cast<CPlayer2D_V2*>(Player)->vec2Index.y < cSettings->VIEW_TILES_YAXIS * 0.5) //Bottom Side Border
 			{
 				ScreenPos.y = vec2Index.y + 1;
+			}
+			else
+			{
+				TotalMicroStep.y -= dynamic_cast<CPlayer2D_V2*>(Player)->vec2NumMicroSteps.y;
 			}
 
 
@@ -690,8 +698,8 @@ void CEnemy2D_Zombie::Update(const double dElapsedTime)
 			}
 
 			//Convert position to UV Coords
-			vec2UVCoordinate.x = cSettings->ConvertIndexToUVSpace(cSettings->x, ScreenPos.x - 1, false, vec2NumMicroSteps.x * cSettings->MICRO_STEP_XAXIS);
-			vec2UVCoordinate.y = cSettings->ConvertIndexToUVSpace(cSettings->y, ScreenPos.y - 1, false, vec2NumMicroSteps.y * cSettings->MICRO_STEP_YAXIS);
+			vec2UVCoordinate.x = cSettings->ConvertIndexToUVSpace(cSettings->x, ScreenPos.x - 1, false, TotalMicroStep.x * cSettings->MICRO_STEP_XAXIS);
+			vec2UVCoordinate.y = cSettings->ConvertIndexToUVSpace(cSettings->y, ScreenPos.y - 1, false, TotalMicroStep.y * cSettings->MICRO_STEP_YAXIS);
 		}
 		else
 		{

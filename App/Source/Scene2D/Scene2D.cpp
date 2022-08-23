@@ -430,11 +430,13 @@ bool CScene2D::Update(const double dElapsedTime)
 	//Call Map2D's update method
 	cMap2D->Update(dElapsedTime);
 
+	//Call Players's update method
+	Player->Update(dElapsedTime);
 	
 	LoadObjects();
 	for (int i = 0; i < cObjectList.size(); i++)
 	{
-		cObjectList[i]->SetPlayervec2Index(Player->vec2Index);
+		cObjectList[i]->SetPlayervec2(Player->vec2Index, Player->vec2NumMicroSteps);
 		cObjectList[i]->Update(dElapsedTime);
 		cObjectList[i]->SetruntimeColour(glm::vec4(1, 1, 1, 1));
 	}
@@ -463,8 +465,6 @@ bool CScene2D::Update(const double dElapsedTime)
 	LoadTurret();
 	cProjectileManager->Update(dElapsedTime);
 
-	//Call Players's update method
-	Player->Update(dElapsedTime);
 
 	//Call cGUI's update method
 	cGUI_Scene2D->Update(dElapsedTime);
@@ -686,7 +686,7 @@ void CScene2D::LoadObjects(void)
 					cObject2D = new CObject2D(Value);
 					cObject2D->SetShader("Shader2D_Colour");
 					cObject2D->Init(uiCol, cSettings->NUM_TILES_YAXIS-uiRow-1 );
-					cObject2D->SetPlayervec2Index(Player->vec2Index);
+					cObject2D->SetPlayervec2(Player->vec2Index, Player->vec2NumMicroSteps);
 					cObjectList.push_back(cObject2D);
 				}
 			}

@@ -65,7 +65,7 @@ public:
 	void SetTransition(bool);
 	void SetIdle(bool);
 	bool GetIdle(void);
-	void SetPlayervec2Index(glm::vec2);
+	void SetPlayervec2(glm::vec2, glm::vec2);
 	void Interact(void);
 
 	void SetruntimeColour(glm::vec4);
@@ -84,6 +84,7 @@ protected:
 	CSpriteAnimation* animatedSprites;
 
 	glm::vec2 Playervec2Index;
+	glm::vec2 Playervec2NumMicroSteps;
 
 	// Object's colour
 	glm::vec4 runtimeColour;

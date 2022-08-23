@@ -196,7 +196,7 @@ void CProjectile2D::Update(const double dElapsedTime)
 		{
 			//Calculate Position of Entity on Screen
 			glm::vec2 ScreenPos = glm::vec2(0, 0);
-
+			glm::vec2 TotalMicroStep = vec2NumMicroSteps;
 			//Check if Map View/Camera at Borders
 			if (Player->vec2Index.x < cSettings->VIEW_TILES_XAXIS * 0.5) // Left Side Border
 			{
@@ -206,6 +206,10 @@ void CProjectile2D::Update(const double dElapsedTime)
 			{
 				ScreenPos.x = cSettings->VIEW_TILES_XAXIS - (cSettings->NUM_TILES_XAXIS - vec2Index.x) + 1;
 			}
+			else
+			{
+				TotalMicroStep.x = TotalMicroStep.x - Player->vec2NumMicroSteps.x;
+			}
 
 			if (Player->vec2Index.y > (cSettings->NUM_TILES_YAXIS - (cSettings->VIEW_TILES_YAXIS * 0.5))) //Top Side Border
 			{
@@ -214,6 +218,10 @@ void CProjectile2D::Update(const double dElapsedTime)
 			else if (Player->vec2Index.y < cSettings->VIEW_TILES_YAXIS * 0.5) //Bottom Side Border
 			{
 				ScreenPos.y = vec2Index.y + 1;
+			}
+			else
+			{
+				TotalMicroStep.y = TotalMicroStep.y - Player->vec2NumMicroSteps.y;
 			}
 
 
@@ -228,8 +236,8 @@ void CProjectile2D::Update(const double dElapsedTime)
 			}
 
 			//Convert position to UV Coords
-			vec2UVCoordinate.x = cSettings->ConvertIndexToUVSpace(cSettings->x, ScreenPos.x - 1, false, vec2NumMicroSteps.x * cSettings->MICRO_STEP_XAXIS);
-			vec2UVCoordinate.y = cSettings->ConvertIndexToUVSpace(cSettings->y, ScreenPos.y - 1, false, vec2NumMicroSteps.y * cSettings->MICRO_STEP_YAXIS);
+			vec2UVCoordinate.x = cSettings->ConvertIndexToUVSpace(cSettings->x, ScreenPos.x - 1, false, (TotalMicroStep.x) * cSettings->MICRO_STEP_XAXIS);
+			vec2UVCoordinate.y = cSettings->ConvertIndexToUVSpace(cSettings->y, ScreenPos.y - 1, false, (TotalMicroStep.y) * cSettings->MICRO_STEP_YAXIS);
 		}
 		else
 		{
