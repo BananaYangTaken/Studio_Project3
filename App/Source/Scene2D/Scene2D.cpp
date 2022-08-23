@@ -302,7 +302,6 @@ void CScene2D::BloodMoonOrSolarEclipse()
 {
 	int EventBaseChance = Math::RandIntMinMax(1, 100);
 	int TotalChance = 1 + days;
-	cout << EventBaseChance << endl;
 	if (EventBaseChance <= TotalChance)
 	{
 		if (hours == 18 && mins == 1)
