@@ -70,13 +70,12 @@ int CGUI_Scene2D::IncreaseInventoryItemCount(std::string arrayindex, int increme
 	bool found = false;
 	for (int i = 0; i < inventory_size; i++)
 	{
+		cout << inventory_item_name_list[i] << endl;
 		if (arrayindex == inventory_item_name_list[i])
 		{
 			ind = i;
 			found = true;
-			break;
 		}
-			
 	}
 	if (found == true)
 	{
@@ -492,7 +491,7 @@ bool CGUI_Scene2D::CheckCrafting(int recipeIngredientCount, std::string Ingredie
 	{
 		for (int u = 0; u < inventory_size; u++)
 		{
-			if (Ingredients[i] == inventory_item_name_list[u] && IngredientRequiredCount[i] <= inventory_item_quantity[u])
+			if (Ingredients[i] == inventory_item_name_list[u] && IngredientRequiredCount[i] <= inventory_item_quantity[u] && IncreaseInventoryItemCount(ResultantCraft, CraftedQuantity) == 1)
 			{
 				craftingpossible[i] = 1;
 				break;
@@ -516,7 +515,7 @@ bool CGUI_Scene2D::CheckCrafting(int recipeIngredientCount, std::string Ingredie
 			}
 		}
 	}
-	IncreaseInventoryItemCount(ResultantCraft, CraftedQuantity);
+	//IncreaseInventoryItemCount(ResultantCraft, CraftedQuantity);
 	return true;
 }
 /**
@@ -1249,7 +1248,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				if (reckey == 0)
 				{
 
-					description = "REQUIREMENTS\n25 Scrap Metal\n25 Wood\nMakes: 25\nPress C to craft!\nPress R to return!";
+					description = "REQUIREMENTS\n25 Scrap Metal\n25 Wood\nMakes: 50\nPress C to craft!\nPress R to return!";
 					ctxt = (Crafting_item_name_list[reckey] + "4");
 
 					if (cKeyboardController->IsKeyPressed('C'))
@@ -1261,7 +1260,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				}
 				if (reckey == 1)
 				{
-					description = "REQUIREMENTS\n15 Scrap Metal\n10 Wood\nMakes: 25\nPress C to craft!\nPress R to return!";
+					description = "REQUIREMENTS\n15 Scrap Metal\n10 Wood\nMakes: 50\nPress C to craft!\nPress R to return!";
 					ctxt = (Crafting_item_name_list[reckey] + "4");
 					if (cKeyboardController->IsKeyPressed('C'))
 					{
@@ -1272,7 +1271,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				}
 				if (reckey == 2)
 				{
-					description = "REQUIREMENTS\n15 Stone\n10 Wood\nMakes: 15\nPress C to craft!\nPress R to return!";
+					description = "REQUIREMENTS\n15 Stone\n10 Wood\nMakes: 30\nPress C to craft!\nPress R to return!";
 					ctxt = (Crafting_item_name_list[reckey] + "4");
 
 					if (cKeyboardController->IsKeyPressed('C'))
@@ -1292,12 +1291,12 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					{
 						std::string requirementsarray[2] = { "Fabric", "Hard wood" };
 						int requirementsCount[2] = { 15, 5 };
-						CheckCrafting(2, requirementsarray, requirementsCount, Crafting_item_name_list[reckey], 10);
+						CheckCrafting(2, requirementsarray, requirementsCount, Crafting_item_name_list[reckey], 5);
 					}
 				}
 				if (reckey == 4)
 				{
-					description = "REQUIREMENTS\n5 Wood\n5 bandages\nMakes: 1\nPress C to craft!\nPress R to return!";
+					description = "REQUIREMENTS\n5 Wood\n5 bandages\nMakes: 2\nPress C to craft!\nPress R to return!";
 					ctxt = (Crafting_item_name_list[reckey] + "4");
 
 					if (cKeyboardController->IsKeyPressed('C'))
