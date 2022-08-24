@@ -109,6 +109,7 @@ bool CScene2D::Init(void)
 	hours = 18;
 	mins = 0;
 	days = 1;
+	offset = 0;
 	spawnrate = 1;
 	isNight = false;
 	SolarEclipse = false;
@@ -300,18 +301,20 @@ void CScene2D::SpawnEnemies()
 
 void CScene2D::BloodMoonOrSolarEclipse()
 {
-	int EventBaseChance = Math::RandIntMinMax(1, 100);
-	int TotalChance = 1 + days;
+	int EventBaseChance = Math::RandIntMinMax(1, 1000);
+	int TotalChance = 10 + days - offset;
 	if (EventBaseChance <= TotalChance)
 	{
 		if (hours == 18 && mins == 1)
 		{
 			BloodMoon = true;
+			offset = days;
 			cout << "BLOOD MOON" << endl;
 		}
 		else if (hours == 6 && mins == 1)
 		{
 			SolarEclipse = true;
+			offset = days;
 			cout << "SOLAR ECLIPSE" << endl;
 		}
 	}
@@ -339,7 +342,7 @@ bool CScene2D::Update(const double dElapsedTime)
 	{
 		spawnrate = 1 + (0.1 * days);
 	}
-	int spawncount = 20 * spawnrate;
+	int spawncount = 40 * spawnrate;
 	UpdateDaylightCycle(dElapsedTime);
 	if (hours >= 22 && BloodMoon == false && numSpawned == 0)
 	{
@@ -387,7 +390,26 @@ bool CScene2D::Update(const double dElapsedTime)
 	}
 
 
+	if (hours > 5 && hours <= 12 && cGUI_Scene2D->darkenmap == true && SolarEclipse == false)
+	{
+		cGUI_Scene2D->darkenmap = false;
+		cGUI_Scene2D->redness = 0;
+		cGUI_Scene2D->DayNightIcon = "Sunrise";
+	}
+	else if (hours > 6 && hours <= 12 && cGUI_Scene2D->darkenmap == false && SolarEclipse == true)
+	{
+		spawnloot = false;
+		cGUI_Scene2D->darkenmap = true;
+		cGUI_Scene2D->redness = 0.5;
+		cGUI_Scene2D->DayNightIcon = "Sunrise";
+	}
 
+	if (hours == 18 && cGUI_Scene2D->darkenmap == true)
+	{
+		cGUI_Scene2D->darkenmap = false;
+		cGUI_Scene2D->redness = 0;
+		cGUI_Scene2D->DayNightIcon = "Sunrise";
+	}
 
 	if (hours >= 19 && cGUI_Scene2D->darkenmap == false && BloodMoon == false)
 	{
@@ -401,7 +423,8 @@ bool CScene2D::Update(const double dElapsedTime)
 		cGUI_Scene2D->DayNightIcon = "Sunrise";
 
 	}
-	else if(hours >= 21 && cGUI_Scene2D->darkenmap == true && calledonce == false)
+
+	if(hours >= 21 && cGUI_Scene2D->darkenmap == true && calledonce == false)
 		cGUI_Scene2D->DayNightIcon = "Night";
 
 
@@ -414,6 +437,8 @@ bool CScene2D::Update(const double dElapsedTime)
 		cout << "HORDE SPAWNED!";
 		calledonce = true;
 	}
+
+
 	if (hours >= 7 && hours <= 12 && cGUI_Scene2D->darkenmap == false)
 	{
 		if (spawnloot == false)
@@ -429,21 +454,7 @@ bool CScene2D::Update(const double dElapsedTime)
 		cGUI_Scene2D->DayNightIcon = "Day";
 		calledonce = false;
 	}
-	else if (hours >= 6 && hours <= 12 && cGUI_Scene2D->darkenmap == true && SolarEclipse == false)
-	{
-		cGUI_Scene2D->darkenmap = false;
-		cGUI_Scene2D->DayNightIcon = "Sunrise";
-	}
-
-
-
-	if (hours >= 6 && hours <= 12 && cGUI_Scene2D->darkenmap == false && SolarEclipse == true)
-	{
-		spawnloot = false;
-		cGUI_Scene2D->darkenmap = false;
-		cGUI_Scene2D->redness = 0.5;
-		cGUI_Scene2D->DayNightIcon = "Sunrise";
-	}
+	
 	
 	//Call Map2D's update method
 	cMap2D->Update(dElapsedTime);
