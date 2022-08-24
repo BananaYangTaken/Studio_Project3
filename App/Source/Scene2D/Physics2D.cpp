@@ -223,8 +223,8 @@ float CPhysics2D::CalculateRotation(glm::vec2 Origin, glm::vec2 DefaultPos, glm:
 	glm::vec2 OriginalPoint = DefaultPos - Origin;
 	glm::vec2 TransformedPoint = NewPos - Origin;
 	float XtoYRatio = CSettings::GetInstance()->VIEW_TILES_XAXIS / CSettings::GetInstance()->VIEW_TILES_YAXIS;
-	OriginalPoint.x *= XtoYRatio;
-	TransformedPoint.x *= XtoYRatio;
+	OriginalPoint.y *= XtoYRatio;
+	TransformedPoint.y *= XtoYRatio;
 	Normalize(OriginalPoint);
 	Normalize(TransformedPoint);
 	float Radian = atan2(TransformedPoint.y * OriginalPoint.x - TransformedPoint.x * OriginalPoint.y,TransformedPoint.x*OriginalPoint.x + TransformedPoint.y + OriginalPoint.y );
