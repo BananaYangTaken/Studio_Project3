@@ -90,7 +90,7 @@ public:
 	void SpawnRandomHomeDepot();
 	void SpawnRandomMilBase();
 	void SpawnRandomYellowRoom();
-
+	bool CheckIfFull(std::string as);
 	int lootcrateSize = 8;
 	std::string crate_item_name_list[8] = { "empty2", "empty3", "empty4", "empty5", "empty6", "empty7", "empty8", "empty9" };
 	int crate_item_quantity[8] = { 0,0,0,0,0,0,0,0 };

@@ -80,10 +80,10 @@ int CGUI_Scene2D::IncreaseInventoryItemCount(std::string arrayindex, int increme
 	}
 	if (found == true)
 	{
-		inventory_item_quantity[ind] += incrementValue;
-		if (inventory_item_quantity[ind] >= inventory_item_max_quantity[ind])
+		//inventory_item_quantity[ind] += incrementValue;
+		if (inventory_item_quantity[ind] + incrementValue >= inventory_item_max_quantity[ind])
 		{
-			float difference = inventory_item_quantity[ind] - inventory_item_max_quantity[ind];
+			float difference = (inventory_item_max_quantity[ind] - inventory_item_quantity[ind]);
 			inventory_item_quantity[ind] = inventory_item_max_quantity[ind];
 			for (int u = 0; u < inventory_size; u++)
 			{
@@ -97,7 +97,11 @@ int CGUI_Scene2D::IncreaseInventoryItemCount(std::string arrayindex, int increme
 			}
 
 		}
-		else return 1;
+		else
+		{
+			inventory_item_quantity[ind] += incrementValue;
+			return 1;
+		}
 	}
 	else
 	{
@@ -732,6 +736,22 @@ void CGUI_Scene2D::clearmap()
 		cMap2D->SetMapInfo(row, col, 0);
 	}
 }
+
+bool CGUI_Scene2D::CheckIfFull(std::string as)
+{
+	for (int i = 0; i < inventory_size; i++)
+	{
+		if (inventory_item_name_list[i] == as)
+		{
+			if (inventory_item_quantity[i] >= inventory_item_max_quantity[i])
+			{
+				return true;
+			}
+			else return false;
+		}
+	}
+}
+
 void CGUI_Scene2D::Update(const double dElapsedTime)
 {
 	textalready = false;
@@ -1654,7 +1674,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 									if (ImGui::ImageButton((ImTextureID)newLootButton.textureID,
 										ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(0.0, 0.0)))
 									{
-										if (IncreaseInventoryItemCount(crate_item_name_list[i], crate_item_quantity[i]) == 0)
+										if (IncreaseInventoryItemCount(crate_item_name_list[i], crate_item_quantity[i]) == 1)
 										{
 											std::string str = "empty" + std::to_string(i);
 											crate_item_name_list[i] = str;
