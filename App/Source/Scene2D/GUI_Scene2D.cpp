@@ -211,7 +211,7 @@ void CGUI_Scene2D::OpenCrate(std::string size)
 				int rval = rand() % 3 + 1;
 				crate_item_quantity[i] = rval;
 			}
-			else if (randitem == 6)
+			else if (randitem == 7)
 			{
 				int drand = rand() % 3 + 1;
 				if (drand == 2)
@@ -220,6 +220,12 @@ void CGUI_Scene2D::OpenCrate(std::string size)
 					crate_item_quantity[i] = 1;
 				}
 				else crate_item_name_list[i] = "empty" + std::to_string(i);
+			}
+			else if (randitem == 8)
+			{
+				crate_item_name_list[i] = "Flashlight";
+				int rval = rand() % 3 + 1;
+				crate_item_quantity[i] = rval;
 			}
 			else crate_item_name_list[i] = "empty" + std::to_string(i);
 
@@ -425,7 +431,7 @@ bool CGUI_Scene2D::Init(void)
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
-
+	rifledescription = "High damage fully\nautomatic 5.56x45 rifle\nused in military purposes\nuses rifle ammo\n\nAttachments:";
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
 	//ImGui::StyleColorsClassic();
@@ -547,16 +553,37 @@ void CGUI_Scene2D::dropitem(int key)
 }
 void CGUI_Scene2D::SwapItems(int itemindex, int swapindex)
 {
-	std::string temp = inventory_item_name_list[itemindex];
-	inventory_item_name_list[itemindex] = inventory_item_name_list[swapindex];
-	inventory_item_name_list[swapindex] = temp;
 
-	int tempp = inventory_item_quantity[itemindex];
-	inventory_item_quantity[itemindex] = inventory_item_quantity[swapindex];
-	inventory_item_quantity[swapindex] = tempp;
+	if (inventory_item_name_list[itemindex] == "Flashlight" && inventory_item_name_list[swapindex] == "Rifle" || inventory_item_name_list[itemindex] == "Rifle" && inventory_item_name_list[swapindex] == "Flashlight" && flashlightequipped == false)
+	{
+		flashlightequipped = true;
+		DecreaseInventoryItemCount("Flashlight", 1);
+		swapactive = false;
+		OGclicked = 0;
+		rifledescription = rifledescription + "\n+ Military Flashlight";
+	}
 
-	swapactive = false;
-	OGclicked = 0;
+	if (inventory_item_name_list[itemindex] == "MuzzleDevice" && inventory_item_name_list[swapindex] == "Rifle" || inventory_item_name_list[itemindex] == "Rifle" && inventory_item_name_list[swapindex] == "MuzzleDevice" && muzzleequipped == false)
+	{
+		muzzleequipped = true;
+		DecreaseInventoryItemCount("MuzzleDevice", 1);
+		swapactive = false;
+		OGclicked = 0;
+		rifledescription = rifledescription + "\n+ Muzzle Velocity Brake";
+	}
+	else
+	{
+		std::string temp = inventory_item_name_list[itemindex];
+		inventory_item_name_list[itemindex] = inventory_item_name_list[swapindex];
+		inventory_item_name_list[swapindex] = temp;
+
+		int tempp = inventory_item_quantity[itemindex];
+		inventory_item_quantity[itemindex] = inventory_item_quantity[swapindex];
+		inventory_item_quantity[swapindex] = tempp;
+
+		swapactive = false;
+		OGclicked = 0;
+	}
 }
 
 std::string CGUI_Scene2D::GetCurrentHotbarItem(void)
@@ -811,14 +838,18 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 			{
 				if (darkenmap == true)
 				{
-					if (textalready == false)
+					if (GetCurrentHotbarItem() == "Flashlight" || GetCurrentHotbarItem() == "Rifle" && flashlightequipped == true)
 					{
-						actiontext = "Its getting late...";
-						textalready = true;
+						transparencyLimit = 0.4f;
 					}
-					if (transparency <= 0.6f)
+					else transparencyLimit = 0.6f;
+					if (transparency < transparencyLimit)
 					{
-						transparency = transparency + 0.002f;
+						transparency = transparency + 0.001f;
+					}
+					else if (transparency > transparencyLimit)
+					{
+						transparency = transparency - 0.005f;
 					}
 					ImGuiWindowFlags window_flags_bg = 0;
 					window_flags_bg |= ImGuiWindowFlags_NoTitleBar;
@@ -1007,14 +1038,18 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 			else if (darkenmap == true)
 			{
 			if (textalready == false)
-				if (textalready == false)
+				if (GetCurrentHotbarItem() == "Flashlight" || GetCurrentHotbarItem() == "Rifle" && flashlightequipped == true)
 				{
-					actiontext = "Its getting late...";
-					textalready = true;
+					transparencyLimit = 0.4f;
 				}
-				if (transparency <= 0.6f)
+				else transparencyLimit = 0.6f;
+				if (transparency < transparencyLimit)
 				{
-					transparency = transparency + 0.002f;
+					transparency = transparency + 0.001f;
+				}
+				else if (transparency > transparencyLimit)
+				{
+					transparency = transparency - 0.005f;
 				}
 				ImGuiWindowFlags window_flags_bg = 0;
 				window_flags_bg |= ImGuiWindowFlags_NoTitleBar;
@@ -1061,6 +1096,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				window_flags_bg |= ImGuiWindowFlags_NoScrollbar;
 				//window_flags |= ImGuiWindowFlags_MenuBar;
 				//window_flags |= ImGuiWindowFlags_NoMove;
+				window_flags_bg |= ImGuiWindowFlags_NoBringToFrontOnFocus;
 				window_flags_bg |= ImGuiWindowFlags_NoCollapse;
 				window_flags_bg |= ImGuiWindowFlags_NoNav;
 				window_flags_bg |= ImGuiWindowFlags_NoMouseInputs;
@@ -1344,7 +1380,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				}
 				else if (itemname == "Rifle")
 				{
-					description = "High damage fully\nautomatic 5.56x45 rifle\nused in military purposes\nuses rifle ammo";
+					description = rifledescription;
 				}
 				else if (itemname == "Pistol")
 				{
@@ -1370,7 +1406,14 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				{
 					description = "A United Nations issued\nsecurity keycard, likely used\n by special forces to get\ninto secret rooms containing\nall sorts of items\nthis card has a\n yellow strip next to it";
 				}
-
+				else if (itemname == "Flashlight")
+				{
+					description = "A military grade flashlight.\nYou can use it on its\nown, or equip it on a rifle to\nuse it with the rifle.\nIlluminates the dark pretty\nwell. ";
+				}
+				else if (itemname == "MuzzleDevice")
+				{
+					description = "A military grade muzzle velocity brake,\nManufactured by LANTAC.\n you cannot use it on its own.\nAttaches to rifles and\ngreately improves bullet velocity. ";
+				}
 				if (itemname.find("empty") == string::npos)
 				{
 					ImGuiWindowFlags inventoryDesc =
@@ -1507,6 +1550,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					ImGuiWindowFlags_AlwaysAutoResize |
 					ImGuiWindowFlags_NoTitleBar |
 					ImGuiWindowFlags_NoResize |
+					ImGuiWindowFlags_NoBringToFrontOnFocus |
 					ImGuiWindowFlags_NoNavFocus |
 					ImGuiWindowFlags_NoCollapse |
 					ImGuiWindowFlags_NoScrollbar;
@@ -1638,6 +1682,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 							ImGuiWindowFlags_AlwaysAutoResize |
 							ImGuiWindowFlags_NoTitleBar |
 							ImGuiWindowFlags_NoResize |
+							ImGuiWindowFlags_NoBringToFrontOnFocus |
 							ImGuiWindowFlags_NoCollapse |
 							ImGuiWindowFlags_NoScrollbar;
 						{

@@ -5,7 +5,7 @@
 #include <GL/glew.h>
 #define GLEW_STATIC
 #endif
-
+#include "GUI_Scene2D.h";
 // Include GLM
 #include <includes/glm.hpp>
 #include <includes/gtc/matrix_transform.hpp>
@@ -74,7 +74,7 @@ protected:
 	CSpriteAnimation* animatedSprites;
 	CEntity2D* Player;
 	CSoundController* cSoundController;
-
+	CGUI_Scene2D* cGUI_Scene2D;
 	glm::vec4 runtimeColour;
 	float Speed; //tile per second
 	TYPE Type;

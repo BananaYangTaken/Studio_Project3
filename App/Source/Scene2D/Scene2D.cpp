@@ -107,7 +107,7 @@ bool CScene2D::Init(void)
 
 	daylightTimer = 0;
 	hours = 18;
-	mins = 0;
+	mins = 45;
 	days = 1;
 	offset = 0;
 	spawnrate = 1;
@@ -395,48 +395,60 @@ bool CScene2D::Update(const double dElapsedTime)
 			BloodMoon = false;
 		}
 	}
-
-
-	if (hours > 5 && hours <= 12 && cGUI_Scene2D->darkenmap == true && SolarEclipse == false)
+	cout << cGUI_Scene2D->DayNightIcon << endl;
+	if (hours > 14 && hours <= 17 && cGUI_Scene2D->darkenmap == false && SolarEclipse == false)
+	{
+		cGUI_Scene2D->DayNightIcon = "Afternoon";
+	}
+	else if (hours > 12 && hours <= 14 && cGUI_Scene2D->darkenmap == false && SolarEclipse == false)
+	{
+		cGUI_Scene2D->DayNightIcon = "Midday";
+	}
+	else if (hours > 7 && hours <= 12 && cGUI_Scene2D->darkenmap == false && SolarEclipse == false)
+	{
+		cGUI_Scene2D->DayNightIcon = "Morning";
+	}
+	else if (hours > 5 && hours <= 7 && cGUI_Scene2D->darkenmap == true && SolarEclipse == false)
 	{
 		cGUI_Scene2D->darkenmap = false;
 		cGUI_Scene2D->redness = 0;
-		cGUI_Scene2D->DayNightIcon = "Sunrise";
-		cGUI_Scene2D->actiontext = "Its Getting Late...";
+		cGUI_Scene2D->actiontext = "The Sun Rises...";
+		cGUI_Scene2D->DayNightIcon = "Dawn";
 	}
 	else if (hours > 6 && hours <= 12 && cGUI_Scene2D->darkenmap == false && SolarEclipse == true)
 	{
 		spawnloot = false;
 		cGUI_Scene2D->darkenmap = true;
 		cGUI_Scene2D->redness = 0.5;
-		cGUI_Scene2D->DayNightIcon = "Sunrise";
-		cGUI_Scene2D->actiontext = "SOLAR ECLIPSE!!!";
+		cGUI_Scene2D->actiontext = "A solar eclipse is forming...";
+		cGUI_Scene2D->DayNightIcon = "solareclipse";
 	}
 
 	if (hours == 18 && cGUI_Scene2D->darkenmap == true)
 	{
 		cGUI_Scene2D->darkenmap = false;
 		cGUI_Scene2D->redness = 0;
-		cGUI_Scene2D->DayNightIcon = "Sunrise";
-		cGUI_Scene2D->actiontext = "The Sun Rises...";
+		cGUI_Scene2D->actiontext = "The solar eclipse is ending...";
+		cGUI_Scene2D->DayNightIcon = "Evening";
 	}
 
 	if (hours >= 19 && cGUI_Scene2D->darkenmap == false && BloodMoon == false)
 	{
 		cGUI_Scene2D->darkenmap = true;
-		cGUI_Scene2D->DayNightIcon = "Sunrise";
 		cGUI_Scene2D->actiontext = "Its Getting Late...";
+		cGUI_Scene2D->DayNightIcon = "Dusk";
 	}
 	else if (hours >= 19 && cGUI_Scene2D->darkenmap == false && BloodMoon == true)
 	{
 		cGUI_Scene2D->darkenmap = true;
 		cGUI_Scene2D->redness = 0.5;
-		cGUI_Scene2D->DayNightIcon = "Sunrise";
-		cGUI_Scene2D->actiontext = "BLOOD MOON!!!";
+		cGUI_Scene2D->actiontext = "The blood moon is rising...";
+		cGUI_Scene2D->DayNightIcon = "bloodmoon";
 	}
 
-	if(hours >= 21 && cGUI_Scene2D->darkenmap == true && calledonce == false)
-		cGUI_Scene2D->DayNightIcon = "Night";
+
+	else if(hours >= 21 && cGUI_Scene2D->darkenmap == true && calledonce == false)
+		cGUI_Scene2D->DayNightIcon = "Midnight";
 
 
 
@@ -462,7 +474,6 @@ bool CScene2D::Update(const double dElapsedTime)
 			cGUI_Scene2D->SpawnRandomYellowRoom();
 			spawnloot = true;
 		}
-		cGUI_Scene2D->DayNightIcon = "Day";
 		calledonce = false;
 	}
 	

@@ -192,13 +192,34 @@ bool CPlayer2D_V2::Init(void)
 		cInventoryItem = cInventoryManager->Add("Health", "Image/Health.tga", 1, 0);
 		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-		cInventoryItem = cInventoryManager->Add("Day", "Image/Day.png", 1, 0);
+		cInventoryItem = cInventoryManager->Add("Dawn", "Image/GUI/dawn.png", 1, 0);
 		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-		cInventoryItem = cInventoryManager->Add("Night", "Image/Night.png", 1, 0);
+		cInventoryItem = cInventoryManager->Add("Morning", "Image/GUI/morning.png", 1, 0);
 		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-		cInventoryItem = cInventoryManager->Add("Sunrise", "Image/Sunrise.png", 1, 0);
+		cInventoryItem = cInventoryManager->Add("Midday", "Image/GUI/midday.png", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+		cInventoryItem = cInventoryManager->Add("Afternoon", "Image/GUI/afternoon.png", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+		cInventoryItem = cInventoryManager->Add("Evening", "Image/GUI/evening.png", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+		cInventoryItem = cInventoryManager->Add("Dusk", "Image/GUI/dusk.png", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+		cInventoryItem = cInventoryManager->Add("Midnight", "Image/GUI/midnight.png", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+		cInventoryItem = cInventoryManager->Add("Afternight", "Image/GUI/afternight.png", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+		cInventoryItem = cInventoryManager->Add("bloodmoon", "Image/GUI/Blood Moon.png", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+		cInventoryItem = cInventoryManager->Add("solareclipse", "Image/GUI/Solar Eclipse.png", 1, 0);
 		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
 		cInventoryItem = cInventoryManager->Add("Hard wood", "Image/Iteme/Hard wood.tga", 1, 0);
@@ -232,6 +253,12 @@ bool CPlayer2D_V2::Init(void)
 		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
 		cInventoryItem = cInventoryManager->Add("Yellow Keycard", "Image/Iteme/Yellow Keycard.tga", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+		cInventoryItem = cInventoryManager->Add("Flashlight", "Image/Iteme/Flashlight.tga", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+		cInventoryItem = cInventoryManager->Add("MuzzleDevice", "Image/Iteme/muzzleDevice.tga", 1, 0);
 		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
 		cInventoryItem = cInventoryManager->Add("Blueprint", "Image/Iteme/Blueprint.tga", 1, 0);
@@ -316,7 +343,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		if (healtimer >= cGUI_Scene2D->healtime)
 		{
 			cGUI_Scene2D->DecreaseInventoryItemCount(cGUI_Scene2D->inventory_item_name_list[cGUI_Scene2D->hotbarselection - 1], 1);
-			Health += cGUI_Scene2D->healamt;
+			Health = 100;
 			cGUI_Scene2D->healing = false;
 			cGUI_Scene2D->actiontext2 = "...";
 			healtimer = 0;
@@ -502,14 +529,15 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 						animatedSprites->PlayAnimation("rifleReload",-1, HeldItem.WData->ReloadTime);
 						cSoundController->PlaySoundByID(25);
 						cGUI_Scene2D->DecreaseInventoryItemCount("Rifle Bullets", 30);
+						HeldItem.GData->CurrentAmmoSize = HeldItem.GData->MaxAmmoSize;
 					}
 					else if (HeldItem.GData->firingtype == FIRING_TYPE::SEMIAUTO && cGUI_Scene2D->checkifItemExists("Pistol Bullets") >= 17)
 					{
 						animatedSprites->PlayAnimation("pistolReload",-1, HeldItem.WData->ReloadTime);
 						cSoundController->PlaySoundByID(24);
-						cGUI_Scene2D->DecreaseInventoryItemCount("Pistol Bullets", 30);
+						cGUI_Scene2D->DecreaseInventoryItemCount("Pistol Bullets", 17);
+						HeldItem.GData->CurrentAmmoSize = HeldItem.GData->MaxAmmoSize;
 					}
-					HeldItem.GData->CurrentAmmoSize = HeldItem.GData->MaxAmmoSize;
 				}
 			}
 			//Cooldowns 

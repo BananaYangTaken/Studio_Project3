@@ -72,7 +72,7 @@ bool CProjectile2D::Init(glm::vec2 newvec2Index, glm::vec2 newvec2NumMicroSteps,
 {
 	cPhysics2D.Init();
 	Player = dynamic_cast<CEntity2D*>(CPlayer2D_V2::GetInstance());
-
+	cGUI_Scene2D = CGUI_Scene2D::GetInstance();
 	// Get the handler to the CSettings instance
 	cSettings = CSettings::GetInstance();
 
@@ -145,8 +145,16 @@ bool CProjectile2D::Reset()
 void CProjectile2D::Update(const double dElapsedTime)
 {
 	animatedSprites->PlayAnimation("Attack", -1, 1);
-	vec2NumMicroSteps.x += Direction.x * Speed * dElapsedTime;
-	vec2NumMicroSteps.y += Direction.y * Speed * dElapsedTime;
+	if (cGUI_Scene2D->muzzleequipped == true)
+	{
+		vec2NumMicroSteps.x += Direction.x * 1.5f * Speed * dElapsedTime;
+		vec2NumMicroSteps.y += Direction.y * 1.5f * Speed * dElapsedTime;
+	}
+	else
+	{
+		vec2NumMicroSteps.x += Direction.x * Speed * dElapsedTime;
+		vec2NumMicroSteps.y += Direction.y * Speed * dElapsedTime;
+	}
 	
 	if (Projectile == PROJECTILE::KNIFE)
 	{
