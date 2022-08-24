@@ -61,6 +61,7 @@ public:
 	bool textalready = false;
 	bool flashlightequipped = false;
 	bool muzzleequipped = false;
+	bool magequipped = false;
 	std::string timestring;
 	float greenness = 0;
 	std::string rifledescription;
@@ -68,7 +69,7 @@ public:
 	bool selectinventory = true;
 	void spawnloot(float vecX, float vecY);
 	const int inventory_size = 9;
-	std::string inventory_item_name_list[9] = {"Rifle", "Hard wood", "Stone Ore", "Pistol Bullets", "Rifle Bullets", "MuzzleDevice", "Pistol", "Medkit", "Blueprint"};
+	std::string inventory_item_name_list[9] = {"Rifle", "Flashlight", "Extended Magazine", "Pistol Bullets",  "Rifle Bullets", "MuzzleDevice", "Pistol", "Medkit", "Blueprint"};
 	int inventory_item_quantity[9] = {1,999,999,999,999,1,1,90,200};
 	int inventory_item_max_quantity[9] = {999,999,999,999,999,999,999,999,999};
 	std::string searchtxt;

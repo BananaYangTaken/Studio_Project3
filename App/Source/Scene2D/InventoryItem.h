@@ -5,10 +5,8 @@
  Date: Mar 2020
  */
 #pragma once
-
 // Include CEntity2D
 #include "Primitives/Entity2D.h"
-
 #include <map>
 #include <string>
 
@@ -76,8 +74,6 @@ public:
 	WeaponData* WData;
 	//Gun Data only used for items which are melee or guns
 	GunData* GData;
-
-
 	// The amount of this item
 	int iItemCount;
 	//The total amount of this item

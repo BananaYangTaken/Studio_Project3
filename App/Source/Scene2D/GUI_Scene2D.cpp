@@ -562,14 +562,23 @@ void CGUI_Scene2D::SwapItems(int itemindex, int swapindex)
 		OGclicked = 0;
 		rifledescription = rifledescription + "\n+ Military Flashlight";
 	}
-
-	if (inventory_item_name_list[itemindex] == "MuzzleDevice" && inventory_item_name_list[swapindex] == "Rifle" || inventory_item_name_list[itemindex] == "Rifle" && inventory_item_name_list[swapindex] == "MuzzleDevice" && muzzleequipped == false)
+	else if (inventory_item_name_list[itemindex] == "MuzzleDevice" && inventory_item_name_list[swapindex] == "Rifle" || inventory_item_name_list[itemindex] == "Rifle" && inventory_item_name_list[swapindex] == "MuzzleDevice" && muzzleequipped == false)
 	{
 		muzzleequipped = true;
 		DecreaseInventoryItemCount("MuzzleDevice", 1);
 		swapactive = false;
 		OGclicked = 0;
 		rifledescription = rifledescription + "\n+ Muzzle Velocity Brake";
+	}
+	else if (inventory_item_name_list[itemindex] == "Extended Magazine" && inventory_item_name_list[swapindex] == "Rifle" || inventory_item_name_list[itemindex] == "Rifle" && inventory_item_name_list[swapindex] == "Extended Magazine" && magequipped == false)
+	{
+		magequipped = true;
+		cInventoryItem->GData->MaxAmmoSize = 60;
+		cInventoryItem->WData->ReloadTime = 2.0f;
+		DecreaseInventoryItemCount("Extended Magazine", 1);
+		swapactive = false;
+		OGclicked = 0;
+		rifledescription = rifledescription + "\n+ Extended magazine";
 	}
 	else
 	{
@@ -1413,6 +1422,10 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				else if (itemname == "MuzzleDevice")
 				{
 					description = "A military grade muzzle velocity brake,\nManufactured by LANTAC.\n you cannot use it on its own.\nAttaches to rifles and\ngreately improves bullet velocity. ";
+				}
+				else if (itemname == "Extended Magazine")
+				{
+					description = "A military grade 60 round magazine\nCan be attached to rifles to\nincrease the guns ammo\ncapacity. However, slightly\ndecreasing reload speed\ndue to the weight of the mag. ";
 				}
 				if (itemname.find("empty") == string::npos)
 				{

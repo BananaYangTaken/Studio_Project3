@@ -261,6 +261,9 @@ bool CPlayer2D_V2::Init(void)
 		cInventoryItem = cInventoryManager->Add("MuzzleDevice", "Image/Iteme/muzzleDevice.tga", 1, 0);
 		cInventoryItem->vec2Size = glm::vec2(25, 25);
 
+		cInventoryItem = cInventoryManager->Add("Extended Magazine", "Image/Iteme/extendedmag.tga", 1, 0);
+		cInventoryItem->vec2Size = glm::vec2(25, 25);
+
 		cInventoryItem = cInventoryManager->Add("Blueprint", "Image/Iteme/Blueprint.tga", 1, 0);
 		cInventoryItem->vec2Size = glm::vec2(25, 25);
 		cInventoryItem = cInventoryManager->Add("empty0", "Image/BlankBox.tga", 1, 0);
@@ -520,15 +523,19 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 			//Reload
 			if (cKeyboardController->IsKeyPressed(GLFW_KEY_R) && AnimationTimer == 0)
 			{
+	
 				if (HeldItem.GData->CurrentAmmoSize < HeldItem.GData->MaxAmmoSize)
 				{
+					int bulletdifference = HeldItem.GData->MaxAmmoSize; -HeldItem.GData->CurrentAmmoSize;
+					cout << "BULLET DIFF: " + bulletdifference << endl;
 					HeldItem.WData->ReloadTimer = HeldItem.WData->ReloadTime;
 					AnimationTimer = HeldItem.WData->ReloadTime;
+				
 					if (HeldItem.GData->firingtype == FIRING_TYPE::FULLAUTO && cGUI_Scene2D->checkifItemExists("Rifle Bullets") >= 30)
 					{
 						animatedSprites->PlayAnimation("rifleReload",-1, HeldItem.WData->ReloadTime);
 						cSoundController->PlaySoundByID(25);
-						cGUI_Scene2D->DecreaseInventoryItemCount("Rifle Bullets", 30);
+						cGUI_Scene2D->DecreaseInventoryItemCount("Rifle Bullets", bulletdifference);
 						HeldItem.GData->CurrentAmmoSize = HeldItem.GData->MaxAmmoSize;
 					}
 					else if (HeldItem.GData->firingtype == FIRING_TYPE::SEMIAUTO && cGUI_Scene2D->checkifItemExists("Pistol Bullets") >= 17)
