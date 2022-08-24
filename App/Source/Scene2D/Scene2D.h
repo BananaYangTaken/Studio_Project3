@@ -103,7 +103,6 @@ public:
 	bool isNight;
 	bool SolarEclipse, BloodMoon;
 
-
 	void UpdateDaylightCycle(const double dElapsedTime);
 	void SpawnEnemies();
 	void BloodMoonOrSolarEclipse();

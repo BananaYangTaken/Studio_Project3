@@ -157,7 +157,7 @@ bool CObject2D::Init(int x , int y)
 			return false;
 		}
 	}*/
-	else if (ObjectID == 26)
+	else if (ObjectID == 103)
 	{
 		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/CTable.png", true);
 		if (iTextureID == 0)
@@ -166,7 +166,7 @@ bool CObject2D::Init(int x , int y)
 			return false;
 		}
 	}
-	else if (ObjectID == 27)
+	else if (ObjectID == 104)
 	{
 		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Box.png", true);
 		if (iTextureID == 0)
@@ -196,18 +196,12 @@ bool CObject2D::Init(int x , int y)
 		animatedSprites->AddAnimation("transition", 1, 3);
 		animatedSprites->AddAnimation("idle", 3, 3);
 	}
-	/*else if (ObjectID == 25)
-	{
-		animatedSprites = CMeshBuilder::GenerateSpriteAnimation(1, 4, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
-		animatedSprites->AddAnimation("idle", 0, 0);
-		animatedSprites->AddAnimation("active", 0, 3);
-	}*/
-	else if (ObjectID == 26)
+	else if (ObjectID == 103)
 	{
 		animatedSprites = CMeshBuilder::GenerateSpriteAnimation(1, 1, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
 		animatedSprites->AddAnimation("idle", 0, 0);
 	}
-	else if (ObjectID == 27)
+	else if (ObjectID == 104)
 	{
 		animatedSprites = CMeshBuilder::GenerateSpriteAnimation(1, 1, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
 		animatedSprites->AddAnimation("idle", 0, 0);

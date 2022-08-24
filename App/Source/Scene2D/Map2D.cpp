@@ -39,9 +39,13 @@ CMap2D::~CMap2D(void)
 	// Dynamically deallocate the 3D array used to store the map information
 	for (unsigned int uiLevel = 0; uiLevel < uiNumLevels; uiLevel++)
 	{
-		for (unsigned int iRow = 0; iRow < cSettings->NUM_TILES_YAXIS; iRow++)
+		for (unsigned int iLayer = 0; iLayer < 2; iLayer++)
 		{
-			delete[] arrMapInfo[uiLevel][iRow];
+			for (unsigned int iRow = 0; iRow < cSettings->NUM_TILES_YAXIS; iRow++)
+			{
+				delete[] arrMapInfo[uiLevel][iLayer][iRow];
+			}
+			delete[] arrMapInfo[uiLevel][iLayer];
 		}
 		delete [] arrMapInfo[uiLevel];
 	}
@@ -73,16 +77,20 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,const unsigned int uiNumRows,c
 	cSettings = CSettings::GetInstance();
 	// Create the arrMapInfo and initialise to 0
 	// Start by initialising the number of levels
-	arrMapInfo = new Grid** [uiNumLevels];
+	arrMapInfo = new Grid*** [uiNumLevels];
 	for (unsigned uiLevel = 0; uiLevel < uiNumLevels; uiLevel++)
 	{
-		arrMapInfo[uiLevel] = new Grid* [uiNumRows];
-		for (unsigned uiRow = 0; uiRow < uiNumRows; uiRow++)
+		arrMapInfo[uiLevel] = new Grid ** [2];
+		for (unsigned uiLayer = 0; uiLayer < 2; uiLayer++)
 		{
-			arrMapInfo[uiLevel][uiRow] = new Grid[uiNumCols];
-			for (unsigned uiCol = 0; uiCol < uiNumCols; uiCol++)
+			arrMapInfo[uiLevel][uiLayer] = new Grid * [uiNumRows];
+			for (unsigned uiRow = 0; uiRow < uiNumRows; uiRow++)
 			{
-				arrMapInfo[uiLevel][uiRow][uiCol].value = 0;
+				arrMapInfo[uiLevel][uiLayer][uiRow] = new Grid[uiNumCols];
+				for (unsigned uiCol = 0; uiCol < uiNumCols; uiCol++)
+				{
+					arrMapInfo[uiLevel][uiLayer][uiRow][uiCol].value = 0;
+				}
 			}
 		}
 	}
@@ -100,512 +108,508 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,const unsigned int uiNumRows,c
 	//CS: Create the Quad Mesh using the mesh builder
 	quadMesh = CMeshBuilder::GenerateQuad(glm::vec4(1, 1, 1, 1), cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
 
-	
-	//Load the ground texture
+	//Load Texture
 	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_GroundTile.tga", true);
-		if (iTextureID == 0)
+		//Load the ground texture
 		{
-			cout << "Unable to load Image/Scene2D_GroundTile.tga" << endl;
-			return false;
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_GroundTile.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Scene2D_GroundTile.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(100, iTextureID));
+			}
 		}
-		else
-		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(100, iTextureID));
-		}
-	}
 
-	//load Horizontal Wall texture
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Hor_Wall.tga", true);
-		if (iTextureID == 0)
+		//load Horizontal Wall texture
 		{
-			cout << "Unable to load Image/Envi/Hor_Wall.tga" << endl;
-			return false;
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Hor_Wall.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Envi/Hor_Wall.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(101, iTextureID));
+			}
 		}
-		else
+		//load Vertical Wall texture
 		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(101, iTextureID));
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Ver_Wall.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Envi/Ver_Wall.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(102, iTextureID));
+			}
 		}
-	}
-	//load Vertical Wall texture
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Ver_Wall.tga", true);
-		if (iTextureID == 0)
+		//load Horizontal Window texture
 		{
-			cout << "Unable to load Image/Envi/Ver_Wall.tga" << endl;
-			return false;
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Hor_Window.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Envi/Hor_Window.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(50, iTextureID));
+			}
 		}
-		else
+		//load Vertical Window texture
 		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(102, iTextureID));
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Ver_Window.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Envi/Ver_Window.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(54, iTextureID));
+			}
 		}
-	}
-	//load Horizontal Window texture
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Hor_Window.tga", true);
-		if (iTextureID == 0)
+		//load Wall texture
 		{
-			cout << "Unable to load Image/Envi/Hor_Window.tga" << endl;
-			return false;
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Wall.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Envi/Wall.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(105, iTextureID));
+			}
 		}
-		else
+		//load Wall texture
 		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(50, iTextureID));
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Floor.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Envi/Floor.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(21, iTextureID));
+			}
 		}
-	}
-	//load Vertical Window texture
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Ver_Window.tga", true);
-		if (iTextureID == 0)
+		//load Road texture
 		{
-			cout << "Unable to load Image/Envi/Ver_Window.tga" << endl;
-			return false;
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Road.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Envi/Road.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(22, iTextureID));
+			}
 		}
-		else
+		//load Divider texture
 		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(54, iTextureID));
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Divider.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Envi/Divider.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(23, iTextureID));
+			}
 		}
-	}
-	//load Wall texture
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Wall.tga", true);
-		if (iTextureID == 0)
+		//load Divider texture
 		{
-			cout << "Unable to load Image/Envi/Wall.tga" << endl;
-			return false;
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Fence.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Envi/Fence.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(106, iTextureID));
+			}
 		}
-		else
+		//Load Small crate
 		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(105, iTextureID));
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/lootcrateSmall.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Envi/lootcrateLarge.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(110, iTextureID));
+			}
 		}
-	}
-	//load Wall texture
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Floor.tga", true);
-		if (iTextureID == 0)
+		//Load Barbwire for player house
 		{
-			cout << "Unable to load Image/Envi/Floor.tga" << endl;
-			return false;
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Barbwire.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Envi/Barbwire.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(24, iTextureID));
+			}
 		}
-		else
+		//Load lvl2 window
 		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(21, iTextureID));
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Hor_WindowL2.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Envi/Hor_WindowL2.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(119, iTextureID));
+			}
 		}
-	}
-	//load Road texture
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Road.tga", true);
-		if (iTextureID == 0)
+		//Load lvl3 window
 		{
-			cout << "Unable to load Image/Envi/Road.tga" << endl;
-			return false;
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Hor_WindowL3.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Envi/Hor_WindowL3.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(120, iTextureID));
+			}
 		}
-		else
-		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(22, iTextureID));
-		}
-	}
-	//load Divider texture
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Divider.tga", true);
-		if (iTextureID == 0)
-		{
-			cout << "Unable to load Image/Envi/Divider.tga" << endl;
-			return false;
-		}
-		else
-		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(23, iTextureID));
-		}
-	}
-	//load Divider texture
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Fence.tga", true);
-		if (iTextureID == 0)
-		{
-			cout << "Unable to load Image/Envi/Fence.tga" << endl;
-			return false;
-		}
-		else
-		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(106, iTextureID));
-		}
-	}
-	//Load Small crate
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/lootcrateSmall.tga", true);
-		if (iTextureID == 0)
-		{
-			cout << "Unable to load Image/Envi/lootcrateLarge.tga" << endl;
-			return false;
-		}
-		else
-		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(110, iTextureID));
-		}
-	}
-	//Load Barbwire for player house
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Barbwire.tga", true);
-		if (iTextureID == 0)
-		{
-			cout << "Unable to load Image/Envi/Barbwire.tga" << endl;
-			return false;
-		}
-		else
-		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(24, iTextureID));
-		}
-	}
-	//Load lvl2 window
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Hor_WindowL2.tga", true);
-		if (iTextureID == 0)
-		{
-			cout << "Unable to load Image/Envi/Hor_WindowL2.tga" << endl;
-			return false;
-		}
-		else
-		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(119, iTextureID));
-		}
-	}
-	//Load lvl3 window
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Hor_WindowL3.tga", true);
-		if (iTextureID == 0)
-		{
-			cout << "Unable to load Image/Envi/Hor_WindowL3.tga" << endl;
-			return false;
-		}
-		else
-		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(120, iTextureID));
-		}
-	}
 
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/CTable.tga", true);
-		if (iTextureID == 0)
 		{
-			cout << "Unable to load Image/Envi/CTable.tga" << endl;
-			return false;
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/CTable.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Envi/CTable.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(113, iTextureID));
+			}
 		}
-		else
 		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(113, iTextureID));
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Yellow_Wall.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Envi/Yellow_Wall.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(115, iTextureID));
+			}
 		}
-	}
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Yellow_Wall.tga", true);
-		if (iTextureID == 0)
-		{
-			cout << "Unable to load Image/Envi/Yellow_Wall.tga" << endl;
-			return false;
-		}
-		else
-		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(115, iTextureID));
-		}
-	}
-
-
-	//Turret's bases
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Lv1TurretBase.tga", true);
-		if (iTextureID == 0)
-		{
-			cout << "Unable to load Image/Lv1TurretBase.tga" << endl;
-			return false;
-		}
-		else
-		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(116, iTextureID));
-		}
-	}
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Lv2TurretBase.tga", true);
-		if (iTextureID == 0)
-		{
-			cout << "Unable to load Image/Lv2TurretBase.tga" << endl;
-			return false;
-		}
-		else
-		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(117, iTextureID));
-		}
-	}
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Lv3TurretBase.tga", true);
-		if (iTextureID == 0)
-		{
-			cout << "Unable to load Image/Lv3TurretBase.tga" << endl;
-			return false;
-		}
-		else
-		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(118, iTextureID));
-		}
-	}
-
-	//Items
-	//bandages
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Bandage.tga", true);
-		if (iTextureID == 0)
-		{
-			cout << "Unable to load Image/Iteme/Bandage.tga" << endl;
-			return false;
-		}
-		else
-		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(30, iTextureID));
-		}
-	}
-	//Blueprint
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Blueprint.tga", true);
-		if (iTextureID == 0)
-		{
-			cout << "Unable to load Image/Iteme/Blueprint.tga" << endl;
-			return false;
-		}
-		else
-		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(32, iTextureID));
-		}
-	}
-	//Fabric
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Fabric.tga", true);
-		if (iTextureID == 0)
-		{
-			cout << "Unable to load Image/Iteme/Fabric.tga" << endl;
-			return false;
-		}
-		else
-		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(33, iTextureID));
-		}
-	}
-	//Hard Wood
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Hard Wood.tga", true);
-		if (iTextureID == 0)
-		{
-			cout << "Unable to load Image/Iteme/Hard Wood.tga" << endl;
-			return false;
-		}
-		else
-		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(34, iTextureID));
-		}
-	}
-	//Medkit
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Medkit.tga", true);
-		if (iTextureID == 0)
-		{
-			cout << "Unable to load Image/Iteme/Medkit.tga" << endl;
-			return false;
-		}
-		else
-		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(35, iTextureID));
-		}
-	}
-	//Pistol Bullets
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Pistol Bullets.tga", true);
-		if (iTextureID == 0)
-		{
-			cout << "Unable to load Image/Iteme/Pistol Bullets.tga" << endl;
-			return false;
-		}
-		else
-		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(36, iTextureID));
-		}
-	}
-	//Pistol
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Pistol.tga", true);
-		if (iTextureID == 0)
-		{
-			cout << "Unable to load Image/Iteme/Pistol.tga" << endl;
-			return false;
-		}
-		else
-		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(37, iTextureID));
-		}
-	}
-	//Rifle bullet
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Rifle Bullets.tga", true);
-		if (iTextureID == 0)
-		{
-			cout << "Unable to load Image/Iteme/Rifle Bullets.tga" << endl;
-			return false;
-		}
-		else
-		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(38, iTextureID));
-		}
-	}
-	//Rifle
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Rifle.tga", true);
-		if (iTextureID == 0)
-		{
-			cout << "Unable to load Image/Iteme/Pistol.tga" << endl;
-			return false;
-		}
-		else
-		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(39, iTextureID));
-		}
-	}
-	//Scrap metal
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Scrap Metal.tga", true);
-		if (iTextureID == 0)
-		{
-			cout << "Unable to load Image/Iteme/Scrap Metal.tga" << endl;
-			return false;
-		}
-		else
-		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(40, iTextureID));
-		}
-	}
-	//Stone Ore
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Stone Ore.tga", true);
-		if (iTextureID == 0)
-		{
-			cout << "Unable to load Image/Iteme/Stone Ore.tga" << endl;
-			return false;
-		}
-		else
-		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(41, iTextureID));
-		}
-	}
-	//Yellow Keycard
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Yellow Keycard.tga", true);
-		if (iTextureID == 0)
-		{
-			cout << "Unable to load Image/Iteme/Yellow Keycard.tga" << endl;
-			return false;
-		}
-		else
-		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(42, iTextureID));
-		}
-	}
 
 
-	//Ver Wall Top
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Ver_Wall_Top.tga", true);
-		if (iTextureID == 0)
+		//Turret's bases
 		{
-			cout << "Unable to load Image/Iteme/Ver_Wall_Top.tga" << endl;
-			return false;
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Lv1TurretBase.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Lv1TurretBase.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(116, iTextureID));
+			}
 		}
-		else
 		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(123, iTextureID));
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Lv2TurretBase.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Lv2TurretBase.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(117, iTextureID));
+			}
+		}
+		{
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Lv3TurretBase.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Lv3TurretBase.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(118, iTextureID));
+			}
+		}
+
+		//Items
+		//bandages
+		{
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Bandage.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Iteme/Bandage.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(30, iTextureID));
+			}
+		}
+		//Blueprint
+		{
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Blueprint.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Iteme/Blueprint.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(32, iTextureID));
+			}
+		}
+		//Fabric
+		{
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Fabric.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Iteme/Fabric.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(33, iTextureID));
+			}
+		}
+		//Hard Wood
+		{
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Hard Wood.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Iteme/Hard Wood.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(34, iTextureID));
+			}
+		}
+		//Medkit
+		{
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Medkit.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Iteme/Medkit.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(35, iTextureID));
+			}
+		}
+		//Pistol Bullets
+		{
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Pistol Bullets.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Iteme/Pistol Bullets.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(36, iTextureID));
+			}
+		}
+		//Pistol
+		{
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Pistol.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Iteme/Pistol.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(37, iTextureID));
+			}
+		}
+		//Rifle bullet
+		{
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Rifle Bullets.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Iteme/Rifle Bullets.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(38, iTextureID));
+			}
+		}
+		//Rifle
+		{
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Rifle.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Iteme/Pistol.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(39, iTextureID));
+			}
+		}
+		//Scrap metal
+		{
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Scrap Metal.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Iteme/Scrap Metal.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(40, iTextureID));
+			}
+		}
+		//Stone Ore
+		{
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Stone Ore.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Iteme/Stone Ore.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(41, iTextureID));
+			}
+		}
+		//Yellow Keycard
+		{
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Yellow Keycard.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Iteme/Yellow Keycard.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(42, iTextureID));
+			}
+		}
+
+
+		//Ver Wall Top
+		{
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Ver_Wall_Top.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Iteme/Ver_Wall_Top.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(123, iTextureID));
+			}
+		}
+
+		//Hor Wall Right
+		{
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Hor_Wall_Right.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Iteme/Hor_Wall_Right.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(122, iTextureID));
+			}
+		}
+
+		//Ver Wall Bot
+		{
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Ver_Wall_Bot.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Iteme/Ver_Wall_Bot.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(124, iTextureID));
+			}
+		}
+
+		//Hor Wall Left
+		{
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Hor_Wall_Left.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Iteme/Hor_Wall_Left.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(121, iTextureID));
+			}
 		}
 	}
-
-	//Hor Wall Right
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Hor_Wall_Right.tga", true);
-		if (iTextureID == 0)
-		{
-			cout << "Unable to load Image/Iteme/Hor_Wall_Right.tga" << endl;
-			return false;
-		}
-		else
-		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(122, iTextureID));
-		}
-	}
-
-	//Ver Wall Bot
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Ver_Wall_Bot.tga", true);
-		if (iTextureID == 0)
-		{
-			cout << "Unable to load Image/Iteme/Ver_Wall_Bot.tga" << endl;
-			return false;
-		}
-		else
-		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(124, iTextureID));
-		}
-	}
-
-	//Hor Wall Left
-	{
-		iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Hor_Wall_Left.tga", true);
-		if (iTextureID == 0)
-		{
-			cout << "Unable to load Image/Iteme/Hor_Wall_Left.tga" << endl;
-			return false;
-		}
-		else
-		{
-			// Store the texture ID into MapOfTextureIDs
-			MapOfTextureIDs.insert(pair<int, int>(121, iTextureID));
-		}
-	}
-
-	
-
-
 	
 
-
-	
 	// Initialise the variables for AStar
 	m_weight = 1;
 	m_startPos = glm::vec2(0, 0);
@@ -695,9 +699,9 @@ void CMap2D::Render(void)
 
 			// Update the shaders with the latest transform
 			glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
-
 			// Render a tile
-			RenderTile(uiRow, uiCol);
+			RenderTile(0, uiRow, uiCol);
+			RenderTile(1, uiRow, uiCol);
 		}
 	}
 }
@@ -777,12 +781,13 @@ void CMap2D::SetNumSteps(const CSettings::AXIS sAxis, const unsigned int uiValue
  @param iCol A const int variable containing the column index of the element to set to
  @param iValue A const int variable containing the value to assign to this arrMapInfo
  */
-void CMap2D::SetMapInfo(const unsigned int uiRow, const unsigned int uiCol, const int iValue, const bool bInvert)
+void CMap2D::SetMapInfo(const unsigned int uiRow, const unsigned int uiCol, const int iValue, const bool bInvert, const unsigned int uiCurLayer)
 {
-	if (bInvert)
-		arrMapInfo[uiCurLevel][cSettings->NUM_TILES_YAXIS - uiRow - 1][uiCol].value = iValue;
+	//Only edit foreground
+	if (bInvert)		
+		arrMapInfo[uiCurLevel][uiCurLayer][cSettings->NUM_TILES_YAXIS - uiRow - 1][uiCol].value = iValue;
 	else
-		arrMapInfo[uiCurLevel][uiRow][uiCol].value = iValue;
+		arrMapInfo[uiCurLevel][uiCurLayer][uiRow][uiCol].value = iValue;
 }
 
 /**
@@ -793,27 +798,19 @@ void CMap2D::SetMapInfo(const unsigned int uiRow, const unsigned int uiCol, cons
  */
 int CMap2D::GetMapInfo(const unsigned int uiRow, const int unsigned uiCol, const bool bInvert) const
 {
-	/*if(cSettings->NUM_TILES_YAXIS - uiRow - 1 >= cSettings->NUM_TILES_YAXIS 
-		|| cSettings->NUM_TILES_YAXIS - uiRow - 1 <= 0
-		|| uiRow <= 0
-		|| uiRow >= cSettings->NUM_STEPS_PER_TILE_YAXIS
-		|| uiCol <= 0
-		|| uiCol >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
-	{ 
-		return false;
-	}*/
+	//Only edit foreground
 	if (bInvert)
-		return arrMapInfo[uiCurLevel][cSettings->NUM_TILES_YAXIS - uiRow - 1][uiCol].value;
-	else
-		return arrMapInfo[uiCurLevel][uiRow][uiCol].value;
+		return arrMapInfo[uiCurLevel][1][cSettings->NUM_TILES_YAXIS - uiRow - 1][uiCol].value;
+	else							 
+		return arrMapInfo[uiCurLevel][1][uiRow][uiCol].value;
 }
 
-bool CMap2D::CheckValue(const unsigned int uiRow, const unsigned int uiCol, const unsigned int ObjID)
+bool CMap2D::CheckValue(const unsigned int uiRow, const unsigned int uiCol, const unsigned int ObjID, const unsigned int uiCurLayer)
 {
-	return arrMapInfo[0][uiRow][uiCol].value == ObjID;
+	return arrMapInfo[uiCurLevel][uiCurLayer][uiRow][uiCol].value == ObjID;
 }
 
-Grid*** CMap2D::GetarrMapInfo(void)
+Grid**** CMap2D::GetarrMapInfo(void)
 {
 	return arrMapInfo;
 }
@@ -823,7 +820,7 @@ Grid*** CMap2D::GetarrMapInfo(void)
 /**
  @brief Load a map
  */ 
-bool CMap2D::LoadMap(string filename, const unsigned int uiCurLevel)
+bool CMap2D::LoadMap(string filename, const unsigned int uiCurLevel, const unsigned int uiCurLayer)
 {
 	doc = rapidcsv::Document(FileSystem::getPath(filename).c_str());
 
@@ -837,17 +834,20 @@ bool CMap2D::LoadMap(string filename, const unsigned int uiCurLevel)
 
 	
 
-	// Read the rows and columns of CSV data into arrMapInfo
-	for (unsigned int uiRow = 0; uiRow < cSettings->NUM_TILES_YAXIS; uiRow++)
+	for (unsigned int uiCurLayer = 0; uiCurLayer < 2; uiCurLayer++)
 	{
-		// Read a row from the CSV file
-		std::vector<std::string> row = doc.GetRow<std::string>(uiRow);
-		
-		// Load a particular CSV value into the arrMapInfo
-		for (unsigned int uiCol = 0; uiCol < cSettings->NUM_TILES_XAXIS; ++uiCol)
+		// Read the rows and columns of CSV data into arrMapInfo
+		for (unsigned int uiRow = 0; uiRow < cSettings->NUM_TILES_YAXIS; uiRow++)
 		{
-			arrMapInfo[uiCurLevel][uiRow][uiCol].value = (int)stoi(row[uiCol]);
-		}				
+			// Read a row from the CSV file
+			std::vector<std::string> row = doc.GetRow<std::string>(uiRow);
+
+			// Load a particular CSV value into the arrMapInfo
+			for (unsigned int uiCol = 0; uiCol < cSettings->NUM_TILES_XAXIS; ++uiCol)
+			{
+				arrMapInfo[uiCurLevel][uiCurLayer][uiRow][uiCol].value = (int)stoi(row[uiCol]);
+			}
+		}
 	}
 
 	if (MorethanOneInstance(200, uiCurLevel) == true)
@@ -866,15 +866,17 @@ bool CMap2D::LoadMap(string filename, const unsigned int uiCurLevel)
 bool CMap2D::SaveMap(string filename, const unsigned int uiCurLevel)
 {
 	// Update the rapidcsv::Document from arrMapInfo
-	for (unsigned int uiRow = 0; uiRow < cSettings->NUM_TILES_YAXIS; uiRow++)
+	for (unsigned int uiLayer = 0; uiLayer < 2; uiLayer++)
 	{
-		for (unsigned int uiCol = 0; uiCol < cSettings->NUM_TILES_XAXIS; uiCol++)
+		for (unsigned int uiRow = 0; uiRow < cSettings->NUM_TILES_YAXIS; uiRow++)
 		{
-			doc.SetCell(uiCol, uiRow, arrMapInfo[uiCurLevel][uiRow][uiCol].value);
+			for (unsigned int uiCol = 0; uiCol < cSettings->NUM_TILES_XAXIS; uiCol++)
+			{
+				doc.SetCell(uiCol, uiRow, arrMapInfo[uiCurLevel][uiLayer][uiRow][uiCol].value);
+			}
+			cout << endl;
 		}
-		cout << endl;
 	}
-
 	// Save the rapidcsv::Document to a file
 	doc.Save(FileSystem::getPath(filename).c_str());
 
@@ -888,13 +890,13 @@ bool CMap2D::SaveMap(string filename, const unsigned int uiCurLevel)
 @param iCol A const int variable containing the column index of the found element
 @param bInvert A const bool variable which indicates if the row information is inverted
 */
-bool CMap2D::FindValue(const int iValue, unsigned int& uirRow, unsigned int& uirCol, const bool bInvert)
+bool CMap2D::FindValue(const int iValue, unsigned int& uirRow, unsigned int& uirCol, const bool bInvert, const unsigned int uiCurLayer)
 {
 	for (unsigned int uiRow = 0; uiRow < cSettings->NUM_TILES_YAXIS; uiRow++)
 	{
 		for (unsigned int uiCol = 0; uiCol < cSettings->NUM_TILES_XAXIS; uiCol++)
 		{
-			if (arrMapInfo[uiCurLevel][uiRow][uiCol].value == iValue)
+			if (arrMapInfo[uiCurLevel][uiCurLayer][uiRow][uiCol].value == iValue)
 			{
 				if (bInvert)
 					uirRow = cSettings->NUM_TILES_YAXIS - uiRow - 1;
@@ -915,7 +917,7 @@ bool CMap2D::MorethanOneInstance(unsigned int EntityNum, unsigned int uiCurLevel
 	{
 		for (unsigned int uiCol = 0; uiCol < cSettings->NUM_TILES_XAXIS; uiCol++)
 		{
-			if (arrMapInfo[uiCurLevel][uiRow][uiCol].value == EntityNum)
+			if (arrMapInfo[uiCurLevel][1][uiRow][uiCol].value == EntityNum)
 			{
 				EntityCount++;
 			}
@@ -954,13 +956,18 @@ unsigned int CMap2D::GetCurrentLevel(void) const
  @param iRow A const int variable containing the row index of the tile
  @param iCol A const int variable containing the column index of the tile
  */
-void CMap2D::RenderTile(const unsigned int uiRow, const unsigned int uiCol)
+void CMap2D::RenderTile(const unsigned int uiLayer, const unsigned int uiRow, const unsigned int uiCol)
 {
-	if ((arrMapInfo[uiCurLevel][uiRow][uiCol].value > 0)&& (arrMapInfo[uiCurLevel][uiRow][uiCol].value <200) && (arrMapInfo[uiCurLevel][uiRow][uiCol].value < 25 || arrMapInfo[uiCurLevel][uiRow][uiCol].value > 28))
+	if ((arrMapInfo[uiCurLevel][uiLayer][uiRow][uiCol].value > 0)
+		&& (arrMapInfo[uiCurLevel][uiLayer][uiRow][uiCol].value <200) 
+		&& (arrMapInfo[uiCurLevel][uiLayer][uiRow][uiCol].value < 25 
+		|| arrMapInfo[uiCurLevel][uiLayer][uiRow][uiCol].value > 28)
+		&& arrMapInfo[uiCurLevel][uiLayer][uiRow][uiCol].value != 103
+		&& arrMapInfo[uiCurLevel][uiLayer][uiRow][uiCol].value != 104)
 	{
 		//if (arrMapInfo[uiCurLevel][uiRow][uiCol].value < 3)
 			//std::cout << (arrMapInfo[uiCurLevel][uiRow][uiCol].value) << std::endl;
-			glBindTexture(GL_TEXTURE_2D, MapOfTextureIDs.at(arrMapInfo[uiCurLevel][uiRow][uiCol].value));
+			glBindTexture(GL_TEXTURE_2D, MapOfTextureIDs.at(arrMapInfo[uiCurLevel][uiLayer][uiRow][uiCol].value));
 
 			glBindVertexArray(VAO);
 			//CS: Render the tile
@@ -1120,7 +1127,7 @@ void CMap2D::PrintSelf(void) const
 			{
 				cout.fill('0');
 				cout.width(3);
-				cout << arrMapInfo[uiLevel][uiRow][uiCol].value;
+				cout << arrMapInfo[uiLevel][1][uiRow][uiCol].value;
 				if (uiCol != cSettings->NUM_TILES_XAXIS - 1)
 					cout << ", ";
 				else
@@ -1159,16 +1166,16 @@ bool CMap2D::isBlocked(const unsigned int uiRow, const unsigned int uiCol, const
 {
 	if (bInvert == true)
 	{
-		if ((arrMapInfo[uiCurLevel][cSettings->NUM_TILES_YAXIS - uiRow - 1][uiCol].value >= 100) &&
-			(arrMapInfo[uiCurLevel][cSettings->NUM_TILES_YAXIS - uiRow - 1][uiCol].value < 200))
+		if ((arrMapInfo[uiCurLevel][1][cSettings->NUM_TILES_YAXIS - uiRow - 1][uiCol].value >= 100) &&
+			(arrMapInfo[uiCurLevel][1][cSettings->NUM_TILES_YAXIS - uiRow - 1][uiCol].value < 200))
 			return true;
 		else
 			return false;
 	}
 	else
 	{
-		if ((arrMapInfo[uiCurLevel][uiRow][uiCol].value >= 100) &&
-			(arrMapInfo[uiCurLevel][uiRow][uiCol].value < 200))
+		if ((arrMapInfo[uiCurLevel][1][uiRow][uiCol].value >= 100) &&
+			(arrMapInfo[uiCurLevel][1][uiRow][uiCol].value < 200))
 			return true;
 		else
 			return false;

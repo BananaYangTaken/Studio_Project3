@@ -303,7 +303,7 @@ bool CPlayer2D_V2::Reset()
  */
 void CPlayer2D_V2::Update(const double dElapsedTime)
 {
-
+	std::cout << vec2Index.x << " " << vec2Index.y << std::endl;
 	motion = false;
 	// Store the old position
 	vec2OldIndex = vec2Index;
@@ -880,7 +880,7 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 				}
 			}
 			break;
-		case 27:
+		case 104:
 			if (cKeyboardController->IsKeyPressed('F'))
 			{
 				cout << "CASE 114 " << endl;
@@ -913,7 +913,7 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 				33 - Fabric
 				34 - hard wood*/
 
-		case 26:
+		case 103:
 			cGUI_Scene2D->actiontext = "Press F to open crafting menu";
 			if (cKeyboardController->IsKeyPressed('F'))
 			{

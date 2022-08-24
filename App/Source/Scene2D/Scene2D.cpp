@@ -117,20 +117,27 @@ bool CScene2D::Init(void)
 	numSpawned = 0;
 
 	//Initialse this instance
-	if (cMap2D->Init(5, CSettings::GetInstance()->NUM_TILES_YAXIS, CSettings::GetInstance()->NUM_TILES_XAXIS) == false)
+	if (cMap2D->Init(2, CSettings::GetInstance()->NUM_TILES_YAXIS, CSettings::GetInstance()->NUM_TILES_XAXIS) == false)
 	{
 		std::cout << "Failed to load CMap2D" << std::endl;
 		return false;
 	}
 	//Loading Maps
 	{
-		//Load Map onto Array
-		if (cMap2D->LoadMap("Maps/Map.csv", 0) == false)
+		//Load Map onto Array, Background
+		if (cMap2D->LoadMap("Maps/Map.csv", 0, 0) == false)
 		{
 			//Map loading failed, return false
 			return false;
 		}
-		cMap2D->LoadMap("Maps/Map.csv", 0);
+		cMap2D->LoadMap("Maps/Map.csv", 0, 0);
+		//Load Map onto Array, Foreground
+		if (cMap2D->LoadMap("Maps/Map.csv", 0, 1) == false)
+		{
+			//Map loading failed, return false
+			return false;
+		}
+		cMap2D->LoadMap("Maps/Map.csv", 0, 1);
 	}
 	//cMap2D->SetCurrentLevel(1);
 	
@@ -692,7 +699,7 @@ void CScene2D::PostRender(void)
 
 void CScene2D::LoadObjects(void)
 {
-	Grid*** arrMapInfo;
+	Grid**** arrMapInfo;
 	arrMapInfo = cMap2D->GetarrMapInfo();
 	unsigned int uiCurlLevel = cMap2D->GetCurrentLevel();
 	// Read the rows and columns of CSV data into arrMapInfo
@@ -701,8 +708,8 @@ void CScene2D::LoadObjects(void)
 		// Load a particular CSV value into the arrMapInfo
 		for (unsigned int uiCol = 0; uiCol < cSettings->NUM_TILES_XAXIS; ++uiCol)
 		{
-			int Value = arrMapInfo[uiCurlLevel][uiRow][uiCol].value;
-			if (Value == 25 || Value == 26 || Value == 27 || Value == 28)
+			int Value = arrMapInfo[uiCurlLevel][1][uiRow][uiCol].value;
+			if (Value == 25 || Value == 103 || Value == 104 || Value == 28)
 			{
 				bool Objectnew = true;
 				for (int i = 0; i < cObjectList.size(); i++)
@@ -729,7 +736,7 @@ void CScene2D::LoadObjects(void)
 
 void CScene2D::LoadEnemies(void)
 {
-	Grid*** arrMapInfo;
+	Grid**** arrMapInfo;
 	arrMapInfo = cMap2D->GetarrMapInfo();
 	unsigned int uiCurlLevel = cMap2D->GetCurrentLevel();
 	// Read the rows and columns of CSV data into arrMapInfo
@@ -738,7 +745,7 @@ void CScene2D::LoadEnemies(void)
 		// Load a particular CSV value into the arrMapInfo
 		for (unsigned int uiCol = 0; uiCol < cSettings->NUM_TILES_XAXIS; ++uiCol)
 		{
-			int Value = arrMapInfo[uiCurlLevel][uiRow][uiCol].value;
+			int Value = arrMapInfo[uiCurlLevel][1][uiRow][uiCol].value;
 			if (Value >= 300 && Value < 400)
 			{
 				bool Enemynew = true;
@@ -776,7 +783,7 @@ void CScene2D::LoadEnemies(void)
 
 void CScene2D::LoadTurret(void)
 {
-	Grid*** arrMapInfo;
+	Grid**** arrMapInfo;
 	arrMapInfo = cMap2D->GetarrMapInfo();
 	unsigned int uiCurlLevel = cMap2D->GetCurrentLevel();
 	// Read the rows and columns of CSV data into arrMapInfo
@@ -785,7 +792,7 @@ void CScene2D::LoadTurret(void)
 		// Load a particular CSV value into the arrMapInfo
 		for (unsigned int uiCol = 0; uiCol < cSettings->NUM_TILES_XAXIS; ++uiCol)
 		{
-			int Value = arrMapInfo[uiCurlLevel][uiRow][uiCol].value;
+			int Value = arrMapInfo[uiCurlLevel][1][uiRow][uiCol].value;
 			if (Value >= 400)
 			{
 				bool Turretnew = true;

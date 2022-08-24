@@ -718,21 +718,25 @@ void CGUI_Scene2D::clearmap()
 {
 	for (int i = 0; i < 40; i++)
 	{
-		unsigned int row, col;
-		cMap2D->FindValue(30, row, col);
-		cMap2D->FindValue(32, row, col);
-		cMap2D->FindValue(35, row, col);
-		cMap2D->FindValue(36, row, col);
-		cMap2D->FindValue(37, row, col);
-		cMap2D->FindValue(38, row, col);
-		cMap2D->FindValue(39, row, col);
-		cMap2D->FindValue(40, row, col);
-		cMap2D->FindValue(41, row, col);
-		cMap2D->FindValue(33, row, col);
-		cMap2D->FindValue(34, row, col);
-		cMap2D->FindValue(34, row, col);
-		cMap2D->FindValue(110, row, col);
-		cMap2D->SetMapInfo(row, col, 0);
+		for (int uiCurLayer = 0; uiCurLayer < 2; uiCurLayer++)
+		{
+			unsigned int row = NULL, col = NULL;
+			cMap2D->FindValue(30, row, col, true, uiCurLayer);
+			cMap2D->FindValue(32, row, col, true, uiCurLayer);
+			cMap2D->FindValue(35, row, col, true, uiCurLayer);
+			cMap2D->FindValue(36, row, col, true, uiCurLayer);
+			cMap2D->FindValue(37, row, col, true, uiCurLayer);
+			cMap2D->FindValue(38, row, col, true, uiCurLayer);
+			cMap2D->FindValue(39, row, col, true, uiCurLayer);
+			cMap2D->FindValue(40, row, col, true, uiCurLayer);
+			cMap2D->FindValue(41, row, col, true, uiCurLayer);
+			cMap2D->FindValue(33, row, col, true, uiCurLayer);
+			cMap2D->FindValue(34, row, col, true, uiCurLayer);
+			cMap2D->FindValue(34, row, col, true, uiCurLayer);
+			cMap2D->FindValue(110, row, col, true, uiCurLayer);
+			if(row != NULL && col != NULL)
+				cMap2D->SetMapInfo(row, col, 0, true, uiCurLayer);
+		}
 	}
 }
 

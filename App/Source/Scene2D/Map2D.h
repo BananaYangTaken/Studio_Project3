@@ -83,7 +83,7 @@ class CMap2D : public CSingletonTemplate<CMap2D>, public CEntity2D
 	friend CSingletonTemplate<CMap2D>;
 public:
 	// Init
-	bool Init(	const unsigned int uiNumLevels = 5,
+	bool Init(	const unsigned int uiNumLevels = 1,
 				const unsigned int uiNumRows = 24,
 				const unsigned int uiNumCols = 32);
 
@@ -104,23 +104,23 @@ public:
 	void SetNumSteps(const CSettings::AXIS sAxis, const unsigned int uiValue);
 
 	// Set the value at certain indices in the arrMapInfo
-	void SetMapInfo(const unsigned int uiRow, const unsigned int uiCol, const int iValue, const bool bInvert = true);
+	void SetMapInfo(const unsigned int uiRow, const unsigned int uiCol, const int iValue, const bool bInvert = true, const unsigned int uiCurLayer = 1);
 
 	// Get the value at certain indices in the arrMapInfo
 	int GetMapInfo(const unsigned int uiRow, const unsigned int uiCol, const bool bInvert = true) const;
 
-	bool CheckValue(const unsigned int uiRow, const unsigned int uiCol, const unsigned int ObjID);
+	bool CheckValue(const unsigned int uiRow, const unsigned int uiCol, const unsigned int ObjID, const unsigned int uiCurLayer = 1);
 
-	Grid*** GetarrMapInfo(void);
+	Grid**** GetarrMapInfo(void);
 
 	// Load a map
-	bool LoadMap(string filename, const unsigned int uiLevel = 0);
+	bool LoadMap(string filename, const unsigned int uiLevel = 0, const unsigned int uiCurLayer = 0);
 
 	// Save a tilemap
 	bool SaveMap(string filename, const unsigned int uiLevel = 0);
 
 	// Find the indices of a certain value in arrMapInfo
-	bool FindValue(const int iValue, unsigned int& uirRow, unsigned int& uirCol, const bool bInvert = true);
+	bool FindValue(const int iValue, unsigned int& uirRow, unsigned int& uirCol, const bool bInvert = true, const unsigned int uiCurLayer = 1);
 
 	//If more than one repeat of a instance per lvl, return false
 	bool MorethanOneInstance(unsigned int EntityNum, unsigned int uiCurLevel);
@@ -145,7 +145,7 @@ protected:
 	rapidcsv::Document doc;
 
 	// A 3-D array which stores the values of the tile map
-	Grid*** arrMapInfo;
+	Grid**** arrMapInfo;
 
 	// The current level
 	unsigned int uiCurLevel;
@@ -168,7 +168,7 @@ protected:
 	virtual ~CMap2D(void);
 
 	// Render a tile
-	void RenderTile(const unsigned int uiRow, const unsigned int uiCol);
+	void RenderTile(const unsigned int uiLayer,const unsigned int uiRow, const unsigned int uiCol);
 
 	// For A-Star PathFinding
 	// Build a path from m_cameFromList after calling PathFind()
