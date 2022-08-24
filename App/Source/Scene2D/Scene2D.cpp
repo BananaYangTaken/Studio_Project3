@@ -309,7 +309,7 @@ void CScene2D::SpawnEnemies()
 void CScene2D::BloodMoonOrSolarEclipse()
 {
 	int EventBaseChance = Math::RandIntMinMax(1, 1000);
-	int TotalChance = 10 + days - offset;
+	int TotalChance = 1 + days - offset;
 	if (EventBaseChance <= TotalChance)
 	{
 		if (hours == 18 && mins == 1)
