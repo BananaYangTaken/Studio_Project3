@@ -258,7 +258,6 @@ void CTurretBase::Update(const double dElapsedTime)
 				//Calculate Rotation
 				//Rotates based on last fired target
 				Rotation = cPhysics2D.CalculateRotation(vec2Index, vec2Index + glm::vec2(1, 0), dynamic_cast<CEnemyBase*>((*cEnemyList)[i])->vec2Index);
-				std::cout << "BAMMMMMMMMMMM		" << Rotation << "		BAMMMMMMMMM" << std::endl;
 			}
 		}
 

@@ -39,8 +39,8 @@ public:
 
 	// Windows Information
 	// Should make these not hard-coded :P
-	unsigned int iWindowWidth = 1920;   //76 tiles
-	unsigned int iWindowHeight = 1080;  //43 tiles
+	unsigned int iWindowWidth = 1920;   
+	unsigned int iWindowHeight = 1015;  
 	unsigned int iWindowPosX = 50;
 	unsigned int iWindowPosY = 50;
 	bool bDisableMousePointer = false;
