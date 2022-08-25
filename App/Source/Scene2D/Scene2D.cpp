@@ -153,6 +153,7 @@ bool CScene2D::Init(void)
 	Player->SetObjectList(&cObjectList);
 	Player->SetEnemyList(&cEnemyList);
 
+
 	LoadObjects();
 	LoadEnemies();
 	LoadTurret();
@@ -479,6 +480,7 @@ bool CScene2D::Update(const double dElapsedTime)
 
 	//Call Players's update method
 	Player->Update(dElapsedTime);
+
 	
 	LoadObjects();
 	for (int i = 0; i < cObjectList.size(); i++)
@@ -654,6 +656,7 @@ void CScene2D::Render(void)
 	Player->Render();
 	//Call Player's Post Render()
 	Player->PostRender();
+
 	for (int i = 0; i < cObjectList.size(); i++)
 	{
 		cObjectList[i]->PreRender();

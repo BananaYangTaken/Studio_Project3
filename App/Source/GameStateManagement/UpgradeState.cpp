@@ -174,6 +174,7 @@ bool CUpgradeState::SearchForRequirements(std::string list[3], int listcount[3])
 
 bool CUpgradeState::Update(const double dElapsedTime)
 {
+	cSettings->bShowMousePointer = true;
 	float buttonWidth = 200;
 	float buttonHeight = 100;
 
