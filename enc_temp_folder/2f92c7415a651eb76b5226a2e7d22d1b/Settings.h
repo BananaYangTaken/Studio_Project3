@@ -43,8 +43,8 @@ public:
 	unsigned int iWindowHeight = 1015;  
 	unsigned int iWindowPosX = 50;
 	unsigned int iWindowPosY = 50;
-	bool bDisableMousePointer = false;
-	bool bShowMousePointer = true;
+	bool bDisableMousePointer = true;
+	bool bShowMousePointer = false;
 
 	// Frame Rate Information
 	const unsigned char FPS = 30; // FPS of this game
