@@ -159,7 +159,7 @@ bool CMenuState::Update(const double dElapsedTime)
 			if (ImGui::ImageButton((ImTextureID)OptionButtonData.textureID,
 				ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
 			{
-				// Reset the CKeyboardController
+				// Reset the CKeyboardControllerA
 				CKeyboardController::GetInstance()->Reset();
 
 				// Load the menu state
