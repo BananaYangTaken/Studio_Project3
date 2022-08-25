@@ -653,7 +653,6 @@ void CEnemy2D_Nurse::Update(const double dElapsedTime)
 		}
 		if (healTimer <= 0)
 		{
-			cout << "healing" << endl;
 			healTimer = 1;
 			Health += 5;
 			CSoundController::GetInstance()->PlaySoundByID(21);

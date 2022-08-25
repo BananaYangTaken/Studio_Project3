@@ -316,13 +316,11 @@ void CScene2D::BloodMoonOrSolarEclipse()
 		{
 			BloodMoon = true;
 			offset = days;
-			cout << "BLOOD MOON" << endl;
 		}
 		else if (hours == 6 && mins == 1)
 		{
 			SolarEclipse = true;
 			offset = days;
-			cout << "SOLAR ECLIPSE" << endl;
 		}
 	}
 }
@@ -395,7 +393,6 @@ bool CScene2D::Update(const double dElapsedTime)
 			BloodMoon = false;
 		}
 	}
-	cout << cGUI_Scene2D->DayNightIcon << endl;
 	if (hours > 14 && hours <= 17 && cGUI_Scene2D->darkenmap == false && SolarEclipse == false)
 	{
 		cGUI_Scene2D->DayNightIcon = "Afternoon";
@@ -457,7 +454,6 @@ bool CScene2D::Update(const double dElapsedTime)
 	{
 		cSoundController->PlaySoundByID(39);
 		cSoundController->PlaySoundByID(39);
-		cout << "HORDE SPAWNED!";
 		calledonce = true;
 	}
 

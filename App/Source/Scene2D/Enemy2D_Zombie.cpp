@@ -250,7 +250,6 @@ bool  CEnemy2D_Zombie::checkforLOS()
 
 bool CEnemy2D_Zombie::Init(int x, int y)
 {
-	cout << "INIT INSTANCE ZOMBIE NORMAL " << endl;
 	// Get the handler to the CSettings instance
 	cSettings = CSettings::GetInstance();
 	// Get the handler to the CMap2D instance
@@ -264,7 +263,6 @@ bool CEnemy2D_Zombie::Init(int x, int y)
 	}
 	// Erase the value of the enemy in the arrMapInfo
 	cMap2D->SetMapInfo(uiRow, uiCol, 0);
-	cout << "ZOMBIE SET ON MAP" << endl;
 	// Set the start position of the enemy to iRow and iCol
 	vec2Index = glm::vec2(x, y);
 
