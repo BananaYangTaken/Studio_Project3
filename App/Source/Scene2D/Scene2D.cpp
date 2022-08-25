@@ -107,8 +107,8 @@ bool CScene2D::Init(void)
 	BarbwireUpgrade = 0;
 
 	daylightTimer = 0;
-	hours = 18;
-	mins = 45;
+	hours = 8;
+	mins = 0;
 	days = 1;
 	offset = 0;
 	spawnrate = 1;
@@ -334,11 +334,6 @@ void CScene2D::BloodMoonOrSolarEclipse()
 */
 bool CScene2D::Update(const double dElapsedTime)
 {
-	for (unsigned int i = 0; i < cEnemyList.size(); i++)
-	{
-		cout << dynamic_cast<CEnemyBase*>(cEnemyList[i])->DetectionRadius << endl;
-	}
-
 	string temp = "Days : ";
 	cGUI_Scene2D->days = temp + std::to_string(days);
 	if (cKeyboardController->IsKeyPressed('='))

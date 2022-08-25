@@ -727,7 +727,6 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		glm::vec2 Origin = ScreenPos - glm::vec2(cSettings->VIEW_TILES_XAXIS * 0.5 + 1, cSettings->VIEW_TILES_YAXIS * 0.5 + 1);
 		//Calculate Rotation
 		Rotation = cPhysics2D.CalculateRotation(Origin , glm::vec2(1, 0), glm::vec2(mousexpos, mouseypos));
-		std::cout << Rotation << std::endl;
 		if (vec2Index.x > (cSettings->NUM_TILES_XAXIS - (cSettings->VIEW_TILES_XAXIS * 0.5) + 1)) //Right Side Border 
 		{
 			Rotation = Rotation + Math::PI;
