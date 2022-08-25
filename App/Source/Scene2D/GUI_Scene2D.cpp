@@ -357,6 +357,7 @@ int CGUI_Scene2D::TransferToChest(std::string itemName, int quantity)
 int CGUI_Scene2D::TransferTohand(std::string itemName, int quantity)
 {
 	int ind = 0;
+	int und = 0;
 	bool found = false;
 	for (int i = 0; i < inventory_size; i++)
 	{
@@ -370,15 +371,23 @@ int CGUI_Scene2D::TransferTohand(std::string itemName, int quantity)
 	}
 	if (found == true)
 	{
+		for (int u = 0; u < Chest_size; u++)
+		{
+			if (chest_item_name_list[u] == itemName)
+			{
+				und = u;
+			}
+		}
 		if (inventory_item_quantity[ind] >= inventory_item_max_quantity[ind])
 		{
 			float difference = inventory_item_quantity[ind] - inventory_item_max_quantity[ind];
 			inventory_item_quantity[ind] = inventory_item_max_quantity[ind];
 			return difference;
 		}
-		else if (chest_item_quantity[ind] < quantity)
+		else if (chest_item_quantity[und] < quantity)
 		{
-			IncreaseInventoryItemCount(inventory_item_name_list[ind], chest_item_quantity[ind]);
+
+			IncreaseInventoryItemCount(inventory_item_name_list[ind], chest_item_quantity[und]);
 			decreaseChestQuantity(itemName, quantity);
 		}
 		else
@@ -396,9 +405,16 @@ int CGUI_Scene2D::TransferTohand(std::string itemName, int quantity)
 			if (inventory_item_name_list[u].find("empty") != string::npos)
 			{
 				inventory_item_name_list[u] = itemName;
-				if (chest_item_quantity[ind] <= quantity)
+				for (int r = 0; r < Chest_size; r++)
 				{
-					inventory_item_quantity[ind] += chest_item_quantity[ind];
+					if (chest_item_name_list[r] == itemName)
+					{
+						und = r;
+					}
+				}
+				if (chest_item_quantity[und] <= quantity)
+				{
+					inventory_item_quantity[u] += chest_item_quantity[und];
 					decreaseChestQuantity(itemName, quantity);
 					return 0;
 				}
@@ -852,14 +868,15 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						transparencyLimit = 0.4f;
 					}
 					else transparencyLimit = 0.6f;
-					if (transparency < transparencyLimit)
+					if (transparency < transparencyLimit )
 					{
 						transparency = transparency + 0.001f;
 					}
-					else if (transparency > transparencyLimit)
+					else if (transparency > transparencyLimit && GetCurrentHotbarItem() == "Flashlight" || GetCurrentHotbarItem() == "Rifle" && flashlightequipped == true && transparency > transparencyLimit)
 					{
-						transparency = transparency - 0.005f;
+						transparency = transparency - 0.01f;
 					}
+					cout << "transparency: " << transparency << endl;
 					ImGuiWindowFlags window_flags_bg = 0;
 					window_flags_bg |= ImGuiWindowFlags_NoTitleBar;
 					window_flags_bg |= ImGuiWindowFlags_NoScrollbar;
@@ -948,7 +965,6 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 							ImGuiWindowFlags_AlwaysAutoResize |
 							ImGuiWindowFlags_NoTitleBar |
 							ImGuiWindowFlags_NoResize |
-
 							ImGuiWindowFlags_NoCollapse |
 							ImGuiWindowFlags_NoBackground |
 							ImGuiWindowFlags_NoScrollbar;
@@ -1056,9 +1072,9 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				{
 					transparency = transparency + 0.001f;
 				}
-				else if (transparency > transparencyLimit)
+				else if (transparency > transparencyLimit && GetCurrentHotbarItem() == "Flashlight" || GetCurrentHotbarItem() == "Rifle" && flashlightequipped == true && transparency > transparencyLimit)
 				{
-					transparency = transparency - 0.005f;
+					transparency = transparency - 0.01f;
 				}
 				ImGuiWindowFlags window_flags_bg = 0;
 				window_flags_bg |= ImGuiWindowFlags_NoTitleBar;
@@ -1587,7 +1603,6 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						ImGui::Begin(c, NULL, inventoryWindowFlags);
 						{
 							ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wwspace, cSettings->iWindowHeight * hhspace));
-							ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
 							cInventoryItem = cInventoryManager->GetItem(chest_item_name_list[i]);
 							ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(), ImVec2(75, 75), ImVec2(0, 1), ImVec2(1, 0));
 							ImGui::SameLine();
@@ -1604,9 +1619,8 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						ImGuiWindowFlags_AlwaysAutoResize |
 						ImGuiWindowFlags_NoTitleBar |
 						ImGuiWindowFlags_NoResize |
-						ImGuiWindowFlags_NoNavFocus |
 						ImGuiWindowFlags_NoCollapse |
-						ImGuiWindowFlags_NoBackground |
+						//ImGuiWindowFlags_NoBackground |
 						ImGuiWindowFlags_NoScrollbar;
 
 					std::string istr = std::to_string(i + 36);
@@ -1695,7 +1709,14 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 							ImGuiWindowFlags_AlwaysAutoResize |
 							ImGuiWindowFlags_NoTitleBar |
 							ImGuiWindowFlags_NoResize |
-							ImGuiWindowFlags_NoBringToFrontOnFocus |
+							//ImGuiWindowFlags_NoBackground |
+							ImGuiWindowFlags_NoCollapse |
+							ImGuiWindowFlags_NoScrollbar;
+						ImGuiWindowFlags LootCrateFlagsButtons =
+							ImGuiWindowFlags_AlwaysAutoResize |
+							ImGuiWindowFlags_NoTitleBar |
+							ImGuiWindowFlags_NoResize |
+							ImGuiWindowFlags_NoBackground |
 							ImGuiWindowFlags_NoCollapse |
 							ImGuiWindowFlags_NoScrollbar;
 						{
@@ -1728,7 +1749,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 								istr = std::to_string(i + 63);
 								ctxt = (crate_item_name_list[i] + istr);
 								c = ctxt.c_str();
-								ImGui::Begin(c, NULL, LootCrateFlags);
+								ImGui::Begin(c, NULL, LootCrateFlagsButtons);
 								{
 									ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * wwspace, cSettings->iWindowHeight * hhspace));
 									ImGui::SetWindowSize(ImVec2(25.0f, 25.0f));
