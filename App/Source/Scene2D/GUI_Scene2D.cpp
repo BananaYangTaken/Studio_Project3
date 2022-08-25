@@ -724,10 +724,13 @@ void CGUI_Scene2D::SpawnRandomMilBase()
 				else if (loottype == 2) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 35); // medkit
 				else if (loottype == 3) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 38); // rifle bullets
 				else if (loottype == 4) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 36); // pistol bullets
-				loottype = rand() % 15 + 1;
+				loottype = rand() % 7 + 1;
 				if (loottype == 1) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 37); // pistol
 				if (loottype == 2) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 39); // rifle
 				if (loottype == 3) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 32); // BP
+				if (loottype == 4) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 42); // flashlight
+				if (loottype == 5) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 43); // Muzzle
+				if (loottype == 6) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 44); // Magazine
 			}
 			rande = rand() % 70 + 1;
 			if (rande == 2 && cMap2D->GetMapInfo(PStopleft.y - u, PStopleft.x + i) == 0)
