@@ -357,7 +357,7 @@ bool CScene2D::Update(const double dElapsedTime)
 	{
 		spawnrate = 1 + (0.1 * days);
 	}
-	int spawncount = 40 * spawnrate;
+	int spawncount = 20 * spawnrate;
 	UpdateDaylightCycle(dElapsedTime);
 	if (hours >= 22 && BloodMoon == false && numSpawned == 0)
 	{
@@ -371,6 +371,22 @@ bool CScene2D::Update(const double dElapsedTime)
 		{
 			dynamic_cast<CEnemyBase*>(cEnemyList[i])->DetectionRadius = 40;
 		}
+	}
+	if (hours >= 1 && BloodMoon == false && numSpawned == 1)
+	{
+		for (int i = 0; i < spawncount; i++)
+		{
+			SpawnEnemies();
+		}
+		numSpawned = 2;
+	}
+	if (hours >= 3 && BloodMoon == false && numSpawned == 2)
+	{
+		for (int i = 0; i < spawncount; i++)
+		{
+			SpawnEnemies();
+		}
+		numSpawned = 3;
 	}
 	else if (hours >= 20 && BloodMoon == true && numSpawned == 0)
 	{
@@ -478,6 +494,7 @@ bool CScene2D::Update(const double dElapsedTime)
 	{
 		cSoundController->PlaySoundByID(39);
 		cSoundController->PlaySoundByID(39);
+		cSoundController->PlaySoundByID(40);
 		calledonce = true;
 	}
 

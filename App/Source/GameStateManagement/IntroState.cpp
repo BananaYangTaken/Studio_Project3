@@ -56,7 +56,7 @@ CIntroState::CIntroState(void)
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\Creeper.ogg"), 8, true, false, CSoundInfo::SOUNDGROUP::Creatures);
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\HollowKnight-Reflection.ogg"), 9, true, true, CSoundInfo::SOUNDGROUP::Background);
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\HollowKnight-Hornet.ogg"), 10, true, true, CSoundInfo::SOUNDGROUP::Background);
-		cSoundController->LoadSound(FileSystem::getPath("Sounds\\Terraria-BG.ogg"), 11, true, true, CSoundInfo::SOUNDGROUP::Background);
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Dead-Center.ogg"), 11, true, true, CSoundInfo::SOUNDGROUP::Background);
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\Jumping.ogg"), 12, true, false, CSoundInfo::SOUNDGROUP::Player);
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\Landing.ogg"), 13, true, false, CSoundInfo::SOUNDGROUP::Player);
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\BowStretch.ogg"), 14, true, false, CSoundInfo::SOUNDGROUP::Player);
@@ -105,6 +105,7 @@ CIntroState::CIntroState(void)
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\KeycardReject.ogg"), 38, true, false, CSoundInfo::SOUNDGROUP::Player);
 		//Horde
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Horde.ogg"), 39, true, false, CSoundInfo::SOUNDGROUP::Player);
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\The-Horde.ogg"), 40, true, false, CSoundInfo::SOUNDGROUP::Player);
 		cSoundController->LoadSoundSystem();
 		
 		

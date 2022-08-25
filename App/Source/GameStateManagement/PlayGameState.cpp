@@ -50,7 +50,7 @@ bool CPlayGameState::Init(void)
 		cout << "Failed to load Scene2D" << endl;
 		return false;
 	}
-	//CSoundController::GetInstance()->PlaySoundByID(11);
+	CSoundController::GetInstance()->PlaySoundByID(11);
 
 	return true;
 }
