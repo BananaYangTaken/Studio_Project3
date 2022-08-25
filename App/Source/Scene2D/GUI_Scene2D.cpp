@@ -836,12 +836,14 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				healing = true;
 				healamt = 100;
 				healtime = 150;
+				cSoundController->PlaySoundByID(21);
 			}
 			else if (inventory_item_name_list[hotbarselection - 1] == "Bandage")
 			{
 				healing = true;
 				healamt = 15;
 				healtime = 75;
+				cSoundController->PlaySoundByID(21);
 			}
 		}
 	}
