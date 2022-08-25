@@ -333,7 +333,6 @@ bool CPlayer2D_V2::Reset()
  */
 void CPlayer2D_V2::Update(const double dElapsedTime)
 {
-	std::cout << vec2Index.x << " " << vec2Index.y << std::endl;
 	motion = false;
 	// Store the old position
 	vec2OldIndex = vec2Index;
