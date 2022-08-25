@@ -546,8 +546,48 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,const unsigned int uiNumRows,c
 				MapOfTextureIDs.insert(pair<int, int>(42, iTextureID));
 			}
 		}
-
-
+		//Flashlight
+		{
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/Flashlight.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Iteme/Flashlight.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(42, iTextureID));
+			}
+		}
+		//muzzleDevice
+		{
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/muzzleDevice.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Iteme/muzzleDevice.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(43, iTextureID));
+			}
+		}
+		//extendedmag
+		{
+			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Iteme/extendedmag.tga", true);
+			if (iTextureID == 0)
+			{
+				cout << "Unable to load Image/Iteme/extendedmag.tga" << endl;
+				return false;
+			}
+			else
+			{
+				// Store the texture ID into MapOfTextureIDs
+				MapOfTextureIDs.insert(pair<int, int>(44, iTextureID));
+			}
+		}
 		//Ver Wall Top
 		{
 			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Ver_Wall_Top.tga", true);

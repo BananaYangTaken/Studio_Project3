@@ -174,6 +174,7 @@ bool CUpgradeState::SearchForRequirements(std::string list[3], int listcount[3])
 
 bool CUpgradeState::Update(const double dElapsedTime)
 {
+	cSettings->bShowMousePointer = true;
 	float buttonWidth = 200;
 	float buttonHeight = 100;
 
@@ -325,8 +326,8 @@ bool CUpgradeState::Update(const double dElapsedTime)
 					itemlist[0] = "Hard wood";
 					itemlist[1] = "Scrap Metal";
 					itemlist[2] = "Stone Ore";
-					itemlistcount[0] = 0;
-					itemlistcount[1] = 0;
+					itemlistcount[0] = 50;
+					itemlistcount[1] = 225;
 					itemlistcount[2] = 100;
 				}
 				if (CurrentWindowLv == 2)

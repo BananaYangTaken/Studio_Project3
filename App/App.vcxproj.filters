@@ -122,6 +122,9 @@
     <ClCompile Include="Source\Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Scene2D\Mouse2D.cpp">
+      <Filter>Scene2D\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -215,6 +218,9 @@
       <Filter>Scene2D\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scene2D\Enemy2D_Mutant.h">
+      <Filter>Scene2D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\Mouse2D.h">
       <Filter>Scene2D\Header Files</Filter>
     </ClInclude>
   </ItemGroup>

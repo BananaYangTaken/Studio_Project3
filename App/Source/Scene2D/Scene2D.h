@@ -49,6 +49,11 @@
 #include "GameManager.h"
 
 // Add your include files here
+//Enemies
+#include "Enemy2D_Zombie.h"
+#include "Enemy2D_Nurse.h"
+#include "Enemy2D_Police.h"
+#include "Enemy2D_Mutant.h"
 
 class CScene2D : public CSingletonTemplate<CScene2D>
 {
@@ -99,7 +104,6 @@ public:
 	float spawnrate;
 	int numSpawned;
 	float spawnTimer;
-
 	bool isNight;
 	bool SolarEclipse, BloodMoon;
 
@@ -126,7 +130,6 @@ protected:
 	CPhysics2D cPhysics2D;
 	//Handler to ProjectileManager
 	CProjectileManager* cProjectileManager;
-
 
 	//A vector containing instances of CEnemyBase Derived Class
 	std::vector<CEntity2D*> cEnemyList;

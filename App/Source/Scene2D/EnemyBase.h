@@ -66,6 +66,7 @@ public:
 
 	virtual void SetStun(bool);
 	virtual void SetWindowLevel(unsigned int newLevel);
+	float DetectionRadius = 20;
 
 protected:
 	enum DIRECTION

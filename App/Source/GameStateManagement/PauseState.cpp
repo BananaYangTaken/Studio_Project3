@@ -99,6 +99,7 @@ bool CPauseState::Init(void)
  */
 bool CPauseState::Update(const double dElapsedTime)
 {
+	cSettings->bShowMousePointer = true;
 	float buttonWidth = 32;
 	float buttonHeight = 32;
 

@@ -66,6 +66,11 @@ CPlayer2D_V2::~CPlayer2D_V2(void)
 		delete animatedSprites;
 		animatedSprites = NULL;
 	}
+	if (Mouse)
+	{
+		delete Mouse;
+		Mouse = NULL;
+	}
 
 	// optional: de-allocate all resources once they've outlived their purpose:
 	glDeleteVertexArrays(1, &VAO);
@@ -119,6 +124,9 @@ bool CPlayer2D_V2::Init(void)
 	cGameManager = CGameManager::GetInstance();
 	//Get the handler to the Game Manager Instance
 	cProjectileManager = CProjectileManager::GetInstance();
+	//Create and Init Mouse
+	Mouse = new CMouse2D;
+	Mouse->Init();
 
 	LoadObject = false;
 
@@ -719,11 +727,20 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 		glm::vec2 Origin = ScreenPos - glm::vec2(cSettings->VIEW_TILES_XAXIS * 0.5 + 1, cSettings->VIEW_TILES_YAXIS * 0.5 + 1);
 		//Calculate Rotation
 		Rotation = cPhysics2D.CalculateRotation(Origin , glm::vec2(1, 0), glm::vec2(mousexpos, mouseypos));
-		if (vec2Index.x > (cSettings->NUM_TILES_XAXIS - (cSettings->VIEW_TILES_XAXIS * 0.5) + 2)) //Right Side Border 
+		if (vec2Index.x > (cSettings->NUM_TILES_XAXIS - (cSettings->VIEW_TILES_XAXIS * 0.5) + 1)) //Right Side Border 
 		{
-			Rotation += Math::PI;
+			Rotation = Rotation + Math::PI;
+		}
+		
+		//Calcute Mouse Position
+		{
+			Mouse->vec2UVCoordinate = cPhysics2D.RotateVec2(glm::vec2(0.2, 0), Rotation);
+			Mouse->vec2UVCoordinate.x *= 0.5;
+			Mouse->vec2UVCoordinate += vec2UVCoordinate;
 		}
 	}
+	
+	Mouse->Update(dElapsedTime);
 }
 
 /**
@@ -731,6 +748,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
  */
 void CPlayer2D_V2::PreRender(void)
 {
+
 	// Activate blending mode
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -772,6 +790,9 @@ void CPlayer2D_V2::Render(void)
 	animatedSprites->Render();
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
+	Mouse->PreRender();
+	Mouse->Render();
+	Mouse->PostRender();
 }
 
 /**

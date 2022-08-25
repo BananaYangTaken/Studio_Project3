@@ -200,7 +200,7 @@ void CProjectile2D::Update(const double dElapsedTime)
 	// Update the UV Coordinates
 	{
 		//if within viewing distance
-		if ((abs(Player->vec2Index.x - vec2Index.x) <= cSettings->VIEW_TILES_XAXIS * 0.5 + 1) && (abs(Player->vec2Index.y - vec2Index.y) <= cSettings->VIEW_TILES_YAXIS * 0.5 + 1))
+		if ((abs(Player->vec2Index.x - vec2Index.x) <= cSettings->VIEW_TILES_XAXIS + 1) && (abs(Player->vec2Index.y - vec2Index.y) <= cSettings->VIEW_TILES_YAXIS + 1))
 		{
 			//Calculate Position of Entity on Screen
 			glm::vec2 ScreenPos = glm::vec2(0, 0);

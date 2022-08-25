@@ -73,6 +73,7 @@ CScene2D::~CScene2D(void)
 		cSettings = NULL;
 	}
 
+
 	cObjectList.clear();
 	cEnemyList.clear();
 	cTurretList.clear();
@@ -106,8 +107,8 @@ bool CScene2D::Init(void)
 	BarbwireUpgrade = 0;
 
 	daylightTimer = 0;
-	hours = 18;
-	mins = 45;
+	hours = 8;
+	mins = 0;
 	days = 1;
 	offset = 0;
 	spawnrate = 1;
@@ -153,6 +154,7 @@ bool CScene2D::Init(void)
 	Player->SetObjectList(&cObjectList);
 	Player->SetEnemyList(&cEnemyList);
 
+
 	LoadObjects();
 	LoadEnemies();
 	LoadTurret();
@@ -174,6 +176,9 @@ bool CScene2D::Init(void)
 	cProjectileManager = cProjectileManager->GetInstance();
 	cProjectileManager->Init();
 	cProjectileManager->SetEnemyVector(&cEnemyList);
+
+
+
 	return true;
 }
 
@@ -304,6 +309,8 @@ void CScene2D::SpawnEnemies()
 		}
 		cMap2D->SetMapInfo(randy, randx, 302);
 	}
+
+	LoadEnemies();
 }
 
 void CScene2D::BloodMoonOrSolarEclipse()
@@ -330,7 +337,6 @@ void CScene2D::BloodMoonOrSolarEclipse()
 */
 bool CScene2D::Update(const double dElapsedTime)
 {
-	cout << hours << endl;
 	string temp = "Days : ";
 	cGUI_Scene2D->days = temp + std::to_string(days);
 	if (cKeyboardController->IsKeyPressed('='))
@@ -342,6 +348,10 @@ bool CScene2D::Update(const double dElapsedTime)
 	if (BloodMoon == true || SolarEclipse == true)
 	{
 		spawnrate = 2 + (0.2 * days);
+		for (unsigned int i = 0; i < cEnemyList.size(); i++)
+		{
+			dynamic_cast<CEnemyBase*>(cEnemyList[i])->DetectionRadius = 50;
+		}
 	}
 	else
 	{
@@ -356,6 +366,11 @@ bool CScene2D::Update(const double dElapsedTime)
 			SpawnEnemies();
 		}
 		numSpawned = 1;
+		
+		for (unsigned int i = 0; i < cEnemyList.size(); i++)
+		{
+			dynamic_cast<CEnemyBase*>(cEnemyList[i])->DetectionRadius = 40;
+		}
 	}
 	else if (hours >= 20 && BloodMoon == true && numSpawned == 0)
 	{
@@ -380,11 +395,20 @@ bool CScene2D::Update(const double dElapsedTime)
 		{
 			BloodMoon = false;
 		}
+		for (unsigned int i = 0; i < cEnemyList.size(); i++)
+		{
+			dynamic_cast<CEnemyBase*>(cEnemyList[i])->DetectionRadius = 20;
+		}
 	}
 	if (hours >= 18 && SolarEclipse == true)
 	{
 		numSpawned = 0;
 		SolarEclipse = false;
+
+		for (unsigned int i = 0; i < cEnemyList.size(); i++)
+		{
+			dynamic_cast<CEnemyBase*>(cEnemyList[i])->DetectionRadius = 20;
+		}
 	}
 	else if (SolarEclipse == true && hours > 5 && hours < 18)
 	{
@@ -479,6 +503,7 @@ bool CScene2D::Update(const double dElapsedTime)
 
 	//Call Players's update method
 	Player->Update(dElapsedTime);
+
 	
 	LoadObjects();
 	for (int i = 0; i < cObjectList.size(); i++)
@@ -654,6 +679,7 @@ void CScene2D::Render(void)
 	Player->Render();
 	//Call Player's Post Render()
 	Player->PostRender();
+
 	for (int i = 0; i < cObjectList.size(); i++)
 	{
 		cObjectList[i]->PreRender();

@@ -26,6 +26,7 @@
 #include "GameManager.h"
 #include "Object2D.h"
 #include "Projectile2DManager.h"
+#include "Mouse2D.h"
 // Include SoundController
 #include "..\SoundController\SoundController.h"
 //Include Physics2D
@@ -136,6 +137,8 @@ protected:
 	CSpriteAnimation* animatedSprites;
 
 	CSoundController* cSoundController;
+	
+	CMouse2D* Mouse;
 
 	// Player's colour
 	glm::vec4 runtimeColour;
