@@ -49,6 +49,6 @@ public:
 protected:
 	CBackgroundEntity* background;
 	ButtonData play2DButtonData;
-	ButtonData play3DButtonData;
+	ButtonData OptionButtonData;
 	ButtonData exitButtonData;
 };

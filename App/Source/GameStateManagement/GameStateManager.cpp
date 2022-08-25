@@ -75,6 +75,7 @@ bool CGameStateManager::Update(const double dElapsedTime)
 	{
 		if (pauseGameState)
 		{
+			std::cout << "Paused" << endl;
 			pauseGameState->Update(dElapsedTime);
 			//For keyboard controls
 			if (CKeyboardController::GetInstance()->IsKeyReleased(GLFW_KEY_ESCAPE) || CKeyboardController::GetInstance()->IsKeyReleased(GLFW_KEY_F10))
@@ -199,7 +200,7 @@ bool CGameStateManager::SetActiveGameState(const std::string& _name)
 	}
 
 	// Scene exist, set the next scene pointer to that scene
-	nextGameState = GameStateMap[_name];
+ 	nextGameState = GameStateMap[_name];
 
 	return true;
 }
@@ -237,6 +238,11 @@ bool CGameStateManager::SetPauseGameState(const std::string& _name)
 void CGameStateManager::OffPauseGameState(void)
 {
 	pauseGameState = nullptr;
+}
+
+CGameStateBase* CGameStateManager::GetPrevGameState(void)
+{
+	return prevGameState;
 }
 
 bool CGameStateManager::SetUpgradeState(const std::string& _name)

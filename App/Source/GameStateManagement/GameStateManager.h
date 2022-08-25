@@ -31,6 +31,8 @@ public:
 	bool CheckGameStateExist(const std::string& _name);
 	bool SetPauseGameState(const std::string& _name);
 	void OffPauseGameState(void);
+	CGameStateBase* GetPrevGameState(void);
+
 
 	bool SetUpgradeState(const std::string& _name);
 	void OffUpgradeState(void);

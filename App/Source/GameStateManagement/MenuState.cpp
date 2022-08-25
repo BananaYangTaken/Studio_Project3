@@ -87,8 +87,8 @@ bool CMenuState::Init(void)
 	play2DButtonData.fileName = "Image\\GUI\\PlayButton.png";
 	play2DButtonData.textureID = il->LoadTextureGetID(play2DButtonData.fileName.c_str(), false);
 
-	/*play3DButtonData.fileName = "Image\\GUI\\PlayButton_3D.png";
-	play3DButtonData.textureID = il->LoadTextureGetID(play3DButtonData.fileName.c_str(), false);*/
+	OptionButtonData.fileName = "Image\\GUI\\OptionButton.png";
+	OptionButtonData.textureID = il->LoadTextureGetID(OptionButtonData.fileName.c_str(), false);
 
 	exitButtonData.fileName = "Image\\GUI\\ExitButton.png";
 	exitButtonData.textureID = il->LoadTextureGetID(exitButtonData.fileName.c_str(), false);
@@ -107,6 +107,7 @@ bool CMenuState::Init(void)
  */
 bool CMenuState::Update(const double dElapsedTime)
 {
+
 	// Start the Dear ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
@@ -154,17 +155,17 @@ bool CMenuState::Update(const double dElapsedTime)
 				//cout << "Loading PlayGameState" << endl;
 				CGameStateManager::GetInstance()->SetActiveGameState("PlayGameState");
 			}
-			// Add codes for Play3D button here
-			//if (ImGui::ImageButton((ImTextureID)play3DButtonData.textureID,
-			//	ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
-			//{
-			//	//// Reset the CKeyboardController
-			//	//CKeyboardController::GetInstance()->Reset();
+			 //Add codes for options button here
+			if (ImGui::ImageButton((ImTextureID)OptionButtonData.textureID,
+				ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
+			{
+				// Reset the CKeyboardController
+				CKeyboardController::GetInstance()->Reset();
 
-			//	//// Load the menu state
-			//	//cout << "Loading Play3DGameState" << endl;
-			//	//CGameStateManager::GetInstance()->SetActiveGameState("Play3DGameState");
-			//}
+				// Load the menu state
+				cout << "Loading OptionButtonState" << endl;
+				CGameStateManager::GetInstance()->SetPauseGameState("PauseState");
+			}
 			// Add codes for Exit button here
 			if (ImGui::ImageButton((ImTextureID)exitButtonData.textureID,ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
 			{

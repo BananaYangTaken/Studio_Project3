@@ -63,6 +63,9 @@ CPauseState::~CPauseState(void)
  */
 bool CPauseState::Init(void)
 {
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	cout << "CPauseState::Init()\n" << endl;
 
 	CShaderManager::GetInstance()->Use("Shader2D");
@@ -397,6 +400,11 @@ bool CPauseState::Update(const double dElapsedTime)
 	//For keyboard controls
 	if (CKeyboardController::GetInstance()->IsKeyReleased(GLFW_KEY_ESCAPE) || CKeyboardController::GetInstance()->IsKeyReleased(GLFW_KEY_F10))
 	{
+		/*if (CGameStateManager::GetInstance()->GetPrevGameState() == CGameStateBase* )
+		{
+
+		}*/
+
 		return true;
 	}
 
