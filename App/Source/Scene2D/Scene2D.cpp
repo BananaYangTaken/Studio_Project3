@@ -176,6 +176,9 @@ bool CScene2D::Init(void)
 	cProjectileManager = cProjectileManager->GetInstance();
 	cProjectileManager->Init();
 	cProjectileManager->SetEnemyVector(&cEnemyList);
+
+
+
 	return true;
 }
 
