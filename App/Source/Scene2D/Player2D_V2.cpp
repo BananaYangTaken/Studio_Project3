@@ -530,22 +530,21 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 			//Reload
 			if (cKeyboardController->IsKeyPressed(GLFW_KEY_R) && AnimationTimer == 0)
 			{
-	
+				int bulletdifference = HeldItem.GData->MaxAmmoSize - HeldItem.GData->CurrentAmmoSize;
 				if (HeldItem.GData->CurrentAmmoSize < HeldItem.GData->MaxAmmoSize)
 				{
-					int bulletdifference = HeldItem.GData->MaxAmmoSize; -HeldItem.GData->CurrentAmmoSize;
-					cout << "BULLET DIFF: " + bulletdifference << endl;
+					
 					HeldItem.WData->ReloadTimer = HeldItem.WData->ReloadTime;
 					AnimationTimer = HeldItem.WData->ReloadTime;
 				
-					if (HeldItem.GData->firingtype == FIRING_TYPE::FULLAUTO && cGUI_Scene2D->checkifItemExists("Rifle Bullets") >= 30)
+					if (HeldItem.GData->firingtype == FIRING_TYPE::FULLAUTO && cGUI_Scene2D->checkifItemExists("Rifle Bullets") >= HeldItem.GData->MaxAmmoSize)
 					{
 						animatedSprites->PlayAnimation("rifleReload",-1, HeldItem.WData->ReloadTime);
 						cSoundController->PlaySoundByID(25);
 						cGUI_Scene2D->DecreaseInventoryItemCount("Rifle Bullets", bulletdifference);
 						HeldItem.GData->CurrentAmmoSize = HeldItem.GData->MaxAmmoSize;
 					}
-					else if (HeldItem.GData->firingtype == FIRING_TYPE::SEMIAUTO && cGUI_Scene2D->checkifItemExists("Pistol Bullets") >= 17)
+					else if (HeldItem.GData->firingtype == FIRING_TYPE::SEMIAUTO && cGUI_Scene2D->checkifItemExists("Pistol Bullets") >= HeldItem.GData->MaxAmmoSize)
 					{
 						animatedSprites->PlayAnimation("pistolReload",-1, HeldItem.WData->ReloadTime);
 						cSoundController->PlaySoundByID(24);
