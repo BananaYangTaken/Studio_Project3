@@ -49,6 +49,7 @@ CIntroState::CIntroState(void)
 	{	cSoundController->LoadSound(FileSystem::getPath("Sounds\\HollowKnight-Reflection.ogg"), 9, true, true, CSoundInfo::SOUNDGROUP::Background);
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\HollowKnight-Hornet.ogg"), 10, true, true, CSoundInfo::SOUNDGROUP::Background);
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Dead-Center.ogg"), 11, true, true, CSoundInfo::SOUNDGROUP::Background);
+		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SwordSwing.ogg"), 15, true, false, CSoundInfo::SOUNDGROUP::Player);
 		//search
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Search.ogg"), 18, true, false, CSoundInfo::SOUNDGROUP::Player);
 		//Rifle Fire
