@@ -110,21 +110,6 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,const unsigned int uiNumRows,c
 
 	//Load Texture
 	{
-		//Load the ground texture
-		{
-			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_GroundTile.tga", true);
-			if (iTextureID == 0)
-			{
-				cout << "Unable to load Image/Scene2D_GroundTile.tga" << endl;
-				return false;
-			}
-			else
-			{
-				// Store the texture ID into MapOfTextureIDs
-				MapOfTextureIDs.insert(pair<int, int>(100, iTextureID));
-			}
-		}
-
 		//load Horizontal Wall texture
 		{
 			iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Envi/Hor_Wall.tga", true);

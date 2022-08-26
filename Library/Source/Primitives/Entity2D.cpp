@@ -96,14 +96,6 @@ bool CEntity2D::Init(void)
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);*/
 
-	// Load a texture
-	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_EnemyTile.tga", true);
-	if (iTextureID == 0)
-	{
-		cout << "Unable to load Image/Scene2D_EnemyTile.tga" << endl;
-		return false;
-	}
-
 
 	return true;
 }

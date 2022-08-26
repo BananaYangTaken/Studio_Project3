@@ -691,6 +691,13 @@ void CScene2D::Render(void)
 	//Call Map2D's Post Render()
 	cMap2D->PostRender();
 
+	//Call cProjectileManager's Pre Render()
+	cProjectileManager->PreRender();
+	//Call cProjectileManager's Render()
+	cProjectileManager->Render();
+	//Call cProjectileManager's Post Render()
+	cProjectileManager->PostRender();
+
 	//Call Player's Pre Render()
 	Player->PreRender();
 	//Call Player's Render()
@@ -725,6 +732,7 @@ void CScene2D::Render(void)
 		cTurretList[i]->PostRender();
 	}
 
+
 	//Call cGUI_Scene2D's Pre Render()
 	cGUI_Scene2D->PreRender();
 	//Call Player2D's Render()
@@ -732,12 +740,6 @@ void CScene2D::Render(void)
 	//Call Player2D's Post Render()
 	cGUI_Scene2D->PostRender();
 
-	//Call cProjectileManager's Pre Render()
-	cProjectileManager->PreRender();
-	//Call cProjectileManager's Render()
-	cProjectileManager->Render();
-	//Call cProjectileManager's Post Render()
-	cProjectileManager->PostRender();
 }
 
 /**
