@@ -42,6 +42,8 @@
 #endif
 
 
+#include "../App/Source/Scene2D/Scene2D.h"
+
 class CLoseState : public CGameStateBase
 {
 public:
@@ -73,5 +75,5 @@ protected:
 	//Handler containing the instance of 2D Gui
 	CGUI_Scene2D* cGUI_Scene2D;
 
-
+	CScene2D* cScene2D;
 };

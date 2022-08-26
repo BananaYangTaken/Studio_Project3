@@ -42,6 +42,7 @@ using namespace std;
 CLoseState::CLoseState(void)
 	: background(NULL)
 	, cGUI_Scene2D(NULL)
+	, cScene2D(NULL)
 {
 
 }
@@ -52,6 +53,7 @@ CLoseState::CLoseState(void)
 CLoseState::~CLoseState(void)
 {
 	cGUI_Scene2D->Destroy();
+	cScene2D->Destroy();
 }
 
 /**
@@ -67,6 +69,7 @@ bool CLoseState::Init(void)
 	
 	//Create and initialse 2D GUI
 	cGUI_Scene2D = CGUI_Scene2D::GetInstance();
+	cScene2D = CScene2D::GetInstance();
 	// Store the CFPSCounter singleton instance here
 	cFPSCounter = CFPSCounter::GetInstance();
 	//Create Background Entity
@@ -78,6 +81,11 @@ bool CLoseState::Init(void)
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+	// Setup Platform/Renderer bindings
+	ImGui_ImplGlfw_InitForOpenGL(CSettings::GetInstance()->pWindow, true);
+	const char* glsl_version = "#version 330";
+	ImGui_ImplOpenGL3_Init(glsl_version);
 
 	DayNum = "...";
 
@@ -102,14 +110,14 @@ bool CLoseState::Update(const double dElapsedTime)
 		window_flags |= ImGuiWindowFlags_NoResize;
 
 		std::string temp = "Days Survived : ";
-		DayNum = temp + cGUI_Scene2D->days;
+		DayNum = temp + std::to_string(cScene2D->days);
 		// display days
 		ImGui::Begin("DaysCount", NULL, window_flags);
 		{
 			ImVec4 col = ImVec4(0.f, 1.f, 0.f, 1.f);
 			ImGui::PushStyleColor(ImGuiCol_Text, col);
-			ImGui::SetWindowPos(ImVec2(100, 100));
-			ImGui::SetWindowSize(ImVec2(100, 100));
+			ImGui::SetWindowPos(ImVec2(800, 600));
+			ImGui::SetWindowSize(ImVec2(300, 50));
 			ImGui::SetWindowFontScale(1.5f);
 			ImGui::TextColored(ImVec4(1, 1, 0, 1), DayNum.c_str(), cFPSCounter->GetFrameRate());
 			ImGui::PopStyleColor();
@@ -145,6 +153,9 @@ void CLoseState::Render()
 
 	//Draw the background
  	background->Render();
+
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 /**
@@ -153,11 +164,11 @@ void CLoseState::Render()
 void CLoseState::Destroy(void)
 {
 	// Delete the background
-	if (background)
+	/*if (background)
 	{
 		delete background;
 		background = NULL;
-	}
+	}*/
 
 	//cout << "CIntroState::Destroy()\n" << endl;
 }
