@@ -46,23 +46,9 @@ CIntroState::CIntroState(void)
 	// Load the sounds into CSoundController
 	cSoundController = CSoundController::GetInstance();
 	//Loading Sounds
-	{
-		cSoundController->LoadSound(FileSystem::getPath("Sounds\\Sound_Bell.ogg"), 1, true, false, CSoundInfo::SOUNDGROUP::Environment);
-		cSoundController->LoadSound(FileSystem::getPath("Sounds\\Sound_Explosion.ogg"), 2, true, false, CSoundInfo::SOUNDGROUP::Player);
-		cSoundController->LoadSound(FileSystem::getPath("Sounds\\Sound_Jump.ogg"), 3, true, false, CSoundInfo::SOUNDGROUP::Player);
-		cSoundController->LoadSound(FileSystem::getPath("Sounds\\PlayerHit.ogg"), 4, true, false, CSoundInfo::SOUNDGROUP::Player);
-		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SkeletonHit.ogg"), 5, true, false, CSoundInfo::SOUNDGROUP::Creatures);
-		cSoundController->LoadSound(FileSystem::getPath("Sounds\\ArrowHit.ogg"), 6, true, false, CSoundInfo::SOUNDGROUP::Player);
-		cSoundController->LoadSound(FileSystem::getPath("Sounds\\Creeper.ogg"), 8, true, false, CSoundInfo::SOUNDGROUP::Creatures);
-		cSoundController->LoadSound(FileSystem::getPath("Sounds\\HollowKnight-Reflection.ogg"), 9, true, true, CSoundInfo::SOUNDGROUP::Background);
+	{	cSoundController->LoadSound(FileSystem::getPath("Sounds\\HollowKnight-Reflection.ogg"), 9, true, true, CSoundInfo::SOUNDGROUP::Background);
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\HollowKnight-Hornet.ogg"), 10, true, true, CSoundInfo::SOUNDGROUP::Background);
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Dead-Center.ogg"), 11, true, true, CSoundInfo::SOUNDGROUP::Background);
-		cSoundController->LoadSound(FileSystem::getPath("Sounds\\Jumping.ogg"), 12, true, false, CSoundInfo::SOUNDGROUP::Player);
-		cSoundController->LoadSound(FileSystem::getPath("Sounds\\Landing.ogg"), 13, true, false, CSoundInfo::SOUNDGROUP::Player);
-		cSoundController->LoadSound(FileSystem::getPath("Sounds\\BowStretch.ogg"), 14, true, false, CSoundInfo::SOUNDGROUP::Player);
-		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SwordSwing.ogg"), 15, true, false, CSoundInfo::SOUNDGROUP::Player);
-		cSoundController->LoadSound(FileSystem::getPath("Sounds\\Explosion.ogg"), 16, true, false, CSoundInfo::SOUNDGROUP::Creatures);
-		cSoundController->LoadSound(FileSystem::getPath("Sounds\\Hiss.ogg"), 17, true, false, CSoundInfo::SOUNDGROUP::Creatures);	
 		//search
 		cSoundController->LoadSound(FileSystem::getPath("Sounds\\SP_Sounds\\Search.ogg"), 18, true, false, CSoundInfo::SOUNDGROUP::Player);
 		//Rifle Fire
