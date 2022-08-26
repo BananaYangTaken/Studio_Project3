@@ -337,6 +337,7 @@ void CScene2D::BloodMoonOrSolarEclipse()
 */
 bool CScene2D::Update(const double dElapsedTime)
 {
+	cGUI_Scene2D->actiontext = "...";
 	string temp = "Days : ";
 	cGUI_Scene2D->days = temp + std::to_string(days);
 	if (cKeyboardController->IsKeyPressed('='))

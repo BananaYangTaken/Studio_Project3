@@ -728,9 +728,9 @@ void CGUI_Scene2D::SpawnRandomMilBase()
 				if (loottype == 1) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 37); // pistol
 				if (loottype == 2) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 39); // rifle
 				if (loottype == 3) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 32); // BP
-				if (loottype == 4) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 42); // flashlight
-				if (loottype == 5) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 43); // Muzzle
-				if (loottype == 6) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 44); // Magazine
+				if (loottype == 4) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 43); // flashlight
+				if (loottype == 5) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 44); // Muzzle
+				if (loottype == 6) cMap2D->SetMapInfo(PStopleft.y - u, PStopleft.x + i, 45); // Magazine
 			}
 			rande = rand() % 70 + 1;
 			if (rande == 2 && cMap2D->GetMapInfo(PStopleft.y - u, PStopleft.x + i) == 0)
@@ -822,7 +822,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 	float hspace = 0.15f;
 	// Start the Dear ImGui frame
 
-	if (inventory_item_name_list[hotbarselection - 1] == "Medkit" && healing == false)
+	if (inventory_item_name_list[hotbarselection - 1] == "Medkit" && healing == false || inventory_item_name_list[hotbarselection - 1] == "Bandage" && healing == false)
 	{
 		if (textalready == false)
 		{
@@ -831,14 +831,14 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 		}
 		if (cKeyboardController->IsKeyPressed('E'))
 		{
-			if (inventory_item_name_list[hotbarselection - 1] == "Medkit")
+			if (GetCurrentHotbarItem() == "Medkit")
 			{
 				healing = true;
 				healamt = 100;
 				healtime = 150;
 				cSoundController->PlaySoundByID(21);
 			}
-			else if (inventory_item_name_list[hotbarselection - 1] == "Bandage")
+			else if (GetCurrentHotbarItem() == "Bandage")
 			{
 				healing = true;
 				healamt = 15;

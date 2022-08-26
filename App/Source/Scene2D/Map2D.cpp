@@ -557,7 +557,7 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,const unsigned int uiNumRows,c
 			else
 			{
 				// Store the texture ID into MapOfTextureIDs
-				MapOfTextureIDs.insert(pair<int, int>(42, iTextureID));
+				MapOfTextureIDs.insert(pair<int, int>(43, iTextureID));
 			}
 		}
 		//muzzleDevice
@@ -571,7 +571,7 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,const unsigned int uiNumRows,c
 			else
 			{
 				// Store the texture ID into MapOfTextureIDs
-				MapOfTextureIDs.insert(pair<int, int>(43, iTextureID));
+				MapOfTextureIDs.insert(pair<int, int>(44, iTextureID));
 			}
 		}
 		//extendedmag
@@ -585,7 +585,7 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,const unsigned int uiNumRows,c
 			else
 			{
 				// Store the texture ID into MapOfTextureIDs
-				MapOfTextureIDs.insert(pair<int, int>(44, iTextureID));
+				MapOfTextureIDs.insert(pair<int, int>(45, iTextureID));
 			}
 		}
 		//Ver Wall Top

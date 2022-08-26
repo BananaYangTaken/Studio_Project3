@@ -1178,6 +1178,54 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 
 			}
 			break;
+		case 43:
+			cGUI_Scene2D->actiontext = "Press F to pickup Flashlight";
+			if (cKeyboardController->IsKeyPressed('F'))
+			{
+				if (cGUI_Scene2D->IncreaseInventoryItemCount("Flashlight", 1) == 1)
+				{
+					cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
+				}
+				else
+				{
+					cGUI_Scene2D->actiontext = "Inventory full!";
+				}
+				cSoundController->PlaySoundByID(22);
+
+			}
+			break;
+		case 44:
+			cGUI_Scene2D->actiontext = "Press F to pickup Extended Mag";
+			if (cKeyboardController->IsKeyPressed('F'))
+			{
+				if (cGUI_Scene2D->IncreaseInventoryItemCount("Extended Magazine", 1) == 1)
+				{
+					cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
+				}
+				else
+				{
+					cGUI_Scene2D->actiontext = "Inventory full!";
+				}
+				cSoundController->PlaySoundByID(22);
+
+			}
+			break;
+		case 45:
+			cGUI_Scene2D->actiontext = "Press F to pickup Extended Mag";
+			if (cKeyboardController->IsKeyPressed('F'))
+			{
+				if (cGUI_Scene2D->IncreaseInventoryItemCount("Extended Magazine", 1) == 1)
+				{
+					cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
+				}
+				else
+				{
+					cGUI_Scene2D->actiontext = "Inventory full!";
+				}
+				cSoundController->PlaySoundByID(22);
+
+			}
+			break;
 		case 115:
 			cGUI_Scene2D->actiontext = "Press F to unlock door";
 			if (cKeyboardController->IsKeyPressed('F'))
@@ -1200,7 +1248,6 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 			}
 			break;
 		default:
-			cGUI_Scene2D->actiontext = "...";
 			break;
 		}
 	}
