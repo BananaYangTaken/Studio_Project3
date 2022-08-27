@@ -91,7 +91,7 @@ public:
 	int GetWindowUpgradeLvl();
 	int GetTurretUpgradeLvl();
 	int GetBarbwireUpgradeLvl();
-	bool spawnloot = false;
+	bool spawnloot = true;
 	void SetWindowUpgradeLvl(int newLV);
 	void SetTurretUpgradeLvl(int newLV);
 	void SetBarbwireUpgradeLvl(int newLV);

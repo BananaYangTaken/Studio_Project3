@@ -487,11 +487,6 @@ bool CGUI_Scene2D::Init(void)
 	DayNight.textureID = il->LoadTextureGetID(AddAllButton.fileName.c_str(), false);
 	//KnightIcon.fileName = "Image\\HumanKnightIcon.png";
 	//.textureID = il->LoadTextureGetID(KnightIcon.fileName.c_str(), true);
-	SpawnRandomPoliceStation();
-	SpawnRandomHospital();
-	SpawnRandomHomeDepot();
-	SpawnRandomMilBase();
-	SpawnRandomYellowRoom();
 	// Initialise the cInventoryManager
 	cInventoryManager = CInventoryManager::GetInstance();
 
@@ -501,7 +496,11 @@ bool CGUI_Scene2D::Init(void)
 	clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 	m_fProgressBar = 0.0f;
-
+	SpawnRandomPoliceStation();
+	SpawnRandomHospital();
+	SpawnRandomHomeDepot();
+	SpawnRandomMilBase();
+	SpawnRandomYellowRoom();
 	return true;
 }
 
@@ -684,7 +683,7 @@ void CGUI_Scene2D::SpawnRandomHomeDepot()
 	{
 		for (int u = 0; u < PStopleft.y - PSbottomleft.y; u++)
 		{
-			int rande = rand() % 65 + 1;
+			int rande = rand() % 65+ 1;
 			if (rande == 2 && cMap2D->GetMapInfo(PStopleft.y - u, PStopleft.x + i) == 0)
 			{
 				spawnloot(PStopleft.y - u, PStopleft.x + i);

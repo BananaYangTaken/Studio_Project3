@@ -154,7 +154,6 @@ bool CScene2D::Init(void)
 	Player->SetObjectList(&cObjectList);
 	Player->SetEnemyList(&cEnemyList);
 
-
 	LoadObjects();
 	LoadEnemies();
 	LoadTurret();
@@ -476,9 +475,10 @@ bool CScene2D::Update(const double dElapsedTime)
 		cGUI_Scene2D->actiontext = "The Sun Rises...";
 		cGUI_Scene2D->DayNightIcon = "Dawn";
 	}
-	else if (hours > 6 && hours <= 12 && cGUI_Scene2D->darkenmap == false && SolarEclipse == true)
+	else if (hours > 6 && hours <= 8 && cGUI_Scene2D->darkenmap == false && SolarEclipse == true)
 	{
-		spawnloot = false;
+		if(spawnloot == true)
+			spawnloot = false;
 		cGUI_Scene2D->darkenmap = true;
 		cGUI_Scene2D->redness = 0.5;
 		cGUI_Scene2D->actiontext = "A solar eclipse is forming...";
