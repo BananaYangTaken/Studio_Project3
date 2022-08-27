@@ -75,6 +75,7 @@ bool CGameStateManager::Update(const double dElapsedTime)
 	{
 		if (pauseGameState)
 		{
+			std::cout << "Paused" << endl;
 			pauseGameState->Update(dElapsedTime);
 			//For keyboard controls
 			if (CKeyboardController::GetInstance()->IsKeyReleased(GLFW_KEY_ESCAPE) || CKeyboardController::GetInstance()->IsKeyReleased(GLFW_KEY_F10))
