@@ -69,8 +69,8 @@ public:
 	bool selectinventory = true;
 	void spawnloot(float vecX, float vecY);
 	const int inventory_size = 9;
-	std::string inventory_item_name_list[9] = {"Rifle", "Rifle Bullets", "Pistol", "Pistol Bullets",  "Bandage", "Flashlight", "Extended Magazine", "MuzzleDevice", "Blueprint"};
-	int inventory_item_quantity[9] = {1,200,1,200,8,1,1,1,200 };
+	std::string inventory_item_name_list[9] = {"Rifle", "Rifle Bullets", "Pistol", "Pistol Bullets",  "Bandage", "empty5", "empty6", "empty7", "Blueprint"};
+	int inventory_item_quantity[9] = {1,200,1,200,8,0,0,0,200 };
 	int inventory_item_max_quantity[9] = { 200,200,200,200,200,200,200,200,200 };
 	std::string searchtxt;
 	bool issearched = false;

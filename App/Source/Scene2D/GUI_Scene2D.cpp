@@ -838,9 +838,9 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 			}
 			else if (GetCurrentHotbarItem() == "Bandage")
 			{
-				healing = true;
 				healamt = 15;
 				healtime = 75;
+				healing = true;
 				cSoundController->PlaySoundByID(21);
 			}
 		}
@@ -1494,7 +1494,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 							}
 						}
 						if (ImGui::ImageButton((ImTextureID)newDropbutton.textureID,
-							ImVec2(128, buttonHeight), ImVec2(0.0, 0.0), ImVec2(0.0, 0.0)))
+							ImVec2(128, buttonHeight), ImVec2(1.0, 1.0), ImVec2(0.0, 0.0)))
 						{
 							if (inventory_item_name_list[deskey].find("empty") == string::npos)
 							{
