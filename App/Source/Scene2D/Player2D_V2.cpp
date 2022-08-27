@@ -548,7 +548,7 @@ void CPlayer2D_V2::Update(const double dElapsedTime)
 					{
 						animatedSprites->PlayAnimation("pistolReload",-1, HeldItem.WData->ReloadTime);
 						cSoundController->PlaySoundByID(24);
-						cGUI_Scene2D->DecreaseInventoryItemCount("Pistol Bullets", 17);
+						cGUI_Scene2D->DecreaseInventoryItemCount("Pistol Bullets", bulletdifference);
 						HeldItem.GData->CurrentAmmoSize = HeldItem.GData->MaxAmmoSize;
 					}
 				}
@@ -1069,7 +1069,7 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 			cGUI_Scene2D->actiontext = "Press F to pickup pistol bullets";
 			if (cKeyboardController->IsKeyPressed('F'))
 			{
-				if (cGUI_Scene2D->IncreaseInventoryItemCount("Pistol Bullet", 5) == 1)
+				if (cGUI_Scene2D->IncreaseInventoryItemCount("Pistol Bullets", 5) == 1)
 				{
 					cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
 				}
