@@ -69,9 +69,9 @@ public:
 	bool selectinventory = true;
 	void spawnloot(float vecX, float vecY);
 	const int inventory_size = 9;
-	std::string inventory_item_name_list[9] = {"Rifle", "Extended Magazine", "Stone Ore", "Pistol Bullets",  "Rifle Bullets", "Hard wood", "Pistol", "Medkit", "Blueprint"};
-	int inventory_item_quantity[9] = {1,999,999,999,999,999,999,999,999};
-	int inventory_item_max_quantity[9] = {999,999,999,999,999,999,999,999,999};
+	std::string inventory_item_name_list[9] = {"Rifle", "Rifle Bullets", "Pistol", "Pistol Bullets",  "Bandage", "Flashlight", "Extended Magazine", "MuzzleDevice", "Blueprint"};
+	int inventory_item_quantity[9] = {1,200,1,200,8,1,1,1,200 };
+	int inventory_item_max_quantity[9] = { 200,200,200,200,200,200,200,200,200 };
 	std::string searchtxt;
 	bool issearched = false;
 	float transparencyLimit;
@@ -86,8 +86,8 @@ public:
 	std::string description = "";
 
 	int Chest_size = 8;
-	std::string chest_item_name_list[8] = { "empty2", "empty3", "empty4", "empty5", "empty6", "empty7", "empty8", "empty9"};
-	int chest_item_quantity[8] = { 0,0,0,0,0,0,0,0};
+	std::string chest_item_name_list[8] = { "Extended Magazine", "Stone Ore", "Hard wood", "Blueprint", "Scrap Metal", "Fabric", "empty8", "empty9"};
+	int chest_item_quantity[8] = { 1,899,899,5,999,899,0,0};
 	int chest_item_max_quantity[8] = { 999,999,999,999,999,999,999,999};
 	
 	void SpawnRandomPoliceStation();

@@ -110,7 +110,7 @@ int CGUI_Scene2D::IncreaseInventoryItemCount(std::string arrayindex, int increme
 			{
 				inventory_item_quantity[u] = incrementValue;
 				inventory_item_name_list[u] = arrayindex;
-				return 0;
+				return 1;
 			}
 
 		}
@@ -487,7 +487,6 @@ bool CGUI_Scene2D::Init(void)
 	DayNight.textureID = il->LoadTextureGetID(AddAllButton.fileName.c_str(), false);
 	//KnightIcon.fileName = "Image\\HumanKnightIcon.png";
 	//.textureID = il->LoadTextureGetID(KnightIcon.fileName.c_str(), true);
-	clearmap();
 	SpawnRandomPoliceStation();
 	SpawnRandomHospital();
 	SpawnRandomHomeDepot();
@@ -1601,7 +1600,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 					wwspace = wwspace + 0.15f;
 
 					recName = chest_item_name_list[i];
-					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(1.0f, 0.f, 0.f, 1.0f));  // Set a background color
+					ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.f, 0.f, 1.0f));  // Set a background color
 					std::string ctxt = (chest_item_name_list[i] + "45");
 					const char* c = ctxt.c_str();
 					{
@@ -1625,7 +1624,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 						ImGuiWindowFlags_NoTitleBar |
 						ImGuiWindowFlags_NoResize |
 						ImGuiWindowFlags_NoCollapse |
-						//ImGuiWindowFlags_NoBackground |
+						ImGuiWindowFlags_NoBackground |
 						ImGuiWindowFlags_NoScrollbar;
 
 					std::string istr = std::to_string(i + 36);

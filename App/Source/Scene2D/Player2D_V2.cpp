@@ -1101,7 +1101,7 @@ void CPlayer2D_V2::InteractWithMap(int xdisplacement, int ydisplacement)
 			cGUI_Scene2D->actiontext = "Press F to pickup rifle bullets";
 			if (cKeyboardController->IsKeyPressed('F'))
 			{
-				if (cGUI_Scene2D->IncreaseInventoryItemCount("Rifle Bullet", 1) == 1)
+				if (cGUI_Scene2D->IncreaseInventoryItemCount("Rifle Bullets", 1) == 1)
 				{
 					cMap2D->SetMapInfo(vec2Index.y + ydisplacement, vec2Index.x + xdisplacement, 0);
 				}
